@@ -147,14 +147,14 @@ class CellMeta(NamedTuple):
     path_out:   Path | None
 
 
-def get_cell_meta(track, kind, module, task):
+def get_cell_meta(track, kind, module, task, path_out_reports):
     """
     Cell metadata from the TASKS registry: cell_id, cell_title, path_out.
     Note: raises KeyError for unregistered `title`: loud on purpose.
     """
     cid   = make_cell_id(track, kind, module, task)
     title = f'{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}'
-    return CellMeta(cid, title, PATH_OUT_REPORTS.get(cid))
+    return CellMeta(cid, title, path_out_reports.get(cid))
 
 
 def render_code_cell(cell_id, title, report_text, track='a'):
