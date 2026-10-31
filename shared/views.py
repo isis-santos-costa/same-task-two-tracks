@@ -3,6 +3,9 @@
 # --- libraries: authored ---
 from identity import *
 
+# --- libraries: standard ---
+from html import escape
+
 # toc .....................................................................................................
 
 TOC_CSS = TRACK_CSS + '<style>.toc{' + ''.join(
