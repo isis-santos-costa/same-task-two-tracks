@@ -15,7 +15,7 @@ from pathlib       import Path
 import pandas as pd
 
 # --- libraries • display ---
-from rich.markdown    import markdown
+from rich.markdown    import Markdown
 from IPython.display  import display_markdown
 from pandas.api.types import is_numeric_dtype as is_num
 from pandas.api.types import is_integer_dtype as is_int
