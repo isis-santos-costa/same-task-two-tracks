@@ -8,8 +8,6 @@ from pathlib import Path
 
 # overall .................................................................................................
 
-DEV_MODE = False
-
 LOW_CARDIN_THRESH = 10
 CORE_DISTRIBUTION = [0, 0.25, 0.5, 0.75, 1]
 
