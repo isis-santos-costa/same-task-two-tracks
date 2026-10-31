@@ -4,6 +4,7 @@
 from identity import *
 
 # --- libraries: standard ---
+import re
 from operator  import itemgetter
 from itertools import groupby
 from html      import escape
