@@ -114,8 +114,8 @@ def _snippet(sid, cfg):
             f'<details><summary>Output</summary>{out}</details>')
 
 
-def render_comparison(comparison, kinds, titles, cfg):
-    cols = ''.join(f'<col style="width:{w}%">' for w in WIDTHS.values())
+def render_comparison(comparison, kinds, titles, cfg, widths):
+    cols = ''.join(f'<col style="width:{w}%">' for w in widths.values())
     head = ('<thead><tr><th class="ix">Task</th><th class="ix">Action</th><th class="ix">Specifier</th>'
             '<th class="t-a">Track A · From scratch</th><th class="t-b">Track B · Off the shelf</th></tr></thead>')
     trs = []
