@@ -5,9 +5,12 @@ from identity import *
 
 # --- libraries: standard ---
 import re
+import ast
+import sys
 from operator  import itemgetter
 from itertools import groupby
 from html      import escape
+from pathlib   import Path
 
 # toc .....................................................................................................
 
@@ -158,3 +161,72 @@ CODE_HEADER = """
 
 </div>
 """
+
+# appendix ................................................................................................
+
+APPENDIX_CSS = TRACK_CSS + '<style>' + """
+.apx{max-width:60rem;font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--fg)}
+.apx details{margin:0 0 .7em}
+.apx summary{display:flex;align-items:center;box-sizing:border-box;width:min(100%,16rem);white-space:nowrap;
+             list-style:none;cursor:pointer;user-select:none;padding:.4em 1em;
+             border:1px solid var(--rl);border-radius:999px;background:var(--bg);color:var(--hfg);
+             font-size:12px;font-weight:600;letter-spacing:.06em}
+.apx summary::-webkit-details-marker{display:none}
+.apx summary::before{content:'▸';display:inline-block;width:1em;transition:transform .15s}
+.apx details[open]>summary{background:var(--rl);color:var(--bg)}
+.apx details[open]>summary::before{transform:rotate(90deg)}
+.apx summary small{margin-left:auto;padding-left:1em;font-weight:400;letter-spacing:0;opacity:.8}
+.apx .doc{margin:.5em 0 0;color:var(--fg);font-size:13px}
+.apx pre{margin:.5em 0 0;max-height:460px;overflow:auto;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.apx table{border-collapse:collapse;width:100%;margin-top:.4em;font-size:13px}
+.apx th,.apx td{padding:.45em .8em;text-align:left;vertical-align:top;border-bottom:1px solid var(--ln);
+                background:var(--bg);color:var(--fg)}
+.apx th{background:var(--hbg);color:var(--hfg);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.apx :is(th,td){text-align:left!important}
+</style>"""
+
+
+def _imported_libs(tree):
+    libs = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            libs |= {a.name.split('.')[0] for a in node.names}
+        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+            libs.add(node.module.split('.')[0])
+    return libs
+    
+
+def render_appendix(files, extra=None):
+    """files: list of (label, path). One pill per file, plus a table of every library used."""
+    authored = {Path(p).stem for _, p in files}
+    used, blocks = {}, []
+
+    for label, path in files:
+        path = Path(path)
+        code = path.read_text(encoding='utf-8').rstrip()
+        tree = ast.parse(code)
+        for lib in _imported_libs(tree):
+            used.setdefault(lib, set()).add(path.name)
+        n   = sum(1 for l in code.splitlines() if l.strip())
+        doc = ast.get_docstring(tree)
+        blocks.append(
+            f'<details><summary>{escape(label)}<small>{n} lines</small></summary>'
+            + (f'<p class="doc">{escape(doc)}</p>' if doc else '')
+            + f'<pre><code>{escape(code)}</code></pre></details>')
+    for label, text in (extra or {}).items():
+        for lib in _imported_libs(ast.parse(text)):
+            used.setdefault(lib, set()).add(label)
+
+    def kind(lib):
+        if lib in authored:                 return '1 · Authored'
+        if lib in sys.stdlib_module_names:  return '2 · Standard library'
+        return '3 · Third-party'
+
+    rows = ''.join(
+        f'<tr><td>{kind(lib)[4:]}</td><td><code>{escape(lib)}</code></td><td>{escape(", ".join(sorted(fs)))}</td></tr>'
+        for lib, fs in sorted(used.items(), key=lambda kv: (kind(kv[0]), kv[0])))
+
+    libs = (f'<details><summary>Libraries<small>{len(used)} across {len(files)} files</small></summary>'
+            f'<table><thead><tr><th>Kind</th><th>Library</th><th>Used in</th></tr></thead><tbody>{rows}</tbody></table></details>')
+
+    return f'{APPENDIX_CSS}<div class="apx t-n">{libs}{"".join(blocks)}</div>'
