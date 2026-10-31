@@ -158,8 +158,8 @@ def get_cell_meta(track, kind, module, task, path_out_reports):
     return CellMeta(cid, title, path_out_reports.get(cid))
 
 
-def render_code_cell(cell_id, title, report_text, track='a'):
-    display_markdown(CODE_HEADER.format(
+def render_code_cell(cell_id, title, report_text, code_header, track='a'):
+    display_markdown(code_header.format(
         cell_id=cell_id, track=track.lower(), TRACK=track.upper(), title=title, report=report_text
     ), raw=True)
 
