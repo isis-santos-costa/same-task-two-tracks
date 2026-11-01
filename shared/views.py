@@ -176,42 +176,6 @@ def render_comparison(comparison, kinds, titles, modules, programs, cfg, widths)
         parts.append(_comparison_table(list(p_rows), kinds, titles, modules, cfg, widths))
     return ''.join(parts) + '<br><hr>'
 
-# code cells ..............................................................................................
-
-CODE_HEADER = """
-{anchors}
-<div class="bn t-{track}">
-<div class="bn-eb">Track {TRACK}</div>
-<h3>{task_title}</h3>
-
-{report}
-
-</div>
-"""
-
-class CellMeta(NamedTuple):
-    task_id:    str
-    task_title: str
-    path_out:   Path | None
-
-
-def get_cell_meta(track, kind, module, task, path_out_reports):
-    """
-    Cell metadata from the TASKS registry: task_id, task_title, path_out.
-    Note: raises KeyError for unregistered `title`: loud on purpose.
-    """
-    tid   = make_task_id(track, kind, module, task)
-    title = f'{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}'
-    return CellMeta(tid, title, path_out_reports.get(tid))
-
-
-def render_code_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
-    snippet_id = make_snippet_id(task_id, action)
-    anchors = (f"<a id='{task_id}'></a>" if is_first_action else '') + f"<a id='{snippet_id}'></a>"
-    display_markdown(CODE_HEADER.format(
-        anchors=anchors, track=track.lower(), TRACK=track.upper(),
-        action=action, task_title=task_title, report=report_text), raw=True)
-
 # appendix ................................................................................................
 
 APPENDIX_CSS = TRACK_CSS + '<style>' + """
