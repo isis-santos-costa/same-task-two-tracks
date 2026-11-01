@@ -7,6 +7,7 @@ from config   import *
 # --- libraries • standard ---
 import os
 import re
+from typing        import NamedTuple
 from rich.console  import Console
 from pathlib       import Path
 
