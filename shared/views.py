@@ -7,6 +7,7 @@ from identity import *
 import re
 import ast
 import sys
+from typing    import NamedTuple
 from operator  import itemgetter
 from itertools import groupby
 from html      import escape
@@ -17,12 +18,13 @@ from pathlib   import Path
 TOC_CSS = TRACK_CSS + '<style>.toc{' + ''.join(
     f'--ix-{k.replace("_", "-")}:{v};' for k, v in IX.items()
 ) + '}' + """
-.toc{max-width:32rem;background:var(--ix-bg);color:var(--ix-fg);border:1px solid var(--ix-line);border-radius:10px;
+.toc{max-width:26rem;background:var(--ix-bg);color:var(--ix-fg);border:1px solid var(--ix-line);border-radius:10px;
      padding:16px 22px;font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}
+.toc .prog{font-weight:400;color:var(--ix-muted);font-size:12px}
 .toc a{text-decoration:none!important}
 .toc .hint{margin:0 0 12px;color:var(--ix-muted);font-size:12px;font-style:italic}
-.toc .tracks{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-.toc a.track{display:block;padding:.5em 1em;border:1px solid var(--rl);border-radius:12px;background:var(--bg);line-height:1.3}
+.toc .tracks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+.toc a.track{display:block;box-sizing:border-box;padding:.5em 1em;border:1px solid var(--rl);border-radius:12px;background:var(--bg);line-height:1.3}
 .toc a.track:hover{background:var(--hbg)}
 .toc .track b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--hfg)}
 .toc .track span{font-size:12.5px;color:var(--fg)}
@@ -46,19 +48,19 @@ def render_toc(tasks, kinds, modules):
     tracks = ''.join(f'<a class="track t-{k}" href="#{k}"><b>Track {k.upper()}</b><span>{escape(v)}</span></a>'
                      for k, v in TRACKS.items())
     rows = ['<p class="hint">Click a pill to jump to that task.</p>', f'<div class="tracks">{tracks}</div>']
-    for module, m_rows in groupby(tasks, key=itemgetter(1)):
+    for (program, module), m_rows in groupby(tasks, key=itemgetter(0, 2)):
         pills = _pills(lambda k: f'{k}{module}')
-        rows.append(f'<div class="row mod"><span class="txt">{module} · {escape(modules[module])}</span>{pills}</div>')
-        for kind, _, task, title in m_rows:
-            pills = _pills(lambda k: make_cell_id(k, kind, module, task))
+        rows.append(f'<div class="row mod"><span class="txt">{module} · {escape(modules[(program, module)])}'
+                    f'<br><small class="prog">{escape(program)}</small></span>{pills}</div>')
+        for _, kind, _, task, title in m_rows:
+            pills = _pills(lambda k: make_task_id(k, kind, module, task))
             rows.append(f'<div class="row"><span class="kind">{kinds[kind]} {task}</span>'
                         f'<span class="txt">{escape(title)}</span>{pills}</div>')
     return f'{TOC_CSS}<div class="toc">{"".join(rows)}</div><br><hr>'
 
-
 # comparison ..............................................................................................
 
-COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap{' + ''.join(
+COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
     f'--ix-{k.replace("_", "-")}:{v};' for k, v in IX.items()
 ) + '}' + """
 .cmp-wrap{container-type:inline-size;overflow:auto;border:1px solid var(--ix-line);border-radius:10px;
@@ -71,7 +73,16 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap{' + ''.join(
                           padding:.7em .9em;overflow-wrap:break-word;border-bottom:1px solid var(--ix-line)}
 .cmp-wrap .cmp thead th{font-size:.85em;font-weight:600;border-bottom-width:3px}
 
-/* index columns: Task, Action, Specifier */
+/* dividers: Program (with Tip), Module */
+.cmp-tip{margin:0 0 10px;font:italic 12px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ix-muted)}
+.cmp-prog{margin:18px 0 8px;font:600 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif}
+.cmp-prog a{color:var(--ix-link);text-decoration:none}
+.cmp-prog a:hover{text-decoration:underline}
+.cmp-wrap .cmp tr.mdr :is(th,td){padding:.45em .9em}
+.cmp-wrap .cmp th.md{background:var(--ix-head-bg);color:var(--ix-head-fg);font-size:.9em;font-weight:600;
+                     border-bottom:1px solid var(--ix-muted)}
+
+/* index columns: Task, Action */
 .cmp-wrap .cmp .ix{background:var(--ix-bg);color:var(--ix-fg);font-weight:500}
 .cmp-wrap .cmp thead .ix{background:var(--ix-head-bg);color:var(--ix-head-fg);font-size:.95em;font-weight:600;
                          border-bottom-color:var(--ix-muted)}
@@ -97,11 +108,8 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap{' + ''.join(
 .cmp pre{width:0;min-width:100%;margin:.5em 0 0;max-height:420px;overflow:auto;
          font:.92em/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .cmp img{max-width:100%;height:auto;border-radius:6px}
+
 </style>"""
-
-
-def _slug(s):
-    return re.sub(r'\W+', '_', s.lower()).strip('_')
 
 
 def _snippet(sid, cfg):
@@ -118,49 +126,91 @@ def _snippet(sid, cfg):
             f'<details><summary>Output</summary>{out}</details>')
 
 
-def render_comparison(comparison, kinds, titles, cfg, widths):
-    cols = ''.join(f'<col style="width:{w}%">' for w in widths.values())
-    head = ('<thead><tr><th class="ix">Task</th><th class="ix">Action</th><th class="ix">Specifier</th>'
-            '<th class="t-a">Track A · From scratch</th><th class="t-b">Track B · Off the shelf</th></tr></thead>')
-    trs = []
-    for (kind, module, task), t_rows in groupby(comparison, key=itemgetter(0, 1, 2)):
-        t_rows, first = list(t_rows), True
-        sid   = f'{kind}_{module}_{task}'                        # task_1_1 · job_task_1_1
-        label = f'{kinds[kind]} {module}.{task}'
-        title = titles[(kind, module, task)]
-        for action, a_rows in groupby(t_rows, key=itemgetter(3)):
-            a_rows = list(a_rows)
-            for i, row in enumerate(a_rows):
-                spec, cells = row[4], []
-                if first:
-                    jump = ' · '.join(f'<a href="#{t}_{sid}">Track {t.upper()}</a>' for t in 'ab')
-                    cells.append(f'<th class="ix" scope="rowgroup" rowspan="{len(t_rows)}"><strong>{label}</strong><br>'
-                                 f'{escape(title)}<br><small>{jump}</small></th>')
-                    first = False
-                if i == 0:
-                    cells.append(f'<th class="ix" scope="rowgroup" rowspan="{len(a_rows)}">{escape(action)}</th>')
-                key = '_'.join(filter(None, [sid, _slug(action), _slug(spec)]))
-                cells += [f'<th class="ix" scope="row">{escape(spec) or "—"}</th>',
-                          f'<td class="t-a">{_snippet("a_" + key, cfg)}</td>',
-                          f'<td class="t-b">{_snippet("b_" + key, cfg)}</td>']
-                trs.append('<tr>' + ''.join(cells) + '</tr>')
-    return (f'{COMPARISON_CSS}<div class="cmp-wrap"><table class="cmp"><colgroup>{cols}</colgroup>'
-            f'{head}<tbody>{"".join(trs)}</tbody></table></div><br><hr>')
+def _group_sizes(rows, key):
+    """{index of the is_first_action row of each group: group size}, for rowspans."""
+    sizes, i = {}, 0
+    for _, grp in groupby(rows, key=key):
+        n = sum(1 for _ in grp)
+        sizes[i] = n
+        i += n
+    return sizes
 
+
+def _comparison_table(rows, kinds, titles, modules, cfg, widths):
+    cols = ''.join(f'<col style="width:{w}%">' for w in widths.values())
+    head = ('<thead><tr><th class="ix">Task</th><th class="ix">Action</th>'
+            '<th class="t-a">Track A · First principles</th><th class="t-b">Track B · Off the shelf</th></tr></thead>')
+    by_task = _group_sizes(rows, itemgetter(0, 1, 2, 3))
+
+    trs, prev_mod = [], None
+    for i, (program, kind, module, task, action) in enumerate(rows):
+        if (program, module) != prev_mod:
+            trs.append(f'<tr class="mdr"><th class="ix md" colspan="2" scope="colgroup">'
+                       f'Module {module} · {escape(modules[(program, module)])}</th>'
+                       f'<td class="t-a"></td><td class="t-b"></td></tr>')
+            prev_mod = (program, module)
+
+        cells = []
+        if i in by_task:
+            jump = ' · '.join(f'<a href="#{make_task_id(t, kind, module, task)}">Track {t.upper()}</a>' for t in TRACKS)
+            cells.append(f'<th class="ix" scope="rowgroup" rowspan="{by_task[i]}"><strong>{kinds[kind]} {module}.{task}</strong><br>'
+                         f'{escape(titles[(kind, module, task)])}<br><small>{jump}</small></th>')
+        sid_a = make_snippet_id(make_task_id('a', kind, module, task), action)
+        sid_b = make_snippet_id(make_task_id('b', kind, module, task), action)
+        cells += [f'<th class="ix" scope="row">{escape(action)}</th>',
+                  f'<td class="t-a">{_snippet(sid_a, cfg)}</td>',
+                  f'<td class="t-b">{_snippet(sid_b, cfg)}</td>']
+        trs.append('<tr>' + ''.join(cells) + '</tr>')
+
+    return (f'<div class="cmp-wrap"><table class="cmp"><colgroup>{cols}</colgroup>'
+            f'{head}<tbody>{"".join(trs)}</tbody></table></div>')
+
+FIT_TIP = 'Tip: for the best fit, close the left and right menus, or zoom out with Ctrl/Cmd + minus.'
+
+def render_comparison(comparison, kinds, titles, modules, programs, cfg, widths):
+    parts = [COMPARISON_CSS]
+    for program, p_rows in groupby(comparison, key=itemgetter(0)):
+        name, url = programs[program]
+        parts.append(f'<p class="cmp-prog"><a href="{escape(url)}">{escape(name)}</a></p>')
+        parts.append(f'<p class="cmp-tip">{escape(FIT_TIP)}</p>')
+        parts.append(_comparison_table(list(p_rows), kinds, titles, modules, cfg, widths))
+    return ''.join(parts) + '<br><hr>'
 
 # code cells ..............................................................................................
 
 CODE_HEADER = """
-<a id='{cell_id}'></a>
-
+{anchors}
 <div class="bn t-{track}">
 <div class="bn-eb">Track {TRACK}</div>
-<h3>{title}</h3>
+<h3>{task_title}</h3>
 
 {report}
 
 </div>
 """
+
+class CellMeta(NamedTuple):
+    task_id:    str
+    task_title: str
+    path_out:   Path | None
+
+
+def get_cell_meta(track, kind, module, task, path_out_reports):
+    """
+    Cell metadata from the TASKS registry: task_id, task_title, path_out.
+    Note: raises KeyError for unregistered `title`: loud on purpose.
+    """
+    tid   = make_task_id(track, kind, module, task)
+    title = f'{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}'
+    return CellMeta(tid, title, path_out_reports.get(tid))
+
+
+def render_code_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
+    snippet_id = make_snippet_id(task_id, action)
+    anchors = (f"<a id='{task_id}'></a>" if is_first_action else '') + f"<a id='{snippet_id}'></a>"
+    display_markdown(CODE_HEADER.format(
+        anchors=anchors, track=track.lower(), TRACK=track.upper(),
+        action=action, task_title=task_title, report=report_text), raw=True)
 
 # appendix ................................................................................................
 
