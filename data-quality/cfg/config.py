@@ -65,6 +65,19 @@ COMPARISON = [   # (program, kind, module, task, action): keep each task's rows 
 _missing = {r[:4] for r in COMPARISON} - {r[:4] for r in TASKS}
 assert not _missing, f'COMPARISON refers to tasks missing from TASKS: {sorted(_missing)}'
 
+# code cells ..............................................................................................
+
+CODE_HEADER = """
+{anchors}
+<div class="bn t-{track}">
+<div class="bn-eb">Track {TRACK}</div>
+<h3>{task_title}</h3>
+
+{report}
+
+</div>
+"""
+
 # task 1.1 ................................................................................................
 
 MIN_AGE =  18
