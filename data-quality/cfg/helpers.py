@@ -7,7 +7,6 @@ from config   import *
 # --- libraries • standard ---
 import os
 import re
-from typing        import NamedTuple
 from rich.console  import Console
 from pathlib       import Path
 
@@ -138,31 +137,6 @@ def to_dt(df_col):
 
 def to_iso_dt(dt):
     return dt.strftime('%Y-%m-%d')
-
-
-# code cells ..............................................................................................
-
-class CellMeta(NamedTuple):
-    cell_id:    str
-    cell_title: str
-    path_out:   Path | None
-
-
-def get_cell_meta(track, kind, module, task, path_out_reports):
-    """
-    Cell metadata from the TASKS registry: cell_id, cell_title, path_out.
-    Note: raises KeyError for unregistered `title`: loud on purpose.
-    """
-    cid   = make_cell_id(track, kind, module, task)
-    title = f'{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}'
-    return CellMeta(cid, title, path_out_reports.get(cid))
-
-
-def render_code_cell(cell_id, title, report_text, code_header, track='a'):
-    display_markdown(code_header.format(
-        cell_id=cell_id, track=track.lower(), TRACK=track.upper(), title=title, report=report_text
-    ), raw=True)
-
 
 # Data Profiling ..............................................................................
 

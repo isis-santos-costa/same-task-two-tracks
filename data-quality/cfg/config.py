@@ -18,17 +18,28 @@ OUTPUT_EXT    = 'png'
 
 # toc & comparison ........................................................................................
 
-MODULES = {
-    1: 'Data Quality · Profiling & Tests'
+PROGRAMS = {   # key used in the registry -> (full name, link)
+    'Coursera': ('Data Quality Specialization · Coursera',
+                 'https://www.coursera.org/specializations/data-quality-analyst-validation-debugging-and-monitoring'),
+    # 'DataKitchen': ('Data Observability and Data Quality Testing Certification · DataKitchen',
+    #                 'https://datakitchen.io/certifications/data-observability-and-data-quality-testing/'),
 }
 
-TASKS = [   # (kind, module, task, title): the single source of truth, ordered by module
-    ('task',     1, 1, 'Profile a dataset and surface quality risks'),
-    ('task',     1, 2, 'Run validation checks and flag errors'),
-    ('task',     1, 3, 'Reconcile data across systems'),
-    ('job_task', 1, 1, 'Profile a dataset and surface quality risks'),
+MODULES = {
+    ('Coursera', 1): 'Data Quality · Profiling & Tests'
+}
+
+TASKS = [   # (program, kind, module, task, title): the single source of truth, ordered by program, module
+    ('Coursera', 'task',     1, 1, 'Profile a dataset and surface quality risks'),
+    ('Coursera', 'task',     1, 2, 'Run validation checks and flag errors'),
+    ('Coursera', 'task',     1, 3, 'Reconcile data across systems'),
+    ('Coursera', 'job_task', 1, 1, 'Profile a dataset and surface quality risks'),
 ]
-TITLES = {(k, m, t): title for k, m, t, title in TASKS}
+TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
+
+# guards: loud on purpose
+_ids = [(k, m, t) for _, k, m, t, _ in TASKS]
+assert len(_ids) == len(set(_ids)), 'Cell IDs must be unique across programs: give the newcomer its own kind'
 
 TASK_OUTPUT_FILES = {
     "1_1": "dq_audit_report.md",
@@ -39,19 +50,20 @@ KINDS  = {'task': 'Task', 'job_task': 'Job Task'}
 
 # comparison ..............................................................................................
 
-WIDTHS = dict(task=12, action=8, spec=10, a=35, b=35)  # preferred share, %
+WIDTHS = dict(task=24, action=10, a=33, b=33)   # preferred share, %
 assert sum(WIDTHS.values()) == 100
 
-COMPARISON = [   # (kind, module, task, action, specifier)
-    ('task',     1, 1, 'Data Profiling', ''),
-    ('task',     1, 1, 'Data Test',      'Rule 01'),
-    ('task',     1, 1, 'Data Test',      'Rule 02'),
-    ('task',     1, 2, 'Placeholder action', ''),
-    ('job_task', 1, 1, 'Placeholder action', ''),
+COMPARISON = [   # (program, kind, module, task, action): keep each task's rows together
+    ('Coursera', 'task',     1, 1, 'Data Profiling'),
+    ('Coursera', 'task',     1, 1, 'Data Tests'),
+    ('Coursera', 'task',     1, 2, 'Placeholder action'),
+    ('Coursera', 'job_task', 1, 1, 'Data Profiling'),
+    ('Coursera', 'job_task', 1, 1, 'Data Tests'),
 ]
 
-_missing = {r[:3] for r in COMPARISON} - set(TITLES)
-assert not _missing, f'COMPARISON refer to tasks missing from TASKS: {sorted(_missing)}'
+# guards: loud on purpose
+_missing = {r[:4] for r in COMPARISON} - {r[:4] for r in TASKS}
+assert not _missing, f'COMPARISON refers to tasks missing from TASKS: {sorted(_missing)}'
 
 # task 1.1 ................................................................................................
 
