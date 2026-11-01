@@ -7,6 +7,7 @@ from config   import *
 # --- libraries • standard ---
 import os
 import re
+import inspect
 from typing        import NamedTuple
 from rich.console  import Console
 from pathlib       import Path
@@ -65,12 +66,25 @@ def style_table(df, track, index=False, caption=None):
             f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
 
 
-def get_code_from_eval(eval_fn):
-    if hasattr(eval_fn, '__code__'):
-        code = eval_fn.__code__.co_name
-    else:
-        code = 'lambda'
-    return code
+def get_eval_code(eval_fn):
+  """
+  Extract the code string from an eval function or lambda.
+  Cleans up dictionary keys and multiline wrappers.
+  """
+  try:
+    lines, _ = inspect.getsourcelines(eval_fn)
+    full_source = ''.join(lines).strip()
+
+    lambda_idx = full_source.find('lambda')
+    if lambda_idx != -1:
+      colon_idx = full_source.find(':', lambda_idx)
+      if colon_idx != -1:
+        expr = full_source[colon_idx + 1 :]
+        return expr.strip().rstrip(',')
+
+    return full_source
+  except (TypeError, OSError):
+    return 'lambda'
 
 
 def display_txt_as_md(file_path):
