@@ -7,7 +7,6 @@ from identity import *
 import re
 import ast
 import sys
-from typing    import NamedTuple
 from operator  import itemgetter
 from itertools import groupby
 from html      import escape
@@ -108,22 +107,17 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
 .cmp pre{width:0;min-width:100%;margin:.5em 0 0;max-height:420px;overflow:auto;
          font:.92em/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .cmp img{max-width:100%;height:auto;border-radius:6px}
+.cmp .out{margin-top:.5em;max-height:460px;overflow:auto}
 
 </style>"""
 
 
 def _snippet(sid, cfg):
-    f = cfg['path'] / f'{sid}.py'
-    if f.exists():
-        code  = f.read_text().rstrip()
-        n     = sum(1 for l in code.splitlines() if l.strip() and not l.strip().startswith('#'))
-        label = f'Code · {n} lines'
-        body  = f'<pre><code>{escape(code)}</code></pre>'
-        out   = f'<img loading="lazy" src="{cfg["repo_raw"]}/outputs/{sid}.{cfg["ext"]}" alt="Output of {sid}">'
-    else:
-        label, body, out = 'Code', '<pre><code>[Code]</code></pre>', '[Output]'
-    return (f'<details><summary>{label}</summary>{body}</details>'
-            f'<details><summary>Output</summary>{out}</details>')
+    f, o = cfg['snippets'] / f'{sid}.py', cfg['outputs'] / f'{sid}.html'
+    code = escape(f.read_text(encoding='utf-8').rstrip()) if f.exists() else '[Code]'
+    out  = o.read_text(encoding='utf-8') if o.exists() else '[Output]'
+    return (f'<details><summary>Code</summary><pre><code>{code}</code></pre></details>'
+            f'<details><summary>Output</summary><div class="out">{out}</div></details>')
 
 
 def _group_sizes(rows, key):
