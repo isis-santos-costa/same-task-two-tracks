@@ -171,13 +171,13 @@ def get_cell_meta(track, kind, module, task, path_out_reports):
     return CellMeta(tid, title, path_out_reports.get(tid))
     
 
-def wrap_cell_up(task_id, task_title, action, report_text, track, is_first_action, path_out):
+def wrap_cell_up(task_id, task_title, action, report_text, track, is_first_action, path_out, dev_mode):
     """Display, save, and (in DEV_MODE) read from file"""
 
     render_cell(task_id, task_title, action, report_text, track, is_first_action)
     if path_out:
         save_to_md(report_text, path_out)
-    if DEV_MODE and path_out:
+    if dev_mode and path_out:
         display_txt_as_md(path_out)
         
     return
