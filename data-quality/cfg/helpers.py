@@ -169,9 +169,21 @@ def get_cell_meta(track, kind, module, task, path_out_reports):
     tid   = make_task_id(track, kind, module, task)
     title = f'{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}'
     return CellMeta(tid, title, path_out_reports.get(tid))
+    
+
+def wrap_cell_up(task_id, task_title, action, report_text, track, is_first_action, path_out):
+    """Display, save, and (in DEV_MODE) read from file"""
+
+    render_cell(task_id, task_title, action, report_text, track, is_first_action)
+    if path_out:
+        save_to_md(report_text, path_out)
+    if DEV_MODE and path_out:
+        display_txt_as_md(path_out)
+        
+    return
 
 
-def render_code_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
+def render_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
     snippet_id = make_snippet_id(task_id, action)
     anchors = (f"<a id='{task_id}'></a>" if is_first_action else '') + f"<a id='{snippet_id}'></a>"
     display_markdown(CODE_HEADER.format(
@@ -348,8 +360,8 @@ def get_dq_tests_report(dq_tests_df):
 
     df_eval     = dq_tests_df.reset_index()
     col_mapping = {c.lower().strip(): c for c in df_eval.columns}
-    res_col     = col_mapping.get(    "result", df_eval.columns[1])
-    class_col   = col_mapping.get("test class", df_eval.columns[-2] if len(df_eval.columns) > 2 else df_eval.columns[0])
+    res_col     = col_mapping.get("test result", df_eval.columns[1])
+    class_col   = col_mapping.get("test class" , df_eval.columns[-2] if len(df_eval.columns) > 2 else df_eval.columns[0])
     total_tests = len(df_eval)
     
     failed_mask = df_eval[res_col].astype(str).str.contains("Fail", case=False, na=False)
@@ -386,7 +398,7 @@ Each test actively monitors critical quality risks, such as **entity integrity**
 Resolving these any failures found ensures that downstream summaries, segmentation models, 
 and P&L calculations reflect true operational reality.
 
-Core finding: {status_str}
+{status_str}
 
 <br>
     """.strip()
