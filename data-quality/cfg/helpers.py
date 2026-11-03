@@ -24,7 +24,7 @@ from pandas.api.types import is_float_dtype   as is_float
 
 # overall .................................................................................................
 
-def style_table(df, track, index=False, caption=None):
+def style_table(df, track, index=False, caption=None, min_width=None):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -38,10 +38,15 @@ def style_table(df, track, index=False, caption=None):
     if caption:
         styler = styler.set_caption(caption)
 
-    fit   = [('overflow-wrap', 'anywhere'), ('white-space', 'normal')]
+    fit   = [('overflow-wrap', 'break-word'), ('white-space', 'normal')]
     body  =  ('tbody td'                   , 'tbody th'                   )
     zebra =  ('tbody tr:nth-child(even) td', 'tbody tr:nth-child(even) th')
     hover =  ('tbody tr:hover td'          , 'tbody tr:hover th'          )
+    base  = [('border-collapse', 'separate'), ('border-spacing', '0'), ('width', '100%'),
+            ('table-layout', 'auto'), ('font-family', FONT), ('font-size', 'clamp(10px, 2.4cqw, 13px)')]
+    
+    if min_width:
+        base.append(('min-width', min_width))
 
     styles = [
         {'selector': '', 'props': [('border-collapse', 'separate'), ('border-spacing',  '0'), ('width', '100%'),
@@ -169,17 +174,16 @@ def get_cell_meta(track, kind, module, task, path_out_reports):
     tid   = make_task_id(track, kind, module, task)
     title = f'{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}'
     return CellMeta(tid, title, path_out_reports.get(tid))
-    
 
-def wrap_cell_up(task_id, task_title, action, report_text, track, is_first_action, path_out, dev_mode):
-    """Display, save, and (in DEV_MODE) read from file"""
 
+def finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, dev_mode=False):
+    """Close a task cell: show the report, save it, and (in dev mode) read it back."""
     render_cell(task_id, task_title, action, report_text, track, is_first_action)
-    if path_out:
-        save_to_md(report_text, path_out)
-    if dev_mode and path_out:
+    if not path_out:
+        return
+    save_to_md(report_text, path_out)
+    if dev_mode:
         display_txt_as_md(path_out)
-        
     return
 
 
@@ -360,7 +364,7 @@ def get_dq_tests_report(dq_tests_df):
 
     df_eval     = dq_tests_df.reset_index()
     col_mapping = {c.lower().strip(): c for c in df_eval.columns}
-    res_col     = col_mapping.get("test result", df_eval.columns[1])
+    res_col     = next(c for c in df_eval.columns if 'test result' in c.lower())   # StopIteration if missing: loud on purpose
     class_col   = col_mapping.get("test class" , df_eval.columns[-2] if len(df_eval.columns) > 2 else df_eval.columns[0])
     total_tests = len(df_eval)
     
