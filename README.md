@@ -18,7 +18,7 @@ They are then shown side by side, code and outputs.
 ## Repository layout
 
 - `shared/`: Resources common to every workstream, building the Tracks comparison structure (`views.py`, `cell_recorder.py`)
-- `data-quality/`: Configuration, custom helpers, and cell info records (`config.py`, `helpers.py`, `snippets`, `outputs`)
+- `data-quality/`: Configuration, helpers, and cell records (`config.py`, `helpers.py`, `snippets`, `outputs`)
 
 ## Integration
 
