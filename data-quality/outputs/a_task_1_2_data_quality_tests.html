@@ -5,8 +5,8 @@
 <div class="t-a">
 <h3>Data Quality Tests</h3>
 <p><code>dq_tests</code></p>
-<div style="container-type:inline-size; overflow:auto; max-width:100%; border:1px solid #CBD5E1; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,.10); background:#F8FAFC;"><style type="text/css">
-#T_8de68  {
+<div style="container-type:inline-size; overflow:auto; max-width:100%; max-height:420px; border:1px solid #CBD5E1; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,.10); background:#F8FAFC;"><style type="text/css">
+#T_0118f  {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
@@ -14,16 +14,19 @@
   font-family: system-ui,-apple-system,'Segoe UI',sans-serif;
   font-size: clamp(10px, 2.4cqw, 13px);
 }
-#T_8de68 caption {
+#T_0118f caption {
   caption-side: top;
   text-align: left;
   padding: 0 0 .6em;
   color: #475569;
   font-weight: 600;
 }
-#T_8de68 thead th {
+#T_0118f thead th {
   background-color: #EEF2F7;
   color: #475569;
+  position: sticky;
+  top: 0;
+  z-index: 2;
   font-size: .85em;
   font-weight: 600;
   letter-spacing: .08em;
@@ -34,7 +37,7 @@
   overflow-wrap: break-word;
   white-space: normal;
 }
-#T_8de68 tbody td {
+#T_0118f tbody td {
   background-color: #F8FAFC;
   color: #1E293B;
   padding: .6em .9em;
@@ -43,7 +46,7 @@
   overflow-wrap: break-word;
   white-space: normal;
 }
-#T_8de68 tbody th {
+#T_0118f tbody th {
   background-color: #F8FAFC;
   color: #1E293B;
   padding: .6em .9em;
@@ -52,140 +55,113 @@
   overflow-wrap: break-word;
   white-space: normal;
 }
-#T_8de68 tbody tr:nth-child(even) td {
+#T_0118f tbody tr:nth-child(even) td {
   background-color: #F1F5F9;
 }
-#T_8de68 tbody tr:nth-child(even) th {
+#T_0118f tbody tr:nth-child(even) th {
   background-color: #F1F5F9;
 }
-#T_8de68 tbody tr:hover td {
+#T_0118f tbody tr:hover td {
   background-color: #E2E8F0;
 }
-#T_8de68 tbody tr:hover th {
+#T_0118f tbody tr:hover th {
   background-color: #E2E8F0;
+}
+#T_0118f tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  max-width: 11rem;
+  box-shadow: 1px 0 0 #E2E8F0;
+}
+#T_0118f thead th:first-child {
+  left: 0;
+  z-index: 4;
 }
 </style>
-<table id="T_8de68">
+<table id="T_0118f">
   <thead>
     <tr>
-      <th class="blank" >&nbsp;</th>
-      <th class="blank" >&nbsp;</th>
-      <th class="blank" >&nbsp;</th>
-      <th class="blank level0" >&nbsp;</th>
-      <th id="T_8de68_level0_col0" class="col_heading level0 col0" >Test result</th>
-      <th id="T_8de68_level0_col1" class="col_heading level0 col1" >Rows affected</th>
-      <th id="T_8de68_level0_col2" class="col_heading level0 col2" >% Affected</th>
-      <th id="T_8de68_level0_col3" class="col_heading level0 col3" >Details</th>
-      <th id="T_8de68_level0_col4" class="col_heading level0 col4" >Relevance</th>
-      <th id="T_8de68_level0_col5" class="col_heading level0 col5" >Test class</th>
-      <th id="T_8de68_level0_col6" class="col_heading level0 col6" >Test code</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >ID</th>
-      <th class="index_name level1" >Dimension</th>
-      <th class="index_name level2" >Field</th>
-      <th class="index_name level3" >Rule</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-      <th class="blank col2" >&nbsp;</th>
-      <th class="blank col3" >&nbsp;</th>
-      <th class="blank col4" >&nbsp;</th>
-      <th class="blank col5" >&nbsp;</th>
-      <th class="blank col6" >&nbsp;</th>
+      <th id="T_0118f_level0_col0" class="col_heading level0 col0" >Data Quality Test</th>
+      <th id="T_0118f_level0_col1" class="col_heading level0 col1" >Test result</th>
+      <th id="T_0118f_level0_col2" class="col_heading level0 col2" >Rows affected</th>
+      <th id="T_0118f_level0_col3" class="col_heading level0 col3" >% Affected</th>
+      <th id="T_0118f_level0_col4" class="col_heading level0 col4" >Details</th>
+      <th id="T_0118f_level0_col5" class="col_heading level0 col5" >Relevance</th>
+      <th id="T_0118f_level0_col6" class="col_heading level0 col6" >Test class</th>
+      <th id="T_0118f_level0_col7" class="col_heading level0 col7" >Test code</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_8de68_level0_row0" class="row_heading level0 row0" >Rule 01</th>
-      <th id="T_8de68_level1_row0" class="row_heading level1 row0" >Completeness</th>
-      <th id="T_8de68_level2_row0" class="row_heading level2 row0" >customer_id</th>
-      <th id="T_8de68_level3_row0" class="row_heading level3 row0" >Non-nullable</th>
-      <td id="T_8de68_row0_col0" class="data row0 col0" >❌ Failed</td>
-      <td id="T_8de68_row0_col1" class="data row0 col1" >1</td>
-      <td id="T_8de68_row0_col2" class="data row0 col2" >1.7%</td>
-      <td id="T_8de68_row0_col3" class="data row0 col3" >1 NULL value found: [nan]</td>
-      <td id="T_8de68_row0_col4" class="data row0 col4" >Entity integrity is crucial for cross-table analyses (JOIN).</td>
-      <td id="T_8de68_row0_col5" class="data row0 col5" >NULL</td>
-      <td id="T_8de68_row0_col6" class="data row0 col6" >},</td>
+      <td id="T_0118f_row0_col0" class="data row0 col0" >Rule 01 · Completeness · customer_id · Non-nullable</td>
+      <td id="T_0118f_row0_col1" class="data row0 col1" >❌ Failed</td>
+      <td id="T_0118f_row0_col2" class="data row0 col2" >1</td>
+      <td id="T_0118f_row0_col3" class="data row0 col3" >1.7%</td>
+      <td id="T_0118f_row0_col4" class="data row0 col4" >1 NULL value found: [nan]</td>
+      <td id="T_0118f_row0_col5" class="data row0 col5" >Entity integrity is crucial for cross-table analyses (JOIN).</td>
+      <td id="T_0118f_row0_col6" class="data row0 col6" >NULL</td>
+      <td id="T_0118f_row0_col7" class="data row0 col7" >df.loc[df['customer_id'].isna(), 'customer_id'].tolist()</td>
     </tr>
     <tr>
-      <th id="T_8de68_level0_row1" class="row_heading level0 row1" >Rule 02</th>
-      <th id="T_8de68_level1_row1" class="row_heading level1 row1" >Uniqueness</th>
-      <th id="T_8de68_level2_row1" class="row_heading level2 row1" >customer_id</th>
-      <th id="T_8de68_level3_row1" class="row_heading level3 row1" >Index</th>
-      <td id="T_8de68_row1_col0" class="data row1 col0" >❌ Failed</td>
-      <td id="T_8de68_row1_col1" class="data row1 col1" >2</td>
-      <td id="T_8de68_row1_col2" class="data row1 col2" >3.3%</td>
-      <td id="T_8de68_row1_col3" class="data row1 col3" >2 duplicate IDs found: ['03c72ba8-d605-4770-8a63-f881ffd0f9d5', '03c72ba8-d605-4770-8a63-f881ffd0f9d5']</td>
-      <td id="T_8de68_row1_col4" class="data row1 col4" >Entity integrity is crucial for cross-table analyses (JOIN).</td>
-      <td id="T_8de68_row1_col5" class="data row1 col5" >Uniques</td>
-      <td id="T_8de68_row1_col6" class="data row1 col6" >df.loc[~df['state'].isin(STATE_DOMAIN), 'state'].tolist()
-    }</td>
+      <td id="T_0118f_row1_col0" class="data row1 col0" >Rule 02 · Uniqueness · customer_id · Index</td>
+      <td id="T_0118f_row1_col1" class="data row1 col1" >❌ Failed</td>
+      <td id="T_0118f_row1_col2" class="data row1 col2" >2</td>
+      <td id="T_0118f_row1_col3" class="data row1 col3" >3.3%</td>
+      <td id="T_0118f_row1_col4" class="data row1 col4" >2 duplicate IDs found: ['03c72ba8-d605-4770-8a63-f881ffd0f9d5', '03c72ba8-d605-4770-8a63-f881ffd0f9d5']</td>
+      <td id="T_0118f_row1_col5" class="data row1 col5" >Entity integrity is crucial for cross-table analyses (JOIN).</td>
+      <td id="T_0118f_row1_col6" class="data row1 col6" >Uniques</td>
+      <td id="T_0118f_row1_col7" class="data row1 col7" >df[df['customer_id'].duplicated()]['customer_id'].tolist()</td>
     </tr>
     <tr>
-      <th id="T_8de68_level0_row2" class="row_heading level0 row2" >Rule 03</th>
-      <th id="T_8de68_level1_row2" class="row_heading level1 row2" >Validity</th>
-      <th id="T_8de68_level2_row2" class="row_heading level2 row2" >age</th>
-      <th id="T_8de68_level3_row2" class="row_heading level3 row2" >[18, 120]</th>
-      <td id="T_8de68_row2_col0" class="data row2 col0" >❌ Failed</td>
-      <td id="T_8de68_row2_col1" class="data row2 col1" >2</td>
-      <td id="T_8de68_row2_col2" class="data row2 col2" >3.3%</td>
-      <td id="T_8de68_row2_col3" class="data row2 col3" >2 out-of-range ages found: [-5, 150]</td>
-      <td id="T_8de68_row2_col4" class="data row2 col4" >Non-valid values can distort non-robust summarizing metrics, like the mean.</td>
-      <td id="T_8de68_row2_col5" class="data row2 col5" >Range</td>
-      <td id="T_8de68_row2_col6" class="data row2 col6" >"key"       : "r06"</td>
+      <td id="T_0118f_row2_col0" class="data row2 col0" >Rule 03 · Validity · age · [18, 120]</td>
+      <td id="T_0118f_row2_col1" class="data row2 col1" >❌ Failed</td>
+      <td id="T_0118f_row2_col2" class="data row2 col2" >2</td>
+      <td id="T_0118f_row2_col3" class="data row2 col3" >3.3%</td>
+      <td id="T_0118f_row2_col4" class="data row2 col4" >2 out-of-range ages found: [-5, 150]</td>
+      <td id="T_0118f_row2_col5" class="data row2 col5" >Non-valid values can distort non-robust summarizing metrics, like the mean.</td>
+      <td id="T_0118f_row2_col6" class="data row2 col6" >Range</td>
+      <td id="T_0118f_row2_col7" class="data row2 col7" >df.loc[df['age'] < MIN_AGE, 'age'].tolist() + df.loc[df['age'] > MAX_AGE, 'age'].tolist()</td>
     </tr>
     <tr>
-      <th id="T_8de68_level0_row3" class="row_heading level0 row3" >Rule 04</th>
-      <th id="T_8de68_level1_row3" class="row_heading level1 row3" >Validity</th>
-      <th id="T_8de68_level2_row3" class="row_heading level2 row3" >email</th>
-      <th id="T_8de68_level3_row3" class="row_heading level3 row3" >Must have an "@"</th>
-      <td id="T_8de68_row3_col0" class="data row3 col0" >❌ Failed</td>
-      <td id="T_8de68_row3_col1" class="data row3 col1" >1</td>
-      <td id="T_8de68_row3_col2" class="data row3 col2" >1.7%</td>
-      <td id="T_8de68_row3_col3" class="data row3 col3" >1 invalid email found: ['user_at_gmail.com']</td>
-      <td id="T_8de68_row3_col4" class="data row3 col4" >Email without an @ is not directly actionable via machine.</td>
-      <td id="T_8de68_row3_col5" class="data row3 col5" >String</td>
-      <td id="T_8de68_row3_col6" class="data row3 col6" >"key"       : "r07"</td>
+      <td id="T_0118f_row3_col0" class="data row3 col0" >Rule 04 · Validity · email · Must have an "@"</td>
+      <td id="T_0118f_row3_col1" class="data row3 col1" >❌ Failed</td>
+      <td id="T_0118f_row3_col2" class="data row3 col2" >1</td>
+      <td id="T_0118f_row3_col3" class="data row3 col3" >1.7%</td>
+      <td id="T_0118f_row3_col4" class="data row3 col4" >1 invalid email found: ['user_at_gmail.com']</td>
+      <td id="T_0118f_row3_col5" class="data row3 col5" >Email without an @ is not directly actionable via machine.</td>
+      <td id="T_0118f_row3_col6" class="data row3 col6" >String</td>
+      <td id="T_0118f_row3_col7" class="data row3 col7" >df.loc[~df['email'].str.contains('@'), 'email'].tolist()</td>
     </tr>
     <tr>
-      <th id="T_8de68_level0_row4" class="row_heading level0 row4" >Rule 05</th>
-      <th id="T_8de68_level1_row4" class="row_heading level1 row4" >Validity</th>
-      <th id="T_8de68_level2_row4" class="row_heading level2 row4" >state</th>
-      <th id="T_8de68_level3_row4" class="row_heading level3 row4" >Must be within domain</th>
-      <td id="T_8de68_row4_col0" class="data row4 col0" >❌ Failed</td>
-      <td id="T_8de68_row4_col1" class="data row4 col1" >8</td>
-      <td id="T_8de68_row4_col2" class="data row4 col2" >13.3%</td>
-      <td id="T_8de68_row4_col3" class="data row4 col3" >8 invalid states found: ['GU', 'XX', 'ZZ', 'GU', 'DC', 'PR', 'MP', 'FM']</td>
-      <td id="T_8de68_row4_col4" class="data row4 col4" >Valid category options are essential for accurate group reporting.</td>
-      <td id="T_8de68_row4_col5" class="data row4 col5" >Domain</td>
-      <td id="T_8de68_row4_col6" class="data row4 col6" >lambda</td>
+      <td id="T_0118f_row4_col0" class="data row4 col0" >Rule 05 · Validity · state · Must be within domain</td>
+      <td id="T_0118f_row4_col1" class="data row4 col1" >❌ Failed</td>
+      <td id="T_0118f_row4_col2" class="data row4 col2" >8</td>
+      <td id="T_0118f_row4_col3" class="data row4 col3" >13.3%</td>
+      <td id="T_0118f_row4_col4" class="data row4 col4" >8 invalid states found: ['GU', 'XX', 'ZZ', 'GU', 'DC', 'PR', 'MP', 'FM']</td>
+      <td id="T_0118f_row4_col5" class="data row4 col5" >Valid category options are essential for accurate group reporting.</td>
+      <td id="T_0118f_row4_col6" class="data row4 col6" >Domain</td>
+      <td id="T_0118f_row4_col7" class="data row4 col7" >df.loc[~df['state'].isin(STATE_DOMAIN), 'state'].tolist()</td>
     </tr>
     <tr>
-      <th id="T_8de68_level0_row5" class="row_heading level0 row5" >Rule 06</th>
-      <th id="T_8de68_level1_row5" class="row_heading level1 row5" >Validity</th>
-      <th id="T_8de68_level2_row5" class="row_heading level2 row5" >purchase_amount</th>
-      <th id="T_8de68_level3_row5" class="row_heading level3 row5" >Must be > 0</th>
-      <td id="T_8de68_row5_col0" class="data row5 col0" >❌ Failed</td>
-      <td id="T_8de68_row5_col1" class="data row5 col1" >1</td>
-      <td id="T_8de68_row5_col2" class="data row5 col2" >1.7%</td>
-      <td id="T_8de68_row5_col3" class="data row5 col3" >1 negative purchase found: [-50.0]</td>
-      <td id="T_8de68_row5_col4" class="data row5 col4" >Non-negative purchases are required for P&L accuracy.</td>
-      <td id="T_8de68_row5_col5" class="data row5 col5" >Non-negative</td>
-      <td id="T_8de68_row5_col6" class="data row5 col6" >lambda</td>
+      <td id="T_0118f_row5_col0" class="data row5 col0" >Rule 06 · Validity · purchase_amount · Must be > 0</td>
+      <td id="T_0118f_row5_col1" class="data row5 col1" >❌ Failed</td>
+      <td id="T_0118f_row5_col2" class="data row5 col2" >1</td>
+      <td id="T_0118f_row5_col3" class="data row5 col3" >1.7%</td>
+      <td id="T_0118f_row5_col4" class="data row5 col4" >1 negative purchase found: [-50.0]</td>
+      <td id="T_0118f_row5_col5" class="data row5 col5" >Non-negative purchases are required for P&L accuracy.</td>
+      <td id="T_0118f_row5_col6" class="data row5 col6" >Non-negative</td>
+      <td id="T_0118f_row5_col7" class="data row5 col7" >df.loc[df['purchase_amount'] < 0, 'purchase_amount'].tolist()</td>
     </tr>
     <tr>
-      <th id="T_8de68_level0_row6" class="row_heading level0 row6" >Rule 07</th>
-      <th id="T_8de68_level1_row6" class="row_heading level1 row6" >Validity</th>
-      <th id="T_8de68_level2_row6" class="row_heading level2 row6" >loyalty_tier</th>
-      <th id="T_8de68_level3_row6" class="row_heading level3 row6" >Must be within domain</th>
-      <td id="T_8de68_row6_col0" class="data row6 col0" >❌ Failed</td>
-      <td id="T_8de68_row6_col1" class="data row6 col1" >2</td>
-      <td id="T_8de68_row6_col2" class="data row6 col2" >3.3%</td>
-      <td id="T_8de68_row6_col3" class="data row6 col3" >2 invalid loyalty tiers found: ['bronze', 'Diamond']</td>
-      <td id="T_8de68_row6_col4" class="data row6 col4" >Valid category options are essential for accurate group reporting.</td>
-      <td id="T_8de68_row6_col5" class="data row6 col5" >Domain</td>
-      <td id="T_8de68_row6_col6" class="data row6 col6" >lambda</td>
+      <td id="T_0118f_row6_col0" class="data row6 col0" >Rule 07 · Validity · loyalty_tier · Must be within domain</td>
+      <td id="T_0118f_row6_col1" class="data row6 col1" >❌ Failed</td>
+      <td id="T_0118f_row6_col2" class="data row6 col2" >2</td>
+      <td id="T_0118f_row6_col3" class="data row6 col3" >3.3%</td>
+      <td id="T_0118f_row6_col4" class="data row6 col4" >2 invalid loyalty tiers found: ['bronze', 'Diamond']</td>
+      <td id="T_0118f_row6_col5" class="data row6 col5" >Valid category options are essential for accurate group reporting.</td>
+      <td id="T_0118f_row6_col6" class="data row6 col6" >Domain</td>
+      <td id="T_0118f_row6_col7" class="data row6 col7" >df.loc[~df['loyalty_tier'].isin(TIER_DOMAIN), 'loyalty_tier'].tolist()</td>
     </tr>
   </tbody>
 </table>
@@ -202,3 +178,24 @@ The overall quality of raw data is low, and warrants ample review.</p>
 <br>
 </div>
 </div>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+                                                <span style="font-weight: bold">Data Quality Tests</span>                                                 
+
+<span style="color: #008080; text-decoration-color: #008080; background-color: #000000; font-weight: bold">dq_tests</span>                                                                                                           
+
+
+
+<span style="font-weight: bold">Data Quality validation checks</span> were performed against <span style="font-weight: bold">7 rules</span>, assessing overall <span style="font-style: italic">accuracy</span>, <span style="font-style: italic">completeness</span>, and       
+<span style="font-style: italic">plausibility</span> of data according to defined domains. The test covers checks for the following classes: NULL, Uniques,
+Range, String, Domain, Non-negative.                                                                               
+
+Each test actively monitors critical quality risks, such as <span style="font-weight: bold">entity integrity</span> for cross-table joins, <span style="font-weight: bold">boundary </span>      
+<span style="font-weight: bold">constraints</span> for numerical metrics, and <span style="font-weight: bold">structural validity</span> for categorical domains. Resolving these any failures   
+found ensures that downstream summaries, segmentation models, and P&amp;L calculations reflect true operational        
+reality.                                                                                                           
+
+<span style="font-weight: bold">❌ All 7 tests failed (Total: 7).</span>                                                                                  
+The overall quality of raw data is low, and warrants ample review.                                                 
+
+
+</pre>
