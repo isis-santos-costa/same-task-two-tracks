@@ -84,7 +84,7 @@ def style_table(df, track, caption=None, min_width=None, max_height=None, sticky
             f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
 
 
-def get_eval_code(eval_fn):
+def get_code_from_eval(eval_fn):
   """
   Extract the code string from an eval function or lambda.
   Cleans up dictionary keys and multiline wrappers.
@@ -221,14 +221,14 @@ def render_cell(task_id, task_title, action, report_text, track='a', is_first_ac
 
 def get_data_profiling(df):
     
-    p_cols         = [col                          for col in df.columns]
-    p_non_nulls    = [df[col].notnull().sum()      for col in df.columns]
-    p_pct_null     = [f"{(1 - num / len(df)):.1%}" for num in p_non_nulls]
-    p_dtype        = [df[col].dtype                for col in df]
-    p_numcat       = [get_field_class     (df[col])    for col in df]
-    p_numcat_class = [get_field_subclass(df[col])    for col in df]
+    p_cols           = [col                          for col in df.columns]
+    p_non_null_cnt   = [df[col].notnull().sum()      for col in df.columns]
+    p_null_pct       = [f"{(1 - num / len(df)):.1%}" for num in p_non_null_cnt]
+    p_dtype          = [df[col].dtype                for col in df]
+    p_field_class    = [get_field_class   (df[col])  for col in df]
+    p_field_subclass = [get_field_subclass(df[col])  for col in df]
     
-    p_details = []
+    p_core_profile = []
     for col in df:
         txt = ''
         if get_field_class(df[col])=='num':
@@ -258,27 +258,49 @@ def get_data_profiling(df):
                 txt += str(df[col].value_counts().to_dict())
             else:
                 txt += 'error'
-        p_details.append(txt)
+        p_core_profile.append(txt)
     
-    profiling_df = pd.DataFrame(zip(
-          p_cols
-        , p_dtype
-        , p_numcat
-        , p_numcat_class
-        , p_non_nulls
-        , p_pct_null
-        , p_details
-    ), columns=[
-          'column_name'
-        , 'dtype'
-        , 'field_class'
-        , 'field_subclass'
-        , 'non_null_cnt'
-        , 'null_pct'
-        , 'Details'
-    ]).sort_values(by=['field_class', 'field_subclass']).reset_index(drop=True)
+    profiling_data = (
+        pd.DataFrame(
+            zip(
+                p_cols,
+                p_core_profile,
+                p_null_pct,
+                p_non_null_cnt,
+                p_field_subclass,
+                p_field_class,
+                p_dtype,
+            ),
+            columns=[
+                'column_name',
+                'core_profile',
+                'null_pct',
+                'non_null_cnt',
+                'field_subclass',
+                'field_class',
+                'dtype',
+            ],
+        )
+        .sort_values(
+            by=['field_class', 'field_subclass'],
+            ascending=False,
+        )
+        .reset_index(drop=True)
+    )
 
-    profiling_report = get_profiling_report(profiling_df)
+    profiling_report = get_profiling_report(profiling_data)
+    
+    profiling_df = profiling_data.rename(
+        columns={
+              'column_name'    : 'Column'
+            , 'core_profile'   : 'Core profile'
+            , 'null_pct'       : 'Null'
+            , 'non_null_cnt'   : 'nNulls'
+            , 'field_subclass' : 'Subclass'
+            , 'field_class'    : 'Class'
+            , 'dtype'          : 'dType'
+        }
+    )
 
     return profiling_df, profiling_report
 
@@ -387,7 +409,7 @@ def get_dq_tests_report(dq_tests_df):
 
     df_eval     = dq_tests_df.reset_index()
     col_mapping = {c.lower().strip(): c for c in df_eval.columns}
-    res_col   = _find_col(df_eval, 'test result')
+    res_col   = _find_col(df_eval, 'result')
     class_col = _find_col(df_eval, 'class')
     total_tests = len(df_eval)
     
@@ -433,6 +455,28 @@ and P&L calculations reflect true operational reality.
     return report_paragraph
 
 
+def get_dq_test_data(df, rules_config):
+    """One row per rule: evaluate the rule on df and describe the outcome."""
+    dq_test_data = []
+    for i, cfg in enumerate(rules_config, start=1):
+        bad_items = cfg['eval_fn'](df)
+        cnt, msg  = get_dq_test_findings(bad_items, cfg['noun'])
+        dq_test_data.append({
+              'ID'        : f"Rule {i:02d}"
+            , 'Dimension' : cfg['dim']
+            , 'Field'     : cfg['field']
+            , 'Rule'      : cfg['rule']
+            , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
+            , 'Affected'  : cnt
+            , '%'         : f'{cnt / len(df):.1%}'
+            , 'Details'   : msg
+            , 'Relevance' : cfg['relevance']
+            , 'Class'     : cfg['class']
+            , 'Code'      : get_code_from_eval(cfg['eval_fn'])
+        })
+    return dq_test_data
+
+
 def _find_col(df, keyword):
     """
     Find a column matching a specific keyword.
@@ -475,6 +519,6 @@ def build_dq_tests_labels(df):
     cols = ['ID', 'Dimension', 'Field', 'Rule']
     out = df.reset_index()
     out.insert(
-        0, 'Data Quality Test', out[cols].astype(str).agg(' · '.join, axis=1)
+        0, 'Test', out[cols].astype(str).agg(' · '.join, axis=1)
     )
     return out.drop(columns=cols)
