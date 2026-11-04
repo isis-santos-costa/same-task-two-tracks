@@ -26,12 +26,13 @@ from pandas.api.types import is_float_dtype   as is_float
 
 # overall .................................................................................................
 
-def style_table(df, track, index=False, caption=None, min_width=None, max_height=None, sticky_first_col=False):
+def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
     """
-    
+
+    index = False
     t = THEMES[track.lower()]
 
     styler = df.style
