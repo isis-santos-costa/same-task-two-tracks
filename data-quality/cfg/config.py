@@ -50,15 +50,17 @@ KINDS  = {'task': 'Task', 'job_task': 'Job Task'}
 
 # comparison ..............................................................................................
 
-WIDTHS = dict(task=24, action=10, a=33, b=33)   # preferred share, %
+WIDTHS = dict(task=12, action=10, a=39, b=39)   # preferred share, %
 assert sum(WIDTHS.values()) == 100
 
 COMPARISON = [   # (program, kind, module, task, action): keep each task's rows together
     ('Coursera', 'task',     1, 1, 'Data Profiling'),
-    ('Coursera', 'task',     1, 1, 'Data Tests'),
-    ('Coursera', 'task',     1, 2, 'Placeholder action'),
+    ('Coursera', 'task',     1, 1, 'Data Quality Tests'),
+    ('Coursera', 'task',     1, 2, 'Data Profiling'),
+    ('Coursera', 'task',     1, 2, 'Data Quality Tests'),
+    ('Coursera', 'task',     1, 3, 'Data Reconciliation'),
     ('Coursera', 'job_task', 1, 1, 'Data Profiling'),
-    ('Coursera', 'job_task', 1, 1, 'Data Tests'),
+    ('Coursera', 'job_task', 1, 1, 'Data Quality Tests'),
 ]
 
 # guards: loud on purpose

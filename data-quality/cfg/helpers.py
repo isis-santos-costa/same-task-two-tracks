@@ -8,6 +8,7 @@ from config   import *
 import os
 import re
 import inspect
+import zipfile
 from typing        import NamedTuple
 from rich.console  import Console
 from pathlib       import Path
@@ -17,6 +18,7 @@ import pandas as pd
 
 # --- libraries • display ---
 from rich.markdown    import Markdown
+from IPython.display  import FileLink
 from IPython.display  import display_markdown
 from pandas.api.types import is_numeric_dtype as is_num
 from pandas.api.types import is_integer_dtype as is_int
@@ -24,7 +26,7 @@ from pandas.api.types import is_float_dtype   as is_float
 
 # overall .................................................................................................
 
-def style_table(df, track, index=False, caption=None, min_width=None):
+def style_table(df, track, index=False, caption=None, min_width=None, max_height=None, sticky_first_col=False):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -55,6 +57,7 @@ def style_table(df, track, index=False, caption=None, min_width=None):
         {'selector': 'caption', 'props': [('caption-side', 'top'), ('text-align', 'left'), ('padding', '0 0 .6em'),
                                           ('color', t['head_fg']), ('font-weight', '600')]},
         {'selector': 'thead th', 'props': [('background-color', t['head_bg']), ('color', t['head_fg']),
+                                           ('position', 'sticky'), ('top', '0'), ('z-index', '2'),
                                            ('font-size', '.85em'), ('font-weight', '600'),
                                            ('letter-spacing', '.08em'), ('text-transform', 'uppercase'),
                                            ('text-align', 'left'), ('padding', '.8em .9em'),
@@ -66,8 +69,17 @@ def style_table(df, track, index=False, caption=None, min_width=None):
     styles += [{'selector': s, 'props': [('background-color', t['zebra'])]} for s in zebra]
     styles += [{'selector': s, 'props': [('background-color', t['hover'])]} for s in hover]
 
+    if sticky_first_col:
+        styles += [
+            {'selector': 'tbody td:first-child', 'props': [('position', 'sticky'), ('left', '0'), ('z-index', '1'),
+                                                           ('max-width', '11rem'), ('box-shadow', f"1px 0 0 {t['line']}")]},
+            {'selector': 'thead th:first-child', 'props': [('left', '0'), ('z-index', '4')]},
+        ]
+
     html = styler.set_table_styles(styles).to_html()
-    return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; border:1px solid {t["outer"]}; '
+    box  = f'max-height:{max_height}; ' if max_height else ''
+    
+    return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; {box}border:1px solid {t["outer"]}; '
             f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
 
 
@@ -157,6 +169,16 @@ def to_dt(df_col):
 
 def to_iso_dt(dt):
     return dt.strftime('%Y-%m-%d')
+
+
+def record_zip(root, name='recorded.zip'):
+    root = Path(root)
+    with zipfile.ZipFile(root / name, 'w', zipfile.ZIP_DEFLATED) as z:
+        for folder in ('snippets', 'outputs'):
+            for p in sorted((root / folder).rglob('*')):
+                if p.is_file():
+                    z.write(p, p.relative_to(root))
+    return FileLink(name)
 
 # code cells ..............................................................................................
 
@@ -364,8 +386,8 @@ def get_dq_tests_report(dq_tests_df):
 
     df_eval     = dq_tests_df.reset_index()
     col_mapping = {c.lower().strip(): c for c in df_eval.columns}
-    res_col     = next(c for c in df_eval.columns if 'test result' in c.lower())   # StopIteration if missing: loud on purpose
-    class_col   = col_mapping.get("test class" , df_eval.columns[-2] if len(df_eval.columns) > 2 else df_eval.columns[0])
+    res_col   = _find_col(df_eval, 'test result')
+    class_col = _find_col(df_eval, 'class')
     total_tests = len(df_eval)
     
     failed_mask = df_eval[res_col].astype(str).str.contains("Fail", case=False, na=False)
@@ -410,6 +432,14 @@ and P&L calculations reflect true operational reality.
     return report_paragraph
 
 
+def _find_col(df, keyword):
+    """
+    Find a column matching a specific keyword.
+    StopIteration if missing: loud on purpose.
+    """
+    return next(c for c in df.columns if keyword in c.lower())
+
+
 def get_dq_test_findings(items, noun='value'):
     """
     For each Data Quality test:
@@ -437,3 +467,13 @@ def get_rules_from_file(file_path, track='a', header_shift=3):
   normalized_text = re.sub(r'^(#{1,6})( .+$)', shift_header, formatted_text, flags=re.MULTILINE)
 
   return f'{TRACK_CSS}\n\n<div class="t-{track.lower()} card">\n\n{normalized_text.strip()}\n\n</div>\n'
+
+
+def build_dq_tests_labels(df):
+    """Combine index fields for UI convenience."""
+    cols = ['ID', 'Dimension', 'Field', 'Rule']
+    out = df.reset_index()
+    out.insert(
+        0, 'Data Quality Test', out[cols].astype(str).agg(' · '.join, axis=1)
+    )
+    return out.drop(columns=cols)

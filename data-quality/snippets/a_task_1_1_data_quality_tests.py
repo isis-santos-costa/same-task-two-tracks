@@ -50,7 +50,13 @@ dq_tests_df, dq_tests_report = get_dq_test_results(dq_tests)
 # report -------------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-dq_tests_table = style_table(dq_tests_df, track, index=True, min_width='44rem')
+dq_tests_table = style_table(
+    build_dq_tests_labels(dq_tests_df),
+    track,
+    min_width ='44rem',
+    max_height='420px',
+    sticky_first_col=True,
+)
 
 sections = [
       f'<div class="t-{track.lower()}">'
