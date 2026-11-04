@@ -62,15 +62,16 @@ def render_toc(tasks, kinds, modules):
 COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
     f'--ix-{k.replace("_", "-")}:{v};' for k, v in IX.items()
 ) + '}' + """
-.cmp-wrap{container-type:inline-size;overflow:auto;border:1px solid var(--ix-line);border-radius:10px;
+.cmp-wrap{max-height:85vh;container-type:inline-size;overflow:auto;border:1px solid var(--ix-line);border-radius:10px;
           box-shadow:0 1px 3px rgba(15,23,42,.10)}
-.cmp-wrap .cmp{table-layout:auto;border-collapse:separate;border-spacing:0;width:100%;
+.cmp-wrap .cmp{layout:fixed;min-width:40rem;border-collapse:separate;border-spacing:0;width:100%;
                font:clamp(10px,2.2cqw,13px)/1.45 system-ui,-apple-system,'Segoe UI',sans-serif}
 
 /* one baseline for every cell: beats the host notebook's th/td styles */
 .cmp-wrap .cmp :is(th,td){font:inherit;text-align:left;text-transform:none;letter-spacing:normal;vertical-align:top;
                           padding:.7em .9em;overflow-wrap:break-word;border-bottom:1px solid var(--ix-line)}
 .cmp-wrap .cmp thead th{font-size:.85em;font-weight:600;border-bottom-width:3px}
+.cmp-wrap .cmp thead th{position:sticky;top:0;z-index:3}
 
 /* dividers: Program (with Tip), Module */
 .cmp-tip{margin:0 0 10px;font:italic 12px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ix-muted)}
@@ -104,8 +105,8 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
 .cmp summary::before{content:'▸';display:inline-block;width:1em;transition:transform .15s}
 .cmp details[open]>summary{background:var(--rl);color:var(--bg)}
 .cmp details[open]>summary::before{transform:rotate(90deg)}
-.cmp pre{width:0;min-width:100%;margin:.5em 0 0;max-height:420px;overflow:auto;
-         font:.92em/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.cmp pre,.cmp pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important;
+                       font-size:10px!important;line-height:1.5!important}
 .cmp img{max-width:100%;height:auto;border-radius:6px}
 .cmp .out{margin-top:.5em;max-height:460px;overflow:auto}
 
@@ -140,7 +141,7 @@ def _comparison_table(rows, kinds, titles, modules, cfg, widths):
     for i, (program, kind, module, task, action) in enumerate(rows):
         if (program, module) != prev_mod:
             trs.append(f'<tr class="mdr"><th class="ix md" colspan="2" scope="colgroup">'
-                       f'Module {module} · {escape(modules[(program, module)])}</th>'
+                       f'<strong>Module {module}</strong><br><small>{escape(modules[(program, module)])}</small></th>'
                        f'<td class="t-a"></td><td class="t-b"></td></tr>')
             prev_mod = (program, module)
 
