@@ -141,7 +141,7 @@ def _comparison_table(rows, kinds, titles, modules, cfg, widths):
     for i, (program, kind, module, task, action) in enumerate(rows):
         if (program, module) != prev_mod:
             trs.append(f'<tr class="mdr"><th class="ix md" colspan="2" scope="colgroup">'
-                       f'<strong>Module {module}</strong><br><small>{escape(modules[(program, module)])}</small></th>'
+                       f'Module {module}<br><strong><small>{escape(modules[(program, module)])}</small></strong></th>'
                        f'<td class="t-a"></td><td class="t-b"></td></tr>')
             prev_mod = (program, module)
 

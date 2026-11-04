@@ -198,13 +198,13 @@ def get_cell_meta(track, kind, module, task, path_out_reports):
     return CellMeta(tid, title, path_out_reports.get(tid))
 
 
-def finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, dev_mode=False):
+def finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, dev_render_md=False):
     """Close a task cell: show the report, save it, and (in dev mode) read it back."""
     render_cell(task_id, task_title, action, report_text, track, is_first_action)
     if not path_out:
         return
     save_to_md(report_text, path_out)
-    if dev_mode:
+    if dev_render_md:
         display_txt_as_md(path_out)
     return
 
