@@ -17,9 +17,10 @@ They are then shown side by side, code and outputs.
 
 ## Repository layout
 
-- `shared/`: Resources common to every workstream, building the Tracks comparison structure (`views.py`, `cell_recorder.py`)
+- `shared/`: Common utilities for convenient side-by-side comparison of Tracks (`views.py`, `cell_recorder.py`)
 - `data-quality/`: Configuration, helpers, and cell records (`config.py`, `helpers.py`, `snippets`, `outputs`)
 
-## Integration
+## Notebook
 
-The Kaggle notebook clones this repo at a pinned commit or tag, for a stable execution of forks.
+The accompanying notebook to this repo demonstrates the Data Quality workstream (WIP).
+For stable and reproducible execution across all forks, it clones this repository at a pinned release tag.
