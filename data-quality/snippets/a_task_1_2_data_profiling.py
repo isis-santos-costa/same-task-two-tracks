@@ -10,6 +10,9 @@
 action = 'Data Profiling'
 is_first_action = True
 
+track, kind, module, task = 'A', 'task', 1, 2
+task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS)
+
 
 # initializing --------------------------------------------------------------------------------------------
 
@@ -72,9 +75,12 @@ dq_tests_df, dq_tests_report = get_dq_test_results(dq_tests)
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-raw_data_table, profiling_table = (
-              style_table(df, track, index=False),
-    style_table(profiling_df, track, index=False),
+profiling_table = style_table(
+    profiling_df, 
+    track,
+    min_width='44rem', 
+    max_height='360px',
+    sticky_first_col=True,
 )
 
 sections = [
@@ -88,5 +94,5 @@ sections = [
 
 report_text = "\n\n".join(sections)
 
-# display, save, and (in DEV_MODE) read from file .........................................................
-finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, DEV_MODE)
+# display, save, and (if flag in ON) read from file .........................................................
+finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, DEV.render_md)

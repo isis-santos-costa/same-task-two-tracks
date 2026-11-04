@@ -26,7 +26,13 @@ df = pd.read_csv(PATH_IN_T_1_1_DATA)
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-reconciliation_table = style_table(reconciliation_df, track, index=False)
+reconciliation_table = style_table(
+    reconciliation_df, 
+    track,
+    min_width='44rem', 
+    max_height='360px',
+    sticky_first_col=True,
+)
 
 sections = [
       f'<div class="t-{track.lower()}">'
@@ -56,5 +62,5 @@ sections = [
 report_text = "\n\n".join(sections)
 
 
-# display, save, and (in DEV_MODE) read from file .........................................................
-finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, DEV_MODE)
+# display, save, and (if flag in ON) read from file .........................................................
+finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, DEV.render_md)

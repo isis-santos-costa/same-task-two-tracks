@@ -18,11 +18,20 @@
 action = 'Data Profiling'
 is_first_action = True
 
+track, kind, module, task = 'A', 'job_task', 1, 1
+task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS)
+
 
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-profiling_table = style_table(profiling_df, track, index=False)
+profiling_table = style_table(
+    profiling_df, 
+    track,
+    min_width='44rem', 
+    max_height='360px',
+    sticky_first_col=True,
+)
 
 sections = [
       f'<div class="t-{track.lower()}">'
@@ -35,5 +44,5 @@ sections = [
 
 report_text = "\n\n".join(sections)
 
-# display, save, and (in DEV_MODE) read from file .........................................................
-finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, DEV_MODE)
+# display, save, and (if flag in ON) read from file .........................................................
+finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, DEV.render_md)
