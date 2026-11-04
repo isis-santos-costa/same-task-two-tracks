@@ -4,8 +4,7 @@
 from identity import TRACKS
 
 # --- libraries: standard ---
-from dataclasses import dataclass
-from pathlib     import Path
+from pathlib import Path
 
 # overall .................................................................................................
 
@@ -16,14 +15,6 @@ reports = {}
 
 PATH_SNIPPETS = Path('snippets')
 OUTPUT_EXT    = 'png'
-
-@dataclass
-class DevFlags:
-	use_main_branch : bool = False
-	export_zip      : bool = False
-	render_md       : bool = False
-
-DEV = DevFlags()
 
 # toc & comparison ........................................................................................
 
