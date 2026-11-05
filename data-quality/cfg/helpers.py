@@ -308,16 +308,7 @@ def get_data_profiling(df):
         }
     )
 
-    profiling_legend = """
-<p style="color: #666; font-size: 0.85em; margin-top: 4px; font-family: monospace;">
-    <b>Legend:</b> 
-    Null:   null percentage &bull; 
-    nNulls: non-null count &bull; 
-    num:    numerical &bull; 
-    cat:    categorical &bull; 
-    dtype:  data type
-</p>
-"""
+    profiling_legend = build_legend(PROFILING_LEGEND)
 
     return profiling_df, profiling_legend, profiling_report
 
@@ -415,13 +406,7 @@ def get_dq_test_results(dq_tests):
     dq_tests_df.set_index(['ID', 'Dimension', 'Field', 'Rule'], inplace=True)
     dq_tests_report = get_dq_tests_report(dq_tests_df)
 
-    dq_tests_legend = """
-<p style="color: #666; font-size: 0.85em; margin-top: 4px; font-family: monospace;">
-    <b>Legend:</b> 
-    Affected: number of rows affected &bull; 
-    %:    percentage of rows affected &bull; 
-</p>
-"""
+    dq_tests_legend = build_legend(DQ_TESTS_LEGEND)
     
     return dq_tests_df, dq_tests_legend, dq_tests_report
     
