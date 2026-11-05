@@ -26,7 +26,7 @@ from pandas.api.types import is_float_dtype   as is_float
 
 # overall .................................................................................................
 
-def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False):
+def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -76,6 +76,9 @@ def style_table(df, track, caption=None, min_width=None, max_height=None, sticky
                                                            ('max-width', '11rem'), ('box-shadow', f"1px 0 0 {t['line']}")]},
             {'selector': 'thead th:first-child', 'props': [('left', '0'), ('z-index', '4')]},
         ]
+
+    if bold_first_col:
+        styles += [{'selector': 'tbody td:first-child, tbody th:first-child', 'props': [('font-weight', '700')]}]
 
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
