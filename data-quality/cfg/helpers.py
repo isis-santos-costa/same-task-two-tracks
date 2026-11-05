@@ -32,7 +32,7 @@ def style_table(df, track, caption=None, min_width=None, max_height=None, sticky
     Always fits: wraps text, scales the font, scrolls as a last resort.
     """
 
-    index = False
+    index = False if len(df) <= 10 else True
     t = THEMES[track.lower()]
 
     styler = df.style
