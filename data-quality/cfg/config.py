@@ -16,13 +16,18 @@ reports = {}
 PATH_SNIPPETS = Path('snippets')
 OUTPUT_EXT    = 'png'
 
+PROFILING_LEGEND = {'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
+                    'cat': 'categorical', 'dtype': 'data type'}
+
+DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
+
 # toc & comparison ........................................................................................
 
 PROGRAMS = {   # key used in the registry -> (full name, link)
     'Coursera': ('Data Quality Specialization · Coursera',
                  'https://www.coursera.org/specializations/data-quality-analyst-validation-debugging-and-monitoring'),
-    # 'DataKitchen': ('Data Observability and Data Quality Testing Certification · DataKitchen',
-    #                 'https://datakitchen.io/certifications/data-observability-and-data-quality-testing/'),
+    'DataKitchen': ('Data Observability and Data Quality Testing Certification · DataKitchen',
+                    'https://datakitchen.io/certifications/data-observability-and-data-quality-testing/'),
 }
 
 MODULES = {
