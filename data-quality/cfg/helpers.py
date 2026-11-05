@@ -181,6 +181,12 @@ def record_zip(root, name='recorded.zip'):
                     z.write(p, p.relative_to(root))
     return FileLink(name)
 
+
+def build_legend(items):
+    """items: {term: meaning} -> one themed legend line."""
+    body = ' · '.join(f'<b>{k}</b>: {v}' for k, v in items.items())
+    return f'<p class="legend"><b>Legend</b> · {body}</p>'
+
 # code cells ..............................................................................................
 
 class CellMeta(NamedTuple):
@@ -232,22 +238,22 @@ def get_data_profiling(df):
     for col in df:
         txt = ''
         if get_field_class(df[col])=='num':
-            txt = 'mean-q0-25-50-75-100: '
+            txt = '[mean]-q0-25-50-75-100: '
             try:
                 
                 # date
                 if is_date(df[col]):
                     avg       = to_iso_dt(to_dt(df[col]).mean())
                     quantiles = to_iso_dt(to_dt(to_dt(df[col]).quantile(CORE_DISTRIBUTION)).dt).tolist()
-                    txt += str([avg] + quantiles)
+                    txt += str([[avg]] + quantiles)
     
                 # int
                 elif is_int(df[col]):
-                    txt += str([int(df[col].mean())] + df[col].quantile(CORE_DISTRIBUTION).astype(int).tolist())
+                    txt += str([[int(df[col].mean())]] + df[col].quantile(CORE_DISTRIBUTION).astype(int).tolist())
     
                 # float
                 elif is_float(df[col]):
-                    txt += str([float(round(df[col].mean(), 2))] + df[col].quantile(CORE_DISTRIBUTION).round(2).tolist())
+                    txt += str([[float(round(df[col].mean(), 2))]] + df[col].quantile(CORE_DISTRIBUTION).round(2).tolist())
             except Exception:
                 txt += 'error'
         else:
@@ -302,7 +308,18 @@ def get_data_profiling(df):
         }
     )
 
-    return profiling_df, profiling_report
+    profiling_legend = """
+<p style="color: #666; font-size: 0.85em; margin-top: 4px; font-family: monospace;">
+    <b>Legend:</b> 
+    Null:   null percentage &bull; 
+    nNulls: non-null count &bull; 
+    num:    numerical &bull; 
+    cat:    categorical &bull; 
+    dtype:  data type
+</p>
+"""
+
+    return profiling_df, profiling_legend, profiling_report
 
 
 def get_profiling_report(df):
@@ -397,8 +414,16 @@ def get_dq_test_results(dq_tests):
     dq_tests_df = pd.DataFrame(dq_tests)
     dq_tests_df.set_index(['ID', 'Dimension', 'Field', 'Rule'], inplace=True)
     dq_tests_report = get_dq_tests_report(dq_tests_df)
+
+    dq_tests_legend = """
+<p style="color: #666; font-size: 0.85em; margin-top: 4px; font-family: monospace;">
+    <b>Legend:</b> 
+    Affected: number of rows affected &bull; 
+    %:    percentage of rows affected &bull; 
+</p>
+"""
     
-    return dq_tests_df, dq_tests_report
+    return dq_tests_df, dq_tests_legend, dq_tests_report
     
     
 def get_dq_tests_report(dq_tests_df):
