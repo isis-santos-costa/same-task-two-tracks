@@ -17,38 +17,29 @@ task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OU
 
 # Data Profiling ------------------------------------------------------------------------------------------
 
-profiling_data, profiling_report = get_data_profiling(df)
-
-profiling_df = profiling_data.rename(
-    columns={
-          'column_name'    : 'Column'
-        , 'dtype'          : 'Data type'
-        , 'field_class'    : 'Field class'
-        , 'field_subclass' : 'Field subclass'
-        , 'non_null_cnt'   : 'Non-nulls'
-        , 'null_pct'       : '% Null'
-        , 'details'        : 'Details'
-    }
-)
+profiling = use('get_data_profiling', 1)(df)
 
 
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-profiling_table = style_table(
-    profiling_df, 
+profiling_styled = style_table(
+    profiling.table, 
     track,
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
+    right_cols=('Mean', 'Median', 'Min', 'Max'),
 )
 
 sections = [
       f'<div class="t-{track.lower()}">'
     , f"\n### {action}"
-    , "`customer_data_profiling`"
-    , profiling_table
-    , profiling_report
+    , "`customer_data_profile`"
+    , profiling_styled
+    , profiling.legend
+    , profiling.report
+    , profiling.see_also
     , '</div>'
 ]
 

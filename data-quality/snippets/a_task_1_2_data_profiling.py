@@ -21,74 +21,29 @@ df = pd.read_csv(PATH_IN_T_1_1_DATA)
 
 # Data Profiling ------------------------------------------------------------------------------------------
 
-profiling_data, profiling_report = get_data_profiling(df)
-
-profiling_df = profiling_data.rename(
-    columns={
-          'column_name'    : 'Column'
-        , 'dtype'          : 'Data type'
-        , 'field_class'    : 'Field class'
-        , 'field_subclass' : 'Field subclass'
-        , 'non_null_cnt'   : 'Non-nulls'
-        , 'null_pct'       : '% Null'
-        , 'details'        : 'Details'
-    }
-)
-
-
-# Data Quality Tests --------------------------------------------------------------------------------------
-
-dq_tests = []
-failed_row_cnt = {}
-failed_row_pct = {}
-test_results   = {}
-result_details = {}
-
-for i, cfg in enumerate(RULES_CONFIG, start=1):
-    
-    k = cfg['key']
-    bad_items = cfg['eval_fn'](df)
-    cnt, msg  = get_dq_test_findings(bad_items, cfg['noun'])
-    
-    failed_row_cnt[k] = cnt
-    result_details[k] = msg
-    test_results  [k] = '✅ Passed' if cnt == 0 else '❌ Failed'
-    failed_row_pct[k] = f'{failed_row_cnt[k] / len(df):.1%}'
-    
-    dq_tests.append({
-            'ID'            : f"Rule {i:02d}"
-          , 'Dimension'     : cfg['dim']
-          , 'Field'         : cfg['field']
-          , 'Rule'          : cfg['rule']
-          , 'Test result'   : test_results  [k]
-          , 'Rows affected' : failed_row_cnt[k]
-          , '% Affected'    : failed_row_pct[k]
-          , 'Details'       : result_details[k]
-          , 'Relevance'     : cfg['relevance']
-          , 'Test class'    : cfg['class']
-          , 'Test code'     : get_eval_code(cfg['eval_fn'])
-      })
-
-dq_tests_df, dq_tests_report = get_dq_test_results(dq_tests)
+profiling = use('get_data_profiling', 2)(df)
 
 
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-profiling_table = style_table(
-    profiling_df, 
+profiling_styled = style_table(
+    profiling.table, 
     track,
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
+    right_cols=('Core profile', 'Null', 'nNulls'),
 )
 
 sections = [
       f'<div class="t-{track.lower()}">'
     , f"\n### {action}"
-    , "`customer_data_profiling`"
-    , profiling_table
-    , profiling_report
+    , "`customer_data_profile`"
+    , profiling_styled
+    , profiling.legend
+    , profiling.report
+    , profiling.see_also
     , '</div>'
 ]
 

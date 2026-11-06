@@ -16,38 +16,8 @@ task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OU
 
 # Data Quality Tests --------------------------------------------------------------------------------------
 
-dq_tests = []
-failed_row_cnt = {}
-failed_row_pct = {}
-test_results   = {}
-result_details = {}
-
-for i, cfg in enumerate(RULES_CONFIG, start=1):
-    
-    k = cfg['key']
-    bad_items = cfg['eval_fn'](df)
-    cnt, msg  = get_dq_test_findings(bad_items, cfg['noun'])
-    
-    failed_row_cnt[k] = cnt
-    result_details[k] = msg
-    test_results  [k] = '✅ Passed' if cnt == 0 else '❌ Failed'
-    failed_row_pct[k] = f'{failed_row_cnt[k] / len(df):.1%}'
-    
-    dq_tests.append({
-            'ID'            : f"Rule {i:02d}"
-          , 'Dimension'     : cfg['dim']
-          , 'Field'         : cfg['field']
-          , 'Rule'          : cfg['rule']
-          , 'Test result'   : test_results  [k]
-          , 'Rows affected' : failed_row_cnt[k]
-          , '% Affected'    : failed_row_pct[k]
-          , 'Details'       : result_details[k]
-          , 'Relevance'     : cfg['relevance']
-          , 'Test class'    : cfg['class']
-          , 'Test code'     : get_eval_code(cfg['eval_fn'])
-      })
-
-dq_tests_df, dq_tests_report = get_dq_test_results(dq_tests)
+dq_tests_data = get_dq_test_data(df, RULES_CONFIG)
+dq_tests_df, dq_tests_legend, dq_tests_report = get_dq_test_results(dq_tests_data)
 
 
 # report --------------------------------------------------------------------------------------------------
@@ -59,6 +29,7 @@ dq_tests_table = style_table(
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
+    bold_first_col=True,
 )
 
 sections = [
@@ -66,6 +37,7 @@ sections = [
     , f"\n### {action}"
     , "`dq_tests`"
     , dq_tests_table
+    , dq_tests_legend
     , dq_tests_report
     , '</div>'
 ]

@@ -25,20 +25,23 @@ task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OU
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-profiling_table = style_table(
-    profiling_df, 
+profiling_styled = style_table(
+    profiling.table, 
     track,
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
+    right_cols=('Core profile', 'Null', 'nNulls'),
 )
 
 sections = [
       f'<div class="t-{track.lower()}">'
     , f"\n### {action}"
-    , "`airline_data_profiling`"
-    , profiling_table
-    , profiling_report
+    , "`customer_data_profile`"
+    , profiling_styled
+    , profiling.legend
+    , profiling.report
+    , profiling.see_also
     , '</div>'
 ]
 

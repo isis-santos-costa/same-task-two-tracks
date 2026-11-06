@@ -23,10 +23,38 @@ from IPython.display  import display_markdown
 from pandas.api.types import is_numeric_dtype as is_num
 from pandas.api.types import is_integer_dtype as is_int
 from pandas.api.types import is_float_dtype   as is_float
+from pandas.api.types import is_bool_dtype    as is_bool
+
+# authored functions versioning ...........................................................................
+
+_REGISTRY = {}
+
+def versioned(name, version):
+    def wrap(fn):
+        versions = _REGISTRY.setdefault(name, {})
+        assert DEV.allow_version_overwrite or version not in versions, f'{name} v{version} already registered'
+        versions[version] = fn
+        fn.__version__ = version
+        return fn
+    return wrap
+
+
+def use(name, version=None):
+    versions = _REGISTRY[name]
+    return versions[max(versions) if version is None else version]
+
+
+def build_see_also(name, current, function_title):
+    versions = VERSION_NOTES[name]
+    latest = max(versions)
+    if current == latest:
+        return ''
+    anchor, note = versions[latest]
+    return f'<p class="legend"><strong>See also · <a href="#{anchor}">{function_title} v{latest}</a></strong>, {note}.</p>'
 
 # overall .................................................................................................
 
-def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False):
+def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, right_cols=()):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -78,7 +106,20 @@ def style_table(df, track, caption=None, min_width=None, max_height=None, sticky
         ]
 
     if bold_first_col:
-        styles += [{'selector': 'tbody td:first-child, tbody th:first-child', 'props': [('font-weight', '700')]}]
+        styles += [{'selector': 'tbody td:first-child, tbody th:first-child', 'props': [('font-weight', '600')]}]
+
+    offset  = 1 if index else 0
+    visible = list(df.columns)
+
+    right = {c for c in df.columns if is_num(df[c]) and df[c].dtype != bool}
+    right |= set(right_cols)
+    
+    for name in right:
+        n = visible.index(name) + 1 + offset
+        styles += [
+            {'selector': f'thead th:nth-child({n})', 'props': [('text-align', 'right')]},
+            {'selector': f'tbody td:nth-child({n})', 'props': [('text-align', 'right')]},
+        ]
 
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
@@ -228,68 +269,67 @@ def render_cell(task_id, task_title, action, report_text, track='a', is_first_ac
 
 # Data Profiling ..............................................................................
 
-def get_data_profiling(df):
+class ProfilingResult(NamedTuple):
+    table    : object
+    legend   : str = ''
+    report   : str = ''
+    see_also : str = ''
+
+@versioned('get_data_profiling', 2)
+def get_data_profiling_v2(df):
     
-    p_cols           = [col                          for col in df.columns]
-    p_non_null_cnt   = [df[col].notnull().sum()      for col in df.columns]
-    p_null_pct       = [f"{(1 - num / len(df)):.1%}" for num in p_non_null_cnt]
-    p_dtype          = [df[col].dtype                for col in df]
-    p_field_class    = [get_field_class   (df[col])  for col in df]
-    p_field_subclass = [get_field_subclass(df[col])  for col in df]
+    field_class    = [use('get_field_class'   , 1)(df[col])  for col in df]
+    field_subclass = [use('get_field_subclass', 1)(df[col])  for col in df]
     
-    p_core_profile = []
-    for col in df:
+    column_name    = [col                                    for col in df.columns]
+    non_null_cnt   = [df[col].notnull().sum()                for col in df.columns]
+    null_pct       = [f"{(1 - num / len(df)):.1%}"           for num in non_null_cnt]
+    data_type      = [str(df[col].dtype)                     for col in df]
+    
+    core_profile = []
+
+    def _fmt_value(x, kind):
+        if kind == 'date':
+            return x.date().isoformat()
+        x = float(x)
+        if kind == 'int':
+            return int(x) if x.is_integer() else round(x, 1)
+        return round(x, 2)
+                
+    for i, col in enumerate(df):
         txt = ''
-        if get_field_class(df[col])=='num':
+        if field_class[i]=='num':
+            kind = 'date' if is_date(df[col]) else 'int' if is_int(df[col]) else 'float'
+            series = to_dt(df[col]) if kind == 'date' else df[col]
+            
             txt = '[mean]-q0-25-50-75-100: '
             try:
-                
-                # date
-                if is_date(df[col]):
-                    avg       = to_iso_dt(to_dt(df[col]).mean())
-                    quantiles = to_iso_dt(to_dt(to_dt(df[col]).quantile(CORE_DISTRIBUTION)).dt).tolist()
-                    txt += str([[avg]] + quantiles)
-    
-                # int
-                elif is_int(df[col]):
-                    txt += str([[int(df[col].mean())]] + df[col].quantile(CORE_DISTRIBUTION).astype(int).tolist())
-    
-                # float
-                elif is_float(df[col]):
-                    txt += str([[float(round(df[col].mean(), 2))]] + df[col].quantile(CORE_DISTRIBUTION).round(2).tolist())
-            except Exception:
-                txt += 'error'
+                mean      = _fmt_value(series.mean(), kind)
+                quantiles = [_fmt_value(q, kind) for q in series.quantile(CORE_DISTRIBUTION)]
+                txt += str([[mean]] + quantiles)
+            except Exception as e:
+                txt += f'error ({type(e).__name__})'
         else:
-            if get_field_subclass(df[col])=='high-cardinality':
+            if field_subclass[i]=='high-cardinality':
                 pct_unique = int(100.0 * df[col].nunique() / len(df[col]))
                 txt += f'% unique: {pct_unique}'
-            elif get_field_subclass(df[col])=='low-cardinality':
+            elif field_subclass[i]=='low-cardinality':
                 txt += str(df[col].value_counts().to_dict())
             else:
                 txt += 'error'
-        p_core_profile.append(txt)
+
+        core_profile.append(txt)
     
     profiling_data = (
-        pd.DataFrame(
-            zip(
-                p_cols,
-                p_core_profile,
-                p_null_pct,
-                p_non_null_cnt,
-                p_field_subclass,
-                p_field_class,
-                p_dtype,
-            ),
-            columns=[
-                'column_name',
-                'core_profile',
-                'null_pct',
-                'non_null_cnt',
-                'field_subclass',
-                'field_class',
-                'dtype',
-            ],
-        )
+        pd.DataFrame({
+            'column_name'    : column_name,
+            'core_profile'   : core_profile,
+            'null_pct'       : null_pct,
+            'non_null_cnt'   : non_null_cnt,
+            'field_subclass' : field_subclass,
+            'field_class'    : field_class,
+            'data_type'      : data_type,
+        })
         .sort_values(
             by=['field_class', 'field_subclass'],
             ascending=False,
@@ -307,13 +347,83 @@ def get_data_profiling(df):
             , 'non_null_cnt'   : 'nNulls'
             , 'field_subclass' : 'Subclass'
             , 'field_class'    : 'Class'
-            , 'dtype'          : 'dType'
+            , 'data_type'      : 'dType'
         }
     )
 
     profiling_legend = build_legend(PROFILING_LEGEND)
 
-    return profiling_df, profiling_legend, profiling_report
+    return ProfilingResult(
+        table  = profiling_df, 
+        legend = profiling_legend, 
+        report = profiling_report
+    )
+
+
+@versioned('get_data_profiling', 1)
+def get_data_profiling_v1(df):
+
+    total_rows = len(df)
+    
+    column_name  = list(df.columns)
+    non_null_cnt = [df[col].notnull().sum() for col in df]
+    null_pct     = [f"{(1 - cnt / total_rows):.1%}" if total_rows > 0 else "0.0%" for cnt in non_null_cnt]
+    data_type    = [str(df[col].dtype) for col in df]
+
+    p_mean   = [f"{df[col].mean():.1f}"   if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p_median = [f"{df[col].median():.1f}" if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p_min    = [f"{df[col].min():.1f}"    if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p_max    = [f"{df[col].max():.1f}"    if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    
+    profiling_data = (
+        pd.DataFrame(
+            zip(
+                column_name,
+                data_type,
+                null_pct,
+                non_null_cnt,
+                p_mean,
+                p_median,
+                p_min,
+                p_max,
+            ),
+            columns=[
+                'column_name',
+                'data_type',
+                'null_pct',
+                'non_null_cnt',
+                'mean',
+                'median',
+                'min',
+                'max',
+            ],
+        )
+        .sort_values(
+            by=['data_type', 'column_name'],
+            ascending=True,
+        )
+        .reset_index(drop=True)
+    )
+    
+    profiling_df = profiling_data.rename(
+        columns={
+              'column_name'    : 'Column'
+            , 'dtype'          : 'dType'
+            , 'null_pct'       : 'Null'
+            , 'non_null_cnt'   : 'nNulls'
+            , 'mean'           : 'Mean'
+            , 'median'         : 'Median'
+            , 'min'            : 'Min'
+            , 'max'            : 'Max'
+        }
+    )
+
+    see_also_note = build_see_also('get_data_profiling', 1, 'Data Profiling')
+
+    return ProfilingResult(
+        table    = profiling_df, 
+        see_also = see_also_note
+    )
 
 
 def get_profiling_report(df):
@@ -344,36 +454,25 @@ def get_profiling_report(df):
       "column_name"
     ].tolist()
     
-    high_str = "`" + "`, `".join(high_card_cols) + "`"
-    low_str  = "`" + "`, `".join( low_card_cols) + "`"
+    high_cardin_str = "`" + "`, `".join(high_card_cols) + "`"
+    low_cardin_str  = "`" + "`, `".join( low_card_cols) + "`"
     num_str  = "`" + "`, `".join(      num_cols) + "`"
     
-    report_paragraph = f"""
-<br>
-
-The Data Profiling reviewed **{total_records} customer records** to evaluate overall completeness and quality. 
-{completeness_text} 
-The evaluation shown in `Details` breaks down across three core field classifications: 
-high-cardinality identifiers, low-cardinality categories, and numerical metrics. 
-    
-For **high-cardinality fields** ({high_str}), uniqueness checks verify entity separation and identifier integrity. 
-Primary identifiers (IDs) are expected to be 100% unique. Business identifiers may tolerate a limited % of reuse, e.g., 
-phone number. There are also high-cardinality fields for which uniqueness is expected to be lower, like `state`.
-For **low-cardinality fields** ({low_str}), the analysis inspects categorical consistency, distribution, and balance. 
-For **numerical metrics** ({num_str}), the validation monitors the average and the core distribution for the field, 
-with q0, q100 being the min/max values, q50 the median, and q25, q75 the boundaries of the interquartile range. 
-This set of metrics enables the inspection of value ranges, distribution boundaries, 
-and anomaly detection to flag logical errors such as out-of-bound values or invalid dates. 
-
-<br>
-    """.strip()
+    report_paragraph = PROFILING_ANALYSIS_TEMPLATE.format(
+        total_records     = total_records,
+        completeness_text = completeness_text,
+        high_cardin_str   = high_cardin_str,
+        low_cardin_str    = low_cardin_str,
+        num_str           = num_str
+    ).strip()
     
     return report_paragraph
 
 
-def get_field_subclass(df_col):
+@versioned('get_field_subclass', 1)
+def get_field_subclass_v1(df_col):
     try:
-        if get_field_class(df_col)=='cat':
+        if use('get_field_class', 1)(df_col)=='cat':
             if df_col.nunique()<=LOW_CARDIN_THRESH:
                 field_subclass = 'low-cardinality'
             else:
@@ -387,7 +486,8 @@ def get_field_subclass(df_col):
         return 'unknown field_class'
 
 
-def get_field_class(df_col):
+@versioned('get_field_class', 1)
+def get_field_class_v1(df_col):
     if (not is_num(df_col) and not is_date(df_col)):
         field_class = 'cat'
     elif df_col.dtype=='bool':
@@ -449,21 +549,11 @@ The overall quality of raw data is mixed, and some fields require cleaning.
     except Exception:
        class_context = "Tests span completeness, uniqueness, and validity dimensions."
     
-    report_paragraph = f"""
-<br>
-    
-**Data Quality validation checks** were performed against **{total_tests} rules**, assessing overall _accuracy_, 
-_completeness_, and _plausibility_ of data according to defined domains. {class_context}   
-
-Each test actively monitors critical quality risks, such as **entity integrity** for cross-table joins, 
-**boundary constraints** for numerical metrics, and **structural validity** for categorical domains. 
-Resolving these any failures found ensures that downstream summaries, segmentation models, 
-and P&L calculations reflect true operational reality.
-
-{status_str}
-
-<br>
-    """.strip()
+    report_paragraph = AUDIT_ANALYSIS_TEMPLATE.format(
+        total_tests   = total_tests,
+        class_context = class_context,
+        status_str    = status_str,
+    ).strip()
     
     return report_paragraph
 
