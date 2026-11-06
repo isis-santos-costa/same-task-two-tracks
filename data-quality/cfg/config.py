@@ -107,6 +107,9 @@ CODE_HEADER = """
 
 # Data Profiling ..........................................................................................
 
+PROFILING_CLASS_ORDER    = ['num', 'cat']
+PROFILING_SUBCLASS_ORDER = ['integer', 'float', 'date', 'low-cardinality', 'high-cardinality']
+
 PROFILING_ANALYSIS_TEMPLATE = """
 <br>
 
