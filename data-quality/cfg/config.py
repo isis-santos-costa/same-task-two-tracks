@@ -21,6 +21,15 @@ PROFILING_LEGEND = {'Null': 'null percentage', 'nNulls': 'non-null count', 'num'
 
 DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
 
+# version registry for autored functions ..................................................................
+
+VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcases it, note)}
+    'get_data_profiling': {
+        1: ('a_task_1_1_data_profiling', 'baseline: dtype, mean, median, min, max, nulls, null %'),
+        2: ('a_task_1_2_data_profiling', 'with a « Core profile » tailored to column cardinality'),
+    },
+}
+
 # toc & comparison ........................................................................................
 
 PROGRAMS = {   # key used in the registry -> (full name, link)
@@ -42,7 +51,6 @@ TASKS = [   # (program, kind, module, task, title): the single source of truth, 
 ]
 TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
 
-# guards: loud on purpose
 _ids = [(k, m, t) for _, k, m, t, _ in TASKS]
 assert len(_ids) == len(set(_ids)), 'Cell IDs must be unique across programs: give the newcomer its own kind'
 
@@ -84,6 +92,46 @@ CODE_HEADER = """
 
 </div>
 """
+
+# Data Profiling ..........................................................................................
+
+PROFILING_ANALYSIS_TEMPLATE = """
+<br>
+
+The Data Profiling reviewed **{total_records} customer records** to evaluate overall completeness and quality. 
+{completeness_text} 
+The evaluation shown in `Details` breaks down across three core field classifications: 
+high-cardinality identifiers, low-cardinality categories, and numerical metrics. 
+    
+For **high-cardinality fields** ({high_cardin_str}), uniqueness checks verify entity separation and identifier integrity. 
+Primary identifiers (IDs) are expected to be 100% unique. Business identifiers may tolerate a limited % of reuse, e.g., 
+phone number. There are also high-cardinality fields for which uniqueness is expected to be lower, like `state`.
+For **low-cardinality fields** ({low_cardin_str}), the analysis inspects categorical consistency, distribution, and balance. 
+For **numerical metrics** ({num_str}), the validation monitors the average and the core distribution for the field, 
+with q0, q100 being the min/max values, q50 the median, and q25, q75 the boundaries of the interquartile range. 
+This set of metrics enables the inspection of value ranges, distribution boundaries, 
+and anomaly detection to flag logical errors such as out-of-bound values or invalid dates. 
+
+<br>
+    """
+
+# Data Quality Tests ......................................................................................
+
+AUDIT_ANALYSIS_TEMPLATE = """
+<br>
+    
+**Data Quality validation checks** were performed against **{total_tests} rules**, assessing overall _accuracy_, 
+_completeness_, and _plausibility_ of data according to defined domains. {class_context}   
+
+Each test actively monitors critical quality risks, such as **entity integrity** for cross-table joins, 
+**boundary constraints** for numerical metrics, and **structural validity** for categorical domains. 
+Resolving these any failures found ensures that downstream summaries, segmentation models, 
+and P&L calculations reflect true operational reality.
+
+{status_str}
+
+<br>
+    """
 
 # task 1.1 ................................................................................................
 
