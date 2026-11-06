@@ -64,7 +64,7 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
 ) + '}' + """
 .cmp-wrap{max-height:85vh;container-type:inline-size;overflow:auto;border:1px solid var(--ix-line);border-radius:10px;
           box-shadow:0 1px 3px rgba(15,23,42,.10)}
-.cmp-wrap .cmp{layout:fixed;min-width:40rem;border-collapse:separate;border-spacing:0;width:100%;
+.cmp-wrap .cmp{layout:fixed;min-width:56rem;border-collapse:separate;border-spacing:0;width:100%;
                font:clamp(10px,2.2cqw,13px)/1.45 system-ui,-apple-system,'Segoe UI',sans-serif}
 
 /* one baseline for every cell: beats the host notebook's th/td styles */
@@ -73,8 +73,10 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
 .cmp-wrap .cmp thead th{font-size:.85em;font-weight:600;border-bottom-width:3px}
 .cmp-wrap .cmp thead th{position:sticky;top:0;z-index:3}
 
-/* dividers: Program (with Tip), Module */
+/* dividers: Tip */
 .cmp-tip{margin:0 0 10px;font:italic 12px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ix-muted)}
+
+/* dividers: Program, Module */
 .cmp-prog{margin:18px 0 8px;font:600 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif}
 .cmp-prog a{color:var(--ix-link);text-decoration:none}
 .cmp-prog a:hover{text-decoration:underline}
@@ -110,6 +112,7 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
 .cmp img{max-width:100%;height:auto;border-radius:6px}
 .cmp .out{margin-top:.5em;max-height:460px;overflow:auto}
 
+
 </style>"""
 
 
@@ -122,7 +125,7 @@ def _snippet(sid, cfg):
 
 
 def _group_sizes(rows, key):
-    """{index of the is_first_action row of each group: group size}, for rowspans."""
+    """{index of the first row of each group: group size}, for rowspans."""
     sizes, i = {}, 0
     for _, grp in groupby(rows, key=key):
         n = sum(1 for _ in grp)
