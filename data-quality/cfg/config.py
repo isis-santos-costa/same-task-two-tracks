@@ -6,6 +6,19 @@ from identity import TRACKS
 # --- libraries: standard ---
 from pathlib import Path
 
+# development flags .......................................................................................
+
+from dataclasses import dataclass
+
+@dataclass
+class DevFlags:
+	allow_version_overwrite : bool = True
+	use_main_branch         : bool = True
+	export_zip              : bool = True
+	render_md               : bool = False
+
+DEV = DevFlags()
+
 # overall .................................................................................................
 
 LOW_CARDIN_THRESH = 10
