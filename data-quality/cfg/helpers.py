@@ -21,6 +21,7 @@ import pandas as pd
 from rich.markdown    import Markdown
 from IPython.display  import FileLink
 from IPython.display  import display_markdown
+from pandas.api.types import CategoricalDtype
 from pandas.api.types import is_numeric_dtype as is_num
 from pandas.api.types import is_integer_dtype as is_int
 from pandas.api.types import is_float_dtype   as is_float
@@ -249,6 +250,11 @@ def short_sha(repo_dir):
         raise RuntimeError(f'Cannot read commit from {repo_dir}: {e.stderr.strip()}') from e
     return result.stdout.strip()
 
+
+def sort_cat(col_name, cat_order):
+    """Sort categorical"""
+    return lambda df: df[col_name].astype(CategoricalDtype(categories=cat_order, ordered=True))
+
 # code cells ..............................................................................................
 
 class CellMeta(NamedTuple):
@@ -295,62 +301,97 @@ class ProfilingResult(NamedTuple):
 
 @versioned('get_data_profiling', 2)
 def get_data_profiling_v2(df):
-    
-    field_class    = [use('get_field_class'   , 1)(df[col])  for col in df]
-    field_subclass = [use('get_field_subclass', 1)(df[col])  for col in df]
-    
-    column_name    = [col                                    for col in df.columns]
-    non_null_cnt   = [df[col].notnull().sum()                for col in df.columns]
-    null_pct       = [f"{(1 - num / len(df)):.1%}"           for num in non_null_cnt]
-    data_type      = [str(df[col].dtype)                     for col in df]
-    
-    core_profile = []
 
-    def _fmt_value(x, kind):
+    
+    def _fmt_value(x, kind, is_pct=False):
+        if is_pct:
+            return f'{x:.0%}'
+        if kind == 'date':
+            return x.date().isoformat()
         if kind == 'date':
             return x.date().isoformat()
         x = float(x)
         if kind == 'int':
             return int(x) if x.is_integer() else round(x, 1)
         return round(x, 2)
-                
-    for i, col in enumerate(df):
+        
+
+    p = {
+        'column_name'    : [],
+        'core_profile'   : [],
+        'non_null_cnt'   : [],
+        'null_pct'       : [],
+        'field_subclass' : [],
+        'field_class'    : [],
+        'data_type'      : [],
+    }
+    
+    for c in df:
+        
+        non_null_cnt = df[c].notnull().sum()
+        
+        p['column_name']   .append(c)
+        p['non_null_cnt']  .append(non_null_cnt)
+        p['null_pct']      .append(f"{(1 - non_null_cnt / len(df)):.1%}")
+        p['field_subclass'].append(use('get_field_subclass', 1)(df[c]))
+        p['field_class']   .append(use('get_field_class'   , 1)(df[c]))
+        p['data_type']     .append(str(df[c].dtype))
+    
+    core_profile = []
+   
+    for col, f_class, f_subclass in zip(df.columns, p['field_class'], p['field_subclass']):
+        
         txt = ''
-        if field_class[i]=='num':
-            kind = 'date' if is_date(df[col]) else 'int' if is_int(df[col]) else 'float'
-            series = to_dt(df[col]) if kind == 'date' else df[col]
+        
+        if f_class == 'num':
             
-            txt = '[mean]-q0-25-50-75-100: '
+            is_dt  = is_date(df[col])
+            kind   = 'date' if is_dt else ('int' if is_int(df[col]) else 'float')
+            series = to_dt(df[col]) if is_dt else df[col]
+
+            prefix = ('[rcv]-' if not is_dt else '') + '[mean]-[q0-25-50-75-100]: '
+            
             try:
-                mean      = _fmt_value(series.mean(), kind)
+                mean_val  =  _fmt_value(series.mean(), kind)
                 quantiles = [_fmt_value(q, kind) for q in series.quantile(CORE_DISTRIBUTION)]
-                txt += str([[mean]] + quantiles)
+
+                if is_dt:
+                    payload = [[mean_val], quantiles]
+                    
+                else:
+                    iqr     = quantiles[3] - quantiles[1]
+                    median  = quantiles[2]
+                    rcv     = _fmt_value(3/4 * iqr / median, kind, is_pct=True)
+                    payload = [[rcv], [mean_val], quantiles]
+
+                txt = prefix + str(payload).replace("'", "")
+            
             except Exception as e:
                 txt += f'error ({type(e).__name__})'
+                
         else:
-            if field_subclass[i]=='high-cardinality':
+            if f_subclass == 'high-cardinality':
                 pct_unique = int(100.0 * df[col].nunique() / len(df[col]))
                 txt += f'% unique: {pct_unique}'
-            elif field_subclass[i]=='low-cardinality':
-                txt += str(df[col].value_counts().to_dict())
+                
+            elif f_subclass == 'low-cardinality':
+                freq_pct = (df[col].value_counts() / df[col].notnull().sum()).map(lambda x: f"{x:.0%}")
+                txt += str(freq_pct.to_dict()).replace("'", "")
+                
             else:
                 txt += 'error'
 
-        core_profile.append(txt)
+        p['core_profile'].append(txt)
     
     profiling_data = (
-        pd.DataFrame({
-            'column_name'    : column_name,
-            'core_profile'   : core_profile,
-            'null_pct'       : null_pct,
-            'non_null_cnt'   : non_null_cnt,
-            'field_subclass' : field_subclass,
-            'field_class'    : field_class,
-            'data_type'      : data_type,
-        })
+        pd.DataFrame(p)
         .sort_values(
             by=['field_class', 'field_subclass'],
             ascending=False,
+        )
+        .assign(
+            field_class   =sort_cat('field_class'   , PROFILING_CLASS_ORDER   ),
+            field_subclass=sort_cat('field_subclass', PROFILING_SUBCLASS_ORDER),
         )
         .reset_index(drop=True)
     )
@@ -361,8 +402,8 @@ def get_data_profiling_v2(df):
         columns={
               'column_name'    : 'Column'
             , 'core_profile'   : 'Core profile'
-            , 'null_pct'       : 'Null'
             , 'non_null_cnt'   : 'nNulls'
+            , 'null_pct'       : 'Null'
             , 'field_subclass' : 'Subclass'
             , 'field_class'    : 'Class'
             , 'data_type'      : 'dType'
