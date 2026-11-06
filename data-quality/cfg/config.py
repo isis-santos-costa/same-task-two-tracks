@@ -97,8 +97,8 @@ assert not _missing, f'COMPARISON refers to tasks missing from TASKS: {sorted(_m
 CODE_HEADER = """
 {anchors}
 <div class="bn t-{track}">
-<div class="bn-eb">Track {TRACK}</div>
-<h3>{task_title}</h3>
+<div class="bn-eb">Track {TRACK}{eyebrow_suffix}</div>
+{task_title}
 
 {report}
 
