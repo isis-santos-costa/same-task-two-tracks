@@ -239,9 +239,15 @@ def build_legend(items):
 
 
 def short_sha(repo_dir):
-    """Get identifier of Git comit in use."""
-    return subprocess.run(['git', '-C', str(repo_dir), 'rev-parse', '--short', 'HEAD'],
-                          capture_output=True, text=True).stdout.strip()
+    """Get identifier of Git commit in use."""
+    try:
+        result = subprocess.run(
+            ['git', '-C', str(repo_dir), 'rev-parse', '--short', 'HEAD'],
+            capture_output=True, text=True, check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f'Cannot read commit from {repo_dir}: {e.stderr.strip()}') from e
+    return result.stdout.strip()
 
 # code cells ..............................................................................................
 
