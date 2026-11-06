@@ -33,7 +33,7 @@ profiling_styled = style_table(
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
-    right_cols=('Core profile', 'Null', 'nNulls'),
+    right_cols=('Null', 'nNulls'),
 )
 
 sections = [
