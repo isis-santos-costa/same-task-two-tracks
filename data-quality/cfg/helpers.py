@@ -54,7 +54,7 @@ def build_see_also(name, current, function_title):
 
 # overall .................................................................................................
 
-def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, right_cols=()):
+def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, right_cols=(), nowrap_cols=()):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -120,6 +120,11 @@ def style_table(df, track, caption=None, min_width=None, max_height=None, sticky
             {'selector': f'thead th:nth-child({n})', 'props': [('text-align', 'right')]},
             {'selector': f'tbody td:nth-child({n})', 'props': [('text-align', 'right')]},
         ]
+
+    for name in nowrap_cols:
+        n = visible.index(name) + 1 + offset
+        styles += [{'selector': f'tbody td:nth-child({n})',
+                    'props': [('white-space', 'nowrap'), ('overflow-wrap', 'normal')]}]
 
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
