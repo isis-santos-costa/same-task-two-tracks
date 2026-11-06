@@ -263,7 +263,7 @@ class CellMeta(NamedTuple):
     path_out:   Path | None
 
 
-def get_cell_meta(track, kind, module, task, path_out_reports):
+def get_cell_meta(track, kind, module, task, path_out_reports, show_title=False):
     """
     Cell metadata from the TASKS registry: task_id, task_title, path_out.
     Note: raises KeyError for unregistered `title`: loud on purpose.
@@ -287,9 +287,10 @@ def finish_cell(task_id, task_title, action, report_text, track, is_first_action
 def render_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
     snippet_id = make_snippet_id(task_id, action)
     anchors = (f"<a id='{task_id}'></a>" if is_first_action else '') + f"<a id='{snippet_id}'></a>"
+    title_html = f'<h3>{task_title}</h3>' if show_title else ''
     display_markdown(CODE_HEADER.format(
         anchors=anchors, track=track.lower(), TRACK=track.upper(),
-        action=action, task_title=task_title, report=report_text), raw=True)
+        action=action, task_title=title_html, report=report_text), raw=True)
 
 # Data Profiling ..............................................................................
 
