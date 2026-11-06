@@ -9,6 +9,7 @@ import os
 import re
 import inspect
 import zipfile
+import subprocess
 from typing        import NamedTuple
 from rich.console  import Console
 from pathlib       import Path
@@ -235,6 +236,12 @@ def build_legend(items):
     """items: {term: meaning} -> one themed legend line."""
     body = ' · '.join(f'<b>{k}</b>: {v}' for k, v in items.items())
     return f'<p class="legend"><b>Legend</b> · {body}</p>'
+
+
+def short_sha(repo_dir):
+    """Get identifier of Git comit in use."""
+    return subprocess.run(['git', '-C', str(repo_dir), 'rev-parse', '--short', 'HEAD'],
+                          capture_output=True, text=True).stdout.strip()
 
 # code cells ..............................................................................................
 
