@@ -28,7 +28,7 @@ reports = {}
 PATH_SNIPPETS = Path('snippets')
 OUTPUT_EXT    = 'png'
 
-PROFILING_LEGEND = {'RCV': robust coefficient of variation, 'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
+PROFILING_LEGEND = {'RCV': 'robust coefficient of variation', 'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
                     'cat': 'categorical', 'dtype': 'data type'}
 
 DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
