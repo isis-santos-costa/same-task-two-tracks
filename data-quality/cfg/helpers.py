@@ -287,9 +287,12 @@ def finish_cell(task_id, task_title, action, report_text, track, is_first_action
 def render_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
     snippet_id = make_snippet_id(task_id, action)
     anchors = (f"<a id='{task_id}'></a>" if is_first_action else '') + f"<a id='{snippet_id}'></a>"
+    t = task_id.upper().split('_')
+    task_short = f"{t[1]} {'.'.join(t[2:])}"
+    eyebrow_suffix = f' · {task_short}' if not task_title else ''
     title_html = f'{task_title}'
     display_markdown(CODE_HEADER.format(
-        anchors=anchors, track=track.lower(), TRACK=track.upper(),
+        anchors=anchors, track=track.lower(), TRACK=track.upper(), eyebrow_suffix=eyebrow_suffix,
         action=action, task_title=title_html, report=report_text), raw=True)
 
 # Data Profiling ..............................................................................
