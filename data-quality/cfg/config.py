@@ -43,6 +43,10 @@ VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcas
         1: ('a_task_1_1_data_profiling', 'baseline: dtype, mean, median, min, max, nulls, null %'),
         2: ('a_task_1_2_data_profiling', 'with a « Core profile » tailored to column cardinality'),
     },
+    'get_data_profiling': {
+        1: ('a_task_1_1_data_quality_tests', 'baseline: test, result, affected, %, class, code'),
+        2: ('a_task_1_2_data_quality_tests', 'added with details and relevance'),
+    },
 }
 
 # toc & comparison ........................................................................................
