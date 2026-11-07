@@ -610,7 +610,7 @@ def get_dq_test_data_v2(df, rules_config):
             , 'Details'   : msg
             , 'Relevance' : cfg['relevance']
             , 'Class'     : cfg['class']
-            , 'Code'      : get_code_from_eval(cfg['eval_fn'])
+            , 'Core code' : get_code_from_eval(cfg['eval_fn'])
         })
     return dq_test_data
 
@@ -631,7 +631,7 @@ def get_dq_test_data_v1(df, rules_config):
             , 'Affected'  : cnt
             , '%'         : f'{cnt / len(df):.1%}'
             , 'Class'     : cfg['class']
-            , 'Code'      : get_code_from_eval(cfg['eval_fn'])
+            , 'Core code' : get_code_from_eval(cfg['eval_fn'])
         })
     return dq_test_data
 
