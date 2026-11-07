@@ -303,6 +303,7 @@ class ProfilingResult(NamedTuple):
     report   : str = ''
     see_also : str = ''
 
+
 @versioned('get_data_profiling', 2)
 def get_data_profiling_v2(df):
 
@@ -562,6 +563,13 @@ def get_field_class_v1(df_col):
 
 # Data Audit ..................................................................................
 
+class TestsResult(NamedTuple):
+    table    : object
+    legend   : str = ''
+    report   : str = ''
+    see_also : str = ''
+
+
 def get_dq_test_results(dq_tests):
     """
     For the full suite of Data Quality tests:
@@ -574,7 +582,71 @@ def get_dq_test_results(dq_tests):
 
     dq_tests_legend = build_legend(DQ_TESTS_LEGEND)
     
-    return dq_tests_df, dq_tests_legend, dq_tests_report
+    return TestsResult(
+        table  = dq_tests_df, 
+        legend = dq_tests_legend, 
+        report = dq_tests_report
+    )
+
+
+@versioned('get_dq_test_data', 2)
+def get_dq_test_data_v2(df, rules_config):
+    """
+    Evaluate df against Data Quality rules.
+    v2 Adds 'Details' and 'Relevance'
+    """
+    dq_test_data = []
+    for i, cfg in enumerate(rules_config, start=1):
+        bad_items = cfg['eval_fn'](df)
+        cnt, msg  = get_dq_test_findings(bad_items, cfg['noun'])
+        dq_test_data.append({
+              'ID'        : f"Rule {i:02d}"
+            , 'Dimension' : cfg['dim']
+            , 'Field'     : cfg['field']
+            , 'Rule'      : cfg['rule']
+            , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
+            , 'Affected'  : cnt
+            , '%'         : f'{cnt / len(df):.1%}'
+            , 'Details'   : msg
+            , 'Relevance' : cfg['relevance']
+            , 'Class'     : cfg['class']
+            , 'Code'      : get_code_from_eval(cfg['eval_fn'])
+        })
+    return dq_test_data
+
+
+@versioned('get_dq_test_data', 1)
+def get_dq_test_data_v1(df, rules_config):
+    """Evaluate df against Data Quality rules."""
+    dq_test_data = []
+    for i, cfg in enumerate(rules_config, start=1):
+        failed_dq_test_rows = cfg['eval_fn'](df)
+        cnt = len(failed_dq_test_rows)
+        dq_test_data.append({
+              'ID'        : f"Rule {i:02d}"
+            , 'Dimension' : cfg['dim']
+            , 'Field'     : cfg['field']
+            , 'Rule'      : cfg['rule']
+            , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
+            , 'Affected'  : cnt
+            , '%'         : f'{cnt / len(df):.1%}'
+            , 'Class'     : cfg['class']
+            , 'Code'      : get_code_from_eval(cfg['eval_fn'])
+        })
+    return dq_test_data
+
+
+def get_dq_test_findings(items, noun='value'):
+    """
+    For each Data Quality test:
+    Calculates count and returns a clean, pluralized detail string.
+    """
+    
+    cnt    = len(items)
+    plural = 's' if cnt > 1 else ''
+    msg    = f"{cnt} {noun}{plural} found: {items}" if cnt > 0 else 'All clean.'
+    
+    return cnt, msg
     
     
 def get_dq_tests_report(dq_tests_df):
@@ -621,47 +693,12 @@ The overall quality of raw data is mixed, and some fields require cleaning.
     return report_paragraph
 
 
-def get_dq_test_data(df, rules_config):
-    """One row per rule: evaluate the rule on df and describe the outcome."""
-    dq_test_data = []
-    for i, cfg in enumerate(rules_config, start=1):
-        bad_items = cfg['eval_fn'](df)
-        cnt, msg  = get_dq_test_findings(bad_items, cfg['noun'])
-        dq_test_data.append({
-              'ID'        : f"Rule {i:02d}"
-            , 'Dimension' : cfg['dim']
-            , 'Field'     : cfg['field']
-            , 'Rule'      : cfg['rule']
-            , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
-            , 'Affected'  : cnt
-            , '%'         : f'{cnt / len(df):.1%}'
-            , 'Details'   : msg
-            , 'Relevance' : cfg['relevance']
-            , 'Class'     : cfg['class']
-            , 'Code'      : get_code_from_eval(cfg['eval_fn'])
-        })
-    return dq_test_data
-
-
 def _find_col(df, keyword):
     """
     Find a column matching a specific keyword.
     StopIteration if missing: loud on purpose.
     """
     return next(c for c in df.columns if keyword in c.lower())
-
-
-def get_dq_test_findings(items, noun='value'):
-    """
-    For each Data Quality test:
-    Calculates count and returns a clean, pluralized detail string.
-    """
-    
-    cnt    = len(items)
-    plural = 's' if cnt > 1 else ''
-    msg    = f"{cnt} {noun}{plural} found: {items}" if cnt > 0 else 'All clean.'
-    
-    return cnt, msg
 
 
 def get_rules_from_file(file_path, track='a', header_shift=3):
