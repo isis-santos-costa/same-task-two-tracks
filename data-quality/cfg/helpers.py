@@ -304,8 +304,8 @@ class ProfilingResult(NamedTuple):
     see_also : str = ''
 
 
-@versioned('get_data_profiling', 2)
-def get_data_profiling_v2(df):
+@versioned('get_data_profile', 2)
+def get_data_profile_v2(df):
 
     
     def _fmt_value(x, kind, is_pct=False):
@@ -424,8 +424,8 @@ def get_data_profiling_v2(df):
     )
 
 
-@versioned('get_data_profiling', 1)
-def get_data_profiling_v1(df):
+@versioned('get_data_profile', 1)
+def get_data_profile_v1(df):
 
     total_rows = len(df)
     
@@ -482,7 +482,7 @@ def get_data_profiling_v1(df):
         }
     )
 
-    see_also_note = build_see_also('get_data_profiling', 1, 'Data Profiling')
+    see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
 
     return ProfilingResult(
         table    = profiling_df, 
@@ -589,8 +589,8 @@ def get_dq_test_results(dq_tests):
     )
 
 
-@versioned('get_dq_test_data', 2)
-def get_dq_test_data_v2(df, rules_config):
+@versioned('get_dq_tests_result', 2)
+def get_dq_tests_result_v2(df, rules_config):
     """
     Evaluate df against Data Quality rules.
     v2 Adds 'Details' and 'Relevance'
@@ -610,13 +610,13 @@ def get_dq_test_data_v2(df, rules_config):
             , 'Details'   : msg
             , 'Relevance' : cfg['relevance']
             , 'Class'     : cfg['class']
-            , 'Core code' : get_code_from_eval(cfg['eval_fn'])
+            , 'Code' : get_code_from_eval(cfg['eval_fn'])
         })
     return dq_test_data
 
 
-@versioned('get_dq_test_data', 1)
-def get_dq_test_data_v1(df, rules_config):
+@versioned('get_dq_tests_result', 1)
+def get_dq_tests_result_v1(df, rules_config):
     """Evaluate df against Data Quality rules."""
     dq_test_data = []
     for i, cfg in enumerate(rules_config, start=1):
@@ -631,7 +631,7 @@ def get_dq_test_data_v1(df, rules_config):
             , 'Affected'  : cnt
             , '%'         : f'{cnt / len(df):.1%}'
             , 'Class'     : cfg['class']
-            , 'Core code' : get_code_from_eval(cfg['eval_fn'])
+            , 'Code' : get_code_from_eval(cfg['eval_fn'])
         })
     return dq_test_data
 
