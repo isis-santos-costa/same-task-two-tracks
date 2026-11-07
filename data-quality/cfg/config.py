@@ -4,6 +4,7 @@
 from identity import TRACKS
 
 # --- libraries: standard ---
+import warnings
 from pathlib import Path
 
 # development flags .......................................................................................
@@ -32,6 +33,8 @@ PROFILING_LEGEND = {'RCV': 'robust coefficient of variation', 'Null': 'null perc
                     'cat': 'categorical', 'dtype': 'data type'}
 
 DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
+
+warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 # version registry for autored functions ..................................................................
 
