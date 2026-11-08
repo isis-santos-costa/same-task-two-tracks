@@ -120,19 +120,27 @@ PROFILING_SUBCLASS_ORDER = ['integer', 'float', 'date', 'low-cardinality', 'high
 PROFILING_ANALYSIS_TEMPLATE = """
 <br>
 
-The Data Profiling reviewed **{total_records} customer records** to evaluate overall completeness and quality. 
-{completeness_text} 
-The evaluation shown in `Details` breaks down across three core field classifications: 
-high-cardinality identifiers, low-cardinality categories, and numerical metrics. 
-    
-For **high-cardinality fields** ({high_cardin_str}), uniqueness checks verify entity separation and identifier integrity. 
+The Data Profiling reviewed **{total_records} customer records** on completeness and quality. 
+{completeness_text}  
+
+`Core profile` summarizes each field by its class:  
+ 
+* For **numerical** fields ({num_str}), the `Core profile` monitors a robust coefficient of variation, the average, 
+and the core distribution for the field, 
+with q0, q100 being the min/max values, q50 the median, and q25, q75 the boundaries of the interquartile range.   
+
+* For **low-cardinality** fields ({low_cardin_str}), with up to {low_cardin_thresh} categories, 
+the `Core profile` presents values count,  
+from which it is possible to evaluate its consistency, distribution, and balance.  
+
+* For **high-cardinality** fields ({high_cardin_str}), the `Core profile` is given by uniqueness, 
+which informs on the distinctiveness across entities and on identifier integrity. 
 Primary identifiers (IDs) are expected to be 100% unique. Business identifiers may tolerate a limited % of reuse, e.g., 
-phone number. There are also high-cardinality fields for which uniqueness is expected to be lower, like `state`.
-For **low-cardinality fields** ({low_cardin_str}), the analysis inspects categorical consistency, distribution, and balance. 
-For **numerical metrics** ({num_str}), the validation monitors the average and the core distribution for the field, 
-with q0, q100 being the min/max values, q50 the median, and q25, q75 the boundaries of the interquartile range. 
+phone number. There are also high-cardinality fields for which uniqueness is expected to be lower, like state. 
+
 This set of metrics enables the inspection of value ranges, distribution boundaries, 
 and anomaly detection to flag logical errors such as out-of-bound values or invalid dates. 
+Distributions of the numerical fields follow.  
 
 <br>
     """
