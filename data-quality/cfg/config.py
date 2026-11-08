@@ -41,7 +41,8 @@ warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcases it, note)}
     'get_data_profile': {
         1: ('a_task_1_1_data_profiling', 'baseline: dtype, mean, median, min, max, nulls, null %'),
-        2: ('a_task_1_2_data_profiling', 'with a « Core profile » tailored to column cardinality'),
+        2: ('a_task_1_2_data_profiling', 'with a « Core profile » tailored to column field type'),
+        3: ('a_job_task_1_1_data_profiling', 'with the « Core profile » monitoring outliers'),
     },
     'get_dq_tests_result': {
         1: ('a_task_1_1_data_quality_tests', 'baseline: test, result, affected, %, class, code'),
@@ -121,7 +122,10 @@ PROFILING_ANALYSIS_TEMPLATE = """
 <br>
 
 The Data Profiling reviewed **{total_records} customer records** on completeness and quality. 
-{completeness_text}  
+{completeness_text} {outlier_text}
+    """
+
+PROFILING_ANALYSIS_TEMPLATE_HELP = """
 
 `Core profile` summarizes each field by its class:  
  
