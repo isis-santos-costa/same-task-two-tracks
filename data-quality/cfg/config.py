@@ -29,8 +29,11 @@ reports = {}
 PATH_SNIPPETS = Path('snippets')
 OUTPUT_EXT    = 'png'
 
-PROFILE_LEGEND = {'RCV': 'robust coefficient of variation', 'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
-                    'cat': 'categorical', 'dtype': 'data type'}
+PROFILE_LEGEND = {
+    'RCV': 'robust coefficient of variation <a href="#ref-3">[1]</a>',
+    'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
+    'cat': 'categorical', 'dtype': 'data type'
+}
 
 DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
 
@@ -125,28 +128,24 @@ The Data Profiling reviewed **{total_records} customer records** on completeness
 {completeness_text} {outlier_text}
     """
 
-PROFILE_ANALYSIS_TEMPLATE_HELP = """
+PROFILE_ANALYSIS_HELP_TEMPLATE = """
 
-`Core profile` summarizes each field by its class:  
+`Core profile` boils down field information by class:  
  
-* For **numerical** fields ({num_str}), the `Core profile` shows the robust coefficient of variation (`rcv`:
-the interquartile range over the median, scaled by 3/4 <sup>[[1]](#ref-1)</sup>),
-the outliers (`out`: values beyond 1.5×IQR from the
-quartiles, with their counts, or `none`), the average, and the core distribution, with q0 and q100 being the
-min/max values, q50 the median, and q25 and q75 the boundaries of the interquartile range.
+* For **numerical** fields ({num_str}), it informs on central tendency and dispersion via core distribution
+(min/max: q0/100, median: q50, interquartile ends: q25/75), average, and—for **non-date fields**—outliers range and count,
+plus, in the Data Profiling v3+, a robust coefficient of variation [[1]](#ref-3).
 
-* For **low-cardinality** fields ({low_cardin_str}), with up to {low_cardin_thresh} categories, 
-the `Core profile` presents values count,  
-from which it is possible to evaluate its consistency, distribution, and balance.  
+* For **low-cardinality** fields ({low_cardin_str})—with up to {low_cardin_thresh} categories—
+it breaks down the values count for each category, shedding light onto consistency, distribution, and balance.  
 
 * For **high-cardinality** fields ({high_cardin_str}), the `Core profile` is given by uniqueness, 
-which informs on the distinctiveness across entities and on identifier integrity. 
+as a measure of distinctiveness across entities and of identifier integrity. 
 Primary identifiers (IDs) are expected to be 100% unique. Business identifiers may tolerate a limited % of reuse, e.g., 
 phone number. There are also high-cardinality fields for which uniqueness is expected to be lower, like state. 
 
-This set of metrics enables the inspection of value ranges, distribution boundaries, 
-and anomaly detection to flag logical errors such as out-of-bound values or invalid dates. 
-Distributions of the numerical fields follow.  
+The `Core profile` supports anomaly detection such as out-of-bound values or invalid ages or dates.  
+The following numerical field distributions complement this.
 
 <br>
     """
