@@ -259,6 +259,12 @@ def sort_cat(col_name, cat_order):
     """Sort categorical"""
     return lambda df: df[col_name].astype(CategoricalDtype(categories=cat_order, ordered=True))
 
+
+def get_clean_dict(d):
+    """Return a dictionary without string quotation marks on keys."""
+    content = ", ".join(f"{k}: {v}" for k, v in d.items())
+    return f"{{{content}}}"
+
 # code cells ..............................................................................................
 
 class CellMeta(NamedTuple):
@@ -756,6 +762,22 @@ def get_distributions_html(df, track, show_box_plot=False, max_per_row=6):
     if show_box_plot:
         html += make_rows([make_img(c, draw_box) for c in cols])
     return html
+
+
+def get_missing_summary(df, target_col, group_col, top_n=LOW_CARDIN_THRESH):
+    """Compute sorted missingness percentage for a dimension as a dictionary."""
+    summary = (
+        df[target_col]
+        .isna()
+        .groupby(df[group_col])
+        .mean()
+        .mul(100)
+        .round(2)
+        .sort_values(ascending=False)
+    )
+    if top_n:
+        summary = summary.head(top_n)
+    return get_clean_dict(summary.to_dict())
 
 
 # Data Quality Tests ..........................................................................
