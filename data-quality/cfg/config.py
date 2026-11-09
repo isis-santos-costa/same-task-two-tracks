@@ -45,7 +45,7 @@ VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcas
     'get_data_profile': {
         1: ('a_task_1_1_data_profiling', 'baseline: dtype, mean, median, min, max, nulls, null %'),
         2: ('a_task_1_2_data_profiling', 'with a « Core profile » tailored to column field type'),
-        3: ('a_job_task_1_1_data_profiling', 'with the « Core profile » monitoring outliers'),
+        3: ('a_job_task_1_1_data_profiling', 'with an extended « Core profile » monitoring outliers'),
     },
     'get_dq_tests_result': {
         1: ('a_task_1_1_data_quality_tests', 'baseline: test, result, affected, %, class, code'),
