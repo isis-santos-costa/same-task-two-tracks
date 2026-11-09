@@ -309,6 +309,8 @@ class ProfileResult(NamedTuple):
     report_help   : str = ''
 
 
+# --- versions ---
+
 @versioned('get_data_profile', 1)
 def get_data_profile_v1(df):
 
@@ -618,6 +620,8 @@ def get_data_profile_v3(df):
     )
 
 
+# --- helpers ---
+
 def get_profile_report(df):
     
     total_records = int(df['non_null_cnt'].max())
@@ -759,30 +763,66 @@ def get_distributions_html(df, track, show_box_plot=False, max_per_row=6):
 class TestsResult(NamedTuple):
     table    : object
     legend   : str = ''
-    see_also : str = ''
     report   : str = ''
-
-
-def get_dq_test_results(dq_tests):
-    """
-    For the full suite of Data Quality tests:
-    Returns a summary df and a report.
-    """
+    see_also : str = ''
     
-    dq_tests_df = pd.DataFrame(dq_tests)
-    dq_tests_df.set_index(['ID', 'Dimension', 'Field', 'Rule'], inplace=True)
-    dq_tests_report = get_dq_tests_report(dq_tests_df)
 
-    dq_tests_legend = build_legend(DQ_TESTS_LEGEND)
+# --- rules ---
 
-    # see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
-    
+def get_rules_from_file(file_path, track='a', header_shift=3):
+  """
+  Reads the Rules Markdown file, normalizes headings, restores rule-level line breaks,
+  and wraps it in a card themed by the track.
+  """
+  text_content   = read_from_md(file_path)
+  formatted_text = re.sub(r'(?=\bR\d{2}_)', '\n', text_content)
+
+  def shift_header(match):
+    return '#' * (len(match.group(1)) + header_shift) + match.group(2)
+
+  normalized_text = re.sub(r'^(#{1,6})( .+$)', shift_header, formatted_text, flags=re.MULTILINE)
+
+  return f'{TRACK_CSS}\n\n<div class="t-{track.lower()} card">\n\n{normalized_text.strip()}\n\n</div>\n'
+
+
+# --- orchestrator ---
+
+def get_dq_tests(df, rules_config, version=None):
+    """Entry point: run the rules with the chosen version and package the result."""
+    name      = 'get_dq_tests_result'
+    rows      = use(name, version)(df, rules_config)
+    shown     = version or max(_REGISTRY[name])
+    table     = pd.DataFrame(rows).set_index(['ID', 'Dimension', 'Field', 'Rule'])
     return TestsResult(
-        table  = dq_tests_df, 
-        legend = dq_tests_legend, 
-        report = dq_tests_report
+        table    = table,
+        legend   = build_legend(DQ_TESTS_LEGEND),
+        report   = get_dq_tests_report(table),
+        see_also = build_see_also(name, shown, 'Data Quality Tests'),
     )
 
+
+# def get_dq_test_results(dq_tests):
+#     """
+#     For the full suite of Data Quality tests:
+#     Returns a summary df and a report.
+#     """
+    
+#     dq_tests_df = pd.DataFrame(dq_tests)
+#     dq_tests_df.set_index(['ID', 'Dimension', 'Field', 'Rule'], inplace=True)
+#     dq_tests_report = get_dq_tests_report(dq_tests_df)
+
+#     dq_tests_legend = build_legend(DQ_TESTS_LEGEND)
+
+#     # see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
+    
+#     return TestsResult(
+#         table  = dq_tests_df, 
+#         legend = dq_tests_legend, 
+#         report = dq_tests_report
+#     )
+
+
+# --- versions ---
 
 @versioned('get_dq_tests_result', 1)
 def get_dq_tests_result_v1(df, rules_config):
@@ -823,27 +863,16 @@ def get_dq_tests_result_v2(df, rules_config):
             , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
             , 'Affected'  : cnt
             , '%'         : f'{cnt / len(df):.1%}'
-            , 'Details'   : msg
-            , 'Relevance' : cfg['relevance']
             , 'Class'     : cfg['class']
             , 'Code' : get_code_from_eval(cfg['eval_fn'])
+            , 'Details'   : msg
+            , 'Relevance' : cfg['relevance']
         })
     return dq_test_data
+    
 
+# --- report ---
 
-def get_dq_test_findings(items, noun='value'):
-    """
-    For each Data Quality test:
-    Calculates count and returns a clean, pluralized detail string.
-    """
-    
-    cnt    = len(items)
-    plural = 's' if cnt > 1 else ''
-    msg    = f"{cnt} {noun}{plural} found: {items}" if cnt > 0 else 'All clean.'
-    
-    return cnt, msg
-    
-    
 def get_dq_tests_report(dq_tests_df):
     """
     Generates a dynamic narrative summary from the Data Quality tests DataFrame,
@@ -851,7 +880,7 @@ def get_dq_tests_report(dq_tests_df):
     """
 
     df_eval     = dq_tests_df.reset_index()
-    col_mapping = {c.lower().strip(): c for c in df_eval.columns}
+    # col_mapping = {c.lower().strip(): c for c in df_eval.columns}
     res_col   = _find_col(df_eval, 'result')
     class_col = _find_col(df_eval, 'class')
     total_tests = len(df_eval)
@@ -888,28 +917,27 @@ The overall quality of raw data is mixed, and some fields require cleaning.
     return report_paragraph
 
 
+# --- helpers ---
+
+def get_dq_test_findings(items, noun='value'):
+    """
+    For each Data Quality test:
+    Calculates count and returns a clean, pluralized detail string.
+    """
+    
+    cnt    = len(items)
+    plural = 's' if cnt > 1 else ''
+    msg    = f"{cnt} {noun}{plural} found: {items}" if cnt > 0 else 'All clean.'
+    
+    return cnt, msg
+    
+
 def _find_col(df, keyword):
     """
     Find a column matching a specific keyword.
     StopIteration if missing: loud on purpose.
     """
     return next(c for c in df.columns if keyword in c.lower())
-
-
-def get_rules_from_file(file_path, track='a', header_shift=3):
-  """
-  Reads the Rules Markdown file, normalizes headings, restores rule-level line breaks,
-  and wraps it in a card themed by the track.
-  """
-  text_content   = read_from_md(file_path)
-  formatted_text = re.sub(r'(?=\bR\d{2}_)', '\n', text_content)
-
-  def shift_header(match):
-    return '#' * (len(match.group(1)) + header_shift) + match.group(2)
-
-  normalized_text = re.sub(r'^(#{1,6})( .+$)', shift_header, formatted_text, flags=re.MULTILINE)
-
-  return f'{TRACK_CSS}\n\n<div class="t-{track.lower()} card">\n\n{normalized_text.strip()}\n\n</div>\n'
 
 
 def build_dq_tests_labels(df):
