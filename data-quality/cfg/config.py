@@ -40,7 +40,7 @@ DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 SMOOTH_HR = """
-hr style="border: none; height: 1px; background-color: rgba(150, 150, 150, 0.2); margin: 20px 0;" />'
+<hr style="border: none; height: 1px; background-color: rgba(150, 150, 150, 0.2); margin: 20px 0;" />'
 """
 
 # version registry for autored functions ..................................................................
