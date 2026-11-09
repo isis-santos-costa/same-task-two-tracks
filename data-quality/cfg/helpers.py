@@ -5,8 +5,11 @@ from identity import *
 from config   import *
 
 # --- libraries • standard ---
+import io
 import os
 import re
+import math
+import base64
 import inspect
 import zipfile
 import subprocess
@@ -16,6 +19,7 @@ from pathlib       import Path
 
 # --- libraries • third-party ---
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # --- libraries • display ---
 from rich.markdown    import Markdown
@@ -297,11 +301,78 @@ def render_cell(task_id, task_title, action, report_text, track='a', is_first_ac
 
 # Data Profiling ..............................................................................
 
-class ProfilingResult(NamedTuple):
-    table    : object
-    legend   : str = ''
-    report   : str = ''
-    see_also : str = ''
+class ProfileResult(NamedTuple):
+    table         : object
+    legend        : str = ''
+    see_also      : str = ''
+    report        : str = ''
+    report_help   : str = ''
+
+
+@versioned('get_data_profile', 1)
+def get_data_profile_v1(df):
+
+    total_rows = len(df)
+    
+    column_name  = list(df.columns)
+    non_null_cnt = [df[col].notnull().sum() for col in df]
+    null_pct     = [f"{(1 - cnt / total_rows):.1%}" if total_rows > 0 else '0.0%' for cnt in non_null_cnt]
+    data_type    = [str(df[col].dtype) for col in df]
+
+    p_mean   = [f"{df[col].mean():.1f}"   if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p_median = [f"{df[col].median():.1f}" if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p_min    = [f"{df[col].min():.1f}"    if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p_max    = [f"{df[col].max():.1f}"    if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    
+    profile_data = (
+        pd.DataFrame(
+            zip(
+                column_name,
+                data_type,
+                null_pct,
+                non_null_cnt,
+                p_mean,
+                p_median,
+                p_min,
+                p_max,
+            ),
+            columns=[
+                'column_name',
+                'data_type',
+                'null_pct',
+                'non_null_cnt',
+                'mean',
+                'median',
+                'min',
+                'max',
+            ],
+        )
+        .sort_values(
+            by=['data_type', 'column_name'],
+            ascending=True,
+        )
+        .reset_index(drop=True)
+    )
+    
+    profile_df = profile_data.rename(
+        columns={
+              'column_name'    : 'Column'
+            , 'dtype'          : 'dType'
+            , 'null_pct'       : 'Null'
+            , 'non_null_cnt'   : 'nNulls'
+            , 'mean'           : 'Mean'
+            , 'median'         : 'Median'
+            , 'min'            : 'Min'
+            , 'max'            : 'Max'
+        }
+    )
+
+    see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
+
+    return ProfileResult(
+        table    = profile_df, 
+        see_also = see_also_note
+    )
 
 
 @versioned('get_data_profile', 2)
@@ -354,7 +425,7 @@ def get_data_profile_v2(df):
             kind   = 'date' if is_dt else ('int' if is_int(df[col]) else 'float')
             series = to_dt(df[col]) if is_dt else df[col]
 
-            prefix = ('[rcv]-' if not is_dt else '') + '[mean]-[q0-25-50-75-100]: '
+            prefix = ('[rcv]-' if not is_dt else '') + '[mean]-[q0-25-50-75-100]]⸺'
             
             try:
                 mean_val  =  _fmt_value(series.mean(), kind)
@@ -388,22 +459,20 @@ def get_data_profile_v2(df):
 
         p['core_profile'].append(txt)
     
-    profiling_data = (
+    profile_data = (
         pd.DataFrame(p)
         .sort_values(
             by=['field_class', 'field_subclass'],
             ascending=False,
         )
         .assign(
-            field_class   =sort_cat('field_class'   , PROFILING_CLASS_ORDER   ),
-            field_subclass=sort_cat('field_subclass', PROFILING_SUBCLASS_ORDER),
+            field_class   =sort_cat('field_class'   , PROFILE_CLASS_ORDER   ),
+            field_subclass=sort_cat('field_subclass', PROFILE_SUBCLASS_ORDER),
         )
         .reset_index(drop=True)
     )
-
-    profiling_report = get_profiling_report(profiling_data)
     
-    profiling_df = profiling_data.rename(
+    profile_df = profile_data.rename(
         columns={
               'column_name'    : 'Column'
             , 'core_profile'   : 'Core profile'
@@ -415,89 +484,145 @@ def get_data_profile_v2(df):
         }
     )
 
-    profiling_legend = build_legend(PROFILING_LEGEND)
+    profile_legend = build_legend(PROFILE_LEGEND)
+    profile_report, profile_report_help = get_profile_report(profile_data)
 
-    return ProfilingResult(
-        table  = profiling_df, 
-        legend = profiling_legend, 
-        report = profiling_report
+    return ProfileResult(
+        table       = profile_df, 
+        legend      = profile_legend, 
+        report      = profile_report,
+        report_help = profile_report_help,
     )
 
 
-@versioned('get_data_profile', 1)
-def get_data_profile_v1(df):
+@versioned('get_data_profile', 3)   # current
+def get_data_profile_v3(df):
 
-    total_rows = len(df)
     
-    column_name  = list(df.columns)
-    non_null_cnt = [df[col].notnull().sum() for col in df]
-    null_pct     = [f"{(1 - cnt / total_rows):.1%}" if total_rows > 0 else "0.0%" for cnt in non_null_cnt]
-    data_type    = [str(df[col].dtype) for col in df]
+    def _fmt_value(x, kind):
+        if kind == 'date':
+            return x.date().isoformat()
+        x = float(x)
+        if kind == 'int':
+            return int(x) if x.is_integer() else round(x, 1)
+        return round(x, 2)
 
-    p_mean   = [f"{df[col].mean():.1f}"   if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
-    p_median = [f"{df[col].median():.1f}" if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
-    p_min    = [f"{df[col].min():.1f}"    if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
-    p_max    = [f"{df[col].max():.1f}"    if (is_num(df[col]) and not is_bool(df[col])) else '---' for col in df]
+    p = {
+        'column_name'    : [],
+        'core_profile'   : [],
+        'non_null_cnt'   : [],
+        'null_pct'       : [],
+        'field_subclass' : [],
+        'field_class'    : [],
+        'data_type'      : [],
+        'outlier_cnt'    : [],
+    }
     
-    profiling_data = (
-        pd.DataFrame(
-            zip(
-                column_name,
-                data_type,
-                null_pct,
-                non_null_cnt,
-                p_mean,
-                p_median,
-                p_min,
-                p_max,
-            ),
-            columns=[
-                'column_name',
-                'data_type',
-                'null_pct',
-                'non_null_cnt',
-                'mean',
-                'median',
-                'min',
-                'max',
-            ],
-        )
+    for c in df:
+        
+        non_null_cnt = df[c].notnull().sum()
+        
+        p['column_name']   .append(c)
+        p['non_null_cnt']  .append(non_null_cnt)
+        p['null_pct']      .append(f"{(1 - non_null_cnt / len(df)):.1%}")
+        p['field_subclass'].append(use('get_field_subclass', 1)(df[c]))
+        p['field_class']   .append(use('get_field_class'   , 1)(df[c]))
+        p['data_type']     .append(str(df[c].dtype))
+    
+    core_profile = []
+   
+    for col, f_class, f_subclass in zip(df.columns, p['field_class'], p['field_subclass']):
+        
+        txt, n_out = '', 0
+        
+        if f_class == 'num':
+            
+            is_dt  = is_date(df[col])
+            kind   = 'date' if is_dt else ('int' if is_int(df[col]) else 'float')
+            series = to_dt(df[col]) if is_dt else df[col]
+
+            try:
+                q     = series.quantile(CORE_DISTRIBUTION)
+                parts = [('mean', _fmt_value(series.mean(), kind)),
+                         ('q0-25-50-75-100', ', '.join(str(_fmt_value(v, kind)) for v in q))]
+
+                if not is_dt:
+                    q1, med, q3 = q.iloc[1], q.iloc[2], q.iloc[3]
+                    iqr    = q3 - q1
+                    lo, hi = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+                    n_lo, n_hi = int((series < lo).sum()), int((series > hi).sum())
+                    n_out = n_lo + n_hi
+                    out = ', '.join(s for s in (
+                        f'<{_fmt_value(lo, kind)}: {n_lo}' if n_lo else '',
+                        f'>{_fmt_value(hi, kind)}: {n_hi}' if n_hi else '') if s) or 'none'
+                    parts.insert(0, ('out', out))
+                    parts.insert(0, ('rcv', f'{0.75 * iqr / med:.0%}' if med else 'n/a'))
+
+                txt = ( '-'.join(f'[{n}]' for n, _ in parts) + '⸺['
+                     + ', '.join(f'[{v}]' for _, v in parts) + ']')
+
+            except Exception as e:
+                txt = f'error ({type(e).__name__})'
+                
+        else:
+            if f_subclass == 'high-cardinality':
+                pct_unique = int(100.0 * df[col].nunique() / len(df[col]))
+                txt += f'% unique: {pct_unique}'
+                
+            elif f_subclass == 'low-cardinality':
+                freq_pct = (df[col].value_counts() / df[col].notnull().sum()).map(lambda x: f"{x:.0%}")
+                txt += str(freq_pct.to_dict()).replace("'", "")
+                
+            else:
+                txt += 'error'
+
+        p['core_profile'].append(txt)
+        p['outlier_cnt'] .append(n_out)
+    
+    profile_data = (
+        pd.DataFrame(p)
         .sort_values(
-            by=['data_type', 'column_name'],
-            ascending=True,
+            by=['field_class', 'field_subclass'],
+            ascending=False,
+        )
+        .assign(
+            field_class   =sort_cat('field_class'   , PROFILE_CLASS_ORDER   ),
+            field_subclass=sort_cat('field_subclass', PROFILE_SUBCLASS_ORDER),
         )
         .reset_index(drop=True)
     )
     
-    profiling_df = profiling_data.rename(
+    profile_df = profile_data.drop(columns='outlier_cnt').rename(
         columns={
               'column_name'    : 'Column'
-            , 'dtype'          : 'dType'
-            , 'null_pct'       : 'Null'
+            , 'core_profile'   : 'Core profile'
             , 'non_null_cnt'   : 'nNulls'
-            , 'mean'           : 'Mean'
-            , 'median'         : 'Median'
-            , 'min'            : 'Min'
-            , 'max'            : 'Max'
+            , 'null_pct'       : 'Null'
+            , 'field_subclass' : 'Subclass'
+            , 'field_class'    : 'Class'
+            , 'data_type'      : 'dType'
         }
     )
 
-    see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
+    profile_legend = build_legend(PROFILE_LEGEND)
+    profile_report, profile_report_help = get_profile_report(profile_data)
 
-    return ProfilingResult(
-        table    = profiling_df, 
-        see_also = see_also_note
+    return ProfileResult(
+        table       = profile_df, 
+        legend      = profile_legend, 
+        report      = profile_report,
+        report_help = profile_report_help,
     )
 
 
-def get_profiling_report(df):
+def get_profile_report(df):
     
-    total_records = int(df["non_null_cnt"].max())
+    total_records = int(df['non_null_cnt'].max())
 
-    incomplete_rows = df[df["non_null_cnt"] < total_records]
+    incomplete_rows = df[df['non_null_cnt'] < total_records]
     if incomplete_rows.empty:
         completeness_text = (
-            "The assessment confirms complete data across all fields with zero"
+            "The assessment confirms complete data across all fields, with no"
             " missing values."
         )
     else:
@@ -505,32 +630,43 @@ def get_profiling_report(df):
             f"`{row['column_name']}`" for _, row in incomplete_rows.iterrows()
         )
         completeness_text = (
-            f"The assessment identified **missing values** in: {missing_summary}."
+            f"**Missing values** were detected in: {missing_summary}."
         )
     
-    high_card_cols = df[df["field_subclass"] == "high-cardinality"][
-      "column_name"
+    high_card_cols = df[df['field_subclass'] == 'high-cardinality'][
+      'column_name'
     ].tolist()
-    low_card_cols = df[df["field_subclass"] == "low-cardinality"][
-      "column_name"
+    low_card_cols = df[df['field_subclass'] == 'low-cardinality'][
+      'column_name'
     ].tolist()
-    num_cols = df[df["field_subclass"].isin(["integer", "float", "date"])][
-      "column_name"
+    num_cols = df[df['field_subclass'].isin(['integer', 'float', 'date'])][
+      'column_name'
     ].tolist()
     
     high_cardin_str = "`" + "`, `".join(high_card_cols) + "`"
     low_cardin_str  = "`" + "`, `".join( low_card_cols) + "`"
-    num_str  = "`" + "`, `".join(      num_cols) + "`"
+    num_str         = "`" + "`, `".join(      num_cols) + "`"
+
+    counts   = df['outlier_cnt'] if 'outlier_cnt' in df.columns else pd.Series(0, index=df.index)
+    out_cols = df.loc[counts > 0, 'column_name']
+    outlier_text = '' if out_cols.empty else (
+        ' **Outliers** (beyond 1.5×IQR from the quartiles) were flagged in: '
+        + ', '.join(f'`{c}`' for c in out_cols) + '.')
     
-    report_paragraph = PROFILING_ANALYSIS_TEMPLATE.format(
-        total_records     = total_records,
-        completeness_text = completeness_text,
-        high_cardin_str   = high_cardin_str,
-        low_cardin_str    = low_cardin_str,
-        num_str           = num_str
+    profiling_analysis = PROFILE_ANALYSIS_TEMPLATE.format(
+        total_records      = total_records,
+        completeness_text  = completeness_text,
+        outlier_text       = outlier_text,
+    ).strip()
+
+    profiling_analysis_help = PROFILE_ANALYSIS_TEMPLATE_HELP.format(
+        num_str            = num_str,
+        low_cardin_thresh  = LOW_CARDIN_THRESH,
+        low_cardin_str     = low_cardin_str,
+        high_cardin_str    = high_cardin_str,
     ).strip()
     
-    return report_paragraph
+    return profiling_analysis, profiling_analysis_help
 
 
 @versioned('get_field_subclass', 1)
@@ -559,15 +695,69 @@ def get_field_class_v1(df_col):
     else:
         field_class = 'num'
     return field_class
+    
+    
+def get_distributions_html(df, track, show_box_plot=False, max_per_row=6):
+    """Histogram per numerical field, plus box plots below them if show_box_plot."""
+    t    = THEMES[track.lower()]
+    cols = [c for c, s in df.items() if is_num(s) and not pd.api.types.is_bool_dtype(s)]
+
+    def draw_hist(ax, data):
+        ax.hist(data, bins=20, color=t['rule'], edgecolor=t['body_bg'])
+
+    def draw_box(ax, data):
+        ax.boxplot(data, vert=False, widths=0.6, patch_artist=True,
+                   boxprops=dict(facecolor=t['rule'], edgecolor=t['body_fg']),
+                   medianprops=dict(color=t['body_bg'], linewidth=2),
+                   whiskerprops=dict(color=t['body_fg']), capprops=dict(color=t['body_fg']),
+                   flierprops=dict(marker='o', markerfacecolor=t['body_fg'],
+                                   markeredgecolor=t['body_fg'], markersize=4))
+        ax.set_yticks([])
+
+    def make_img(col, draw):
+        fig, ax = plt.subplots(figsize=(3, 2.4))
+        fig.subplots_adjust(left=0.2, right=0.96, bottom=0.2, top=0.82)
+        draw(ax, df[col].dropna())
+        ax.set_title(col, fontsize=18, color=t['body_fg'])
+        ax.tick_params(colors=t['body_fg'], labelsize=14)
+        for s in ('top', 'right'):
+            ax.spines[s].set_visible(False)
+        for s in ('left', 'bottom'):
+            ax.spines[s].set_color(t['line'])
+        fig.patch.set_alpha(0)
+        ax.patch.set_alpha(0)
+        buf = io.BytesIO()
+        fig.savefig(buf, format='png', transparent=True, dpi=150)
+        plt.close(fig)
+        img = base64.b64encode(buf.getvalue()).decode('utf-8')
+        return f'<img src="data:image/png;base64,{img}" alt="{col}" />'
+
+    def make_rows(items):
+        n_rows = math.ceil(len(items) / max_per_row)
+        base, extra = divmod(len(items), n_rows)
+        rows, start = [], 0
+        for i in range(n_rows):
+            end = start + base + (1 if i < extra else 0)
+            cells = ''.join(f'<div>{x}</div>' for x in items[start:end])
+            rows.append(f'<div class="dist-row" style="--n:{max_per_row}">{cells}</div>')
+            start = end
+        return ''.join(rows)
+
+    if not cols:
+        return ''
+    html = make_rows([make_img(c, draw_hist) for c in cols])
+    if show_box_plot:
+        html += make_rows([make_img(c, draw_box) for c in cols])
+    return html
 
 
-# Data Audit ..................................................................................
+# Data Quality Tests ..........................................................................
 
 class TestsResult(NamedTuple):
     table    : object
     legend   : str = ''
-    report   : str = ''
     see_also : str = ''
+    report   : str = ''
 
 
 def get_dq_test_results(dq_tests):
@@ -581,6 +771,8 @@ def get_dq_test_results(dq_tests):
     dq_tests_report = get_dq_tests_report(dq_tests_df)
 
     dq_tests_legend = build_legend(DQ_TESTS_LEGEND)
+
+    # see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
     
     return TestsResult(
         table  = dq_tests_df, 
