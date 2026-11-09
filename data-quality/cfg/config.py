@@ -29,7 +29,7 @@ reports = {}
 PATH_SNIPPETS = Path('snippets')
 OUTPUT_EXT    = 'png'
 
-PROFILING_LEGEND = {'RCV': 'robust coefficient of variation', 'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
+PROFILE_LEGEND = {'RCV': 'robust coefficient of variation', 'Null': 'null percentage', 'nNulls': 'non-null count', 'num': 'numerical',
                     'cat': 'categorical', 'dtype': 'data type'}
 
 DQ_TESTS_LEGEND  = {'Affected': 'rows affected', '%': 'share of rows affected'}
@@ -115,17 +115,17 @@ CODE_HEADER = """
 
 # Data Profiling ..........................................................................................
 
-PROFILING_CLASS_ORDER    = ['num', 'cat']
-PROFILING_SUBCLASS_ORDER = ['integer', 'float', 'date', 'low-cardinality', 'high-cardinality']
+PROFILE_CLASS_ORDER    = ['num', 'cat']
+PROFILE_SUBCLASS_ORDER = ['integer', 'float', 'date', 'low-cardinality', 'high-cardinality']
 
-PROFILING_ANALYSIS_TEMPLATE = """
+PROFILE_ANALYSIS_TEMPLATE = """
 <br>
 
 The Data Profiling reviewed **{total_records} customer records** on completeness and quality. 
 {completeness_text} {outlier_text}
     """
 
-PROFILING_ANALYSIS_TEMPLATE_HELP = """
+PROFILE_ANALYSIS_TEMPLATE_HELP = """
 
 `Core profile` summarizes each field by its class:  
  
