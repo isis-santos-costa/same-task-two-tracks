@@ -780,6 +780,19 @@ def get_missing_summary(df, target_col, group_col, top_n=LOW_CARDIN_THRESH):
     return get_clean_dict(summary.to_dict())
 
 
+def extract_outlier_thresholds(df, col):
+    """Extract low/high thresholds from the Data Profiling Core profile"""
+    
+    core_profile = df.table.set_index('Column', drop=True).loc[col, 'Core profile']
+    low_match  = re.search(r'<\s*([0-9.]+)\s*:', core_profile)
+    high_match = re.search(r'>\s*([0-9.]+)\s*:', core_profile)
+    
+    outlier_thresh_low  = float( low_match.group(1)) if  low_match else None
+    outlier_thresh_high = float(high_match.group(1)) if high_match else None
+
+    return outlier_thresh_low, outlier_thresh_high
+
+
 # Data Quality Tests ..........................................................................
 
 class TestsResult(NamedTuple):
