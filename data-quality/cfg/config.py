@@ -48,8 +48,8 @@ VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcas
         3: ('a_job_task_1_1_data_profiling', 'with an extended « Core profile » monitoring outliers'),
     },
     'get_dq_tests_result': {
-        1: ('a_task_1_1_data_quality_tests', 'baseline: test, result, affected, %, class, code'),
-        2: ('a_task_1_2_data_quality_tests', 'added with details and relevance'),
+        1: ('a_task_1_1_data_quality_tests', 'baseline: result, affected rows, class, code'),
+        2: ('a_task_1_2_data_quality_tests', 'with details and relevance for each rule'),
     },
 }
 
