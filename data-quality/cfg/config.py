@@ -145,7 +145,7 @@ Primary identifiers (IDs) are expected to be 100% unique. Business identifiers m
 phone number. There are also high-cardinality fields for which uniqueness is expected to be lower, like state. 
 
 The `Core profile` supports anomaly detection such as out-of-bound values or invalid ages or dates.  
-The following numerical field distributions complement this.
+Numerical field distributions (in v3+) complement this.
 
 <br>
     """
