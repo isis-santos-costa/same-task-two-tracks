@@ -487,11 +487,14 @@ def get_data_profile_v2(df):
     profile_legend = build_legend(PROFILE_LEGEND)
     profile_report, profile_report_help = get_profile_report(profile_data)
 
+    see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
+
     return ProfileResult(
         table       = profile_df, 
         legend      = profile_legend, 
         report      = profile_report,
         report_help = profile_report_help,
+        see_also    = see_also_note,
     )
 
 
@@ -659,7 +662,7 @@ def get_profile_report(df):
         outlier_text       = outlier_text,
     ).strip()
 
-    profiling_analysis_help = PROFILE_ANALYSIS_TEMPLATE_HELP.format(
+    profiling_analysis_help = PROFILE_ANALYSIS_HELP_TEMPLATE.format(
         num_str            = num_str,
         low_cardin_thresh  = LOW_CARDIN_THRESH,
         low_cardin_str     = low_cardin_str,
@@ -781,6 +784,27 @@ def get_dq_test_results(dq_tests):
     )
 
 
+@versioned('get_dq_tests_result', 1)
+def get_dq_tests_result_v1(df, rules_config):
+    """Evaluate df against Data Quality rules."""
+    dq_test_data = []
+    for i, cfg in enumerate(rules_config, start=1):
+        failed_dq_test_rows = cfg['eval_fn'](df)
+        cnt = len(failed_dq_test_rows)
+        dq_test_data.append({
+              'ID'        : f"Rule {i:02d}"
+            , 'Dimension' : cfg['dim']
+            , 'Field'     : cfg['field']
+            , 'Rule'      : cfg['rule']
+            , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
+            , 'Affected'  : cnt
+            , '%'         : f'{cnt / len(df):.1%}'
+            , 'Class'     : cfg['class']
+            , 'Code' : get_code_from_eval(cfg['eval_fn'])
+        })
+    return dq_test_data
+
+
 @versioned('get_dq_tests_result', 2)
 def get_dq_tests_result_v2(df, rules_config):
     """
@@ -801,27 +825,6 @@ def get_dq_tests_result_v2(df, rules_config):
             , '%'         : f'{cnt / len(df):.1%}'
             , 'Details'   : msg
             , 'Relevance' : cfg['relevance']
-            , 'Class'     : cfg['class']
-            , 'Code' : get_code_from_eval(cfg['eval_fn'])
-        })
-    return dq_test_data
-
-
-@versioned('get_dq_tests_result', 1)
-def get_dq_tests_result_v1(df, rules_config):
-    """Evaluate df against Data Quality rules."""
-    dq_test_data = []
-    for i, cfg in enumerate(rules_config, start=1):
-        failed_dq_test_rows = cfg['eval_fn'](df)
-        cnt = len(failed_dq_test_rows)
-        dq_test_data.append({
-              'ID'        : f"Rule {i:02d}"
-            , 'Dimension' : cfg['dim']
-            , 'Field'     : cfg['field']
-            , 'Rule'      : cfg['rule']
-            , 'Result'    : '✅&nbsp;Passed' if cnt == 0 else '❌&nbsp;Failed'
-            , 'Affected'  : cnt
-            , '%'         : f'{cnt / len(df):.1%}'
             , 'Class'     : cfg['class']
             , 'Code' : get_code_from_eval(cfg['eval_fn'])
         })
