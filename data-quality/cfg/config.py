@@ -129,9 +129,11 @@ PROFILING_ANALYSIS_TEMPLATE_HELP = """
 
 `Core profile` summarizes each field by its class:  
  
-* For **numerical** fields ({num_str}), the `Core profile` monitors a robust coefficient of variation, the average, 
-and the core distribution for the field, 
-with q0, q100 being the min/max values, q50 the median, and q25, q75 the boundaries of the interquartile range.   
+* For **numerical** fields ({num_str}), the `Core profile` shows the robust coefficient of variation (`rcv`:
+the interquartile range over the median, scaled by 3/4 <sup>[[1]](#ref-1)</sup>),
+the outliers (`out`: values beyond 1.5×IQR from the
+quartiles, with their counts, or `none`), the average, and the core distribution, with q0 and q100 being the
+min/max values, q50 the median, and q25 and q75 the boundaries of the interquartile range.
 
 * For **low-cardinality** fields ({low_cardin_str}), with up to {low_cardin_thresh} categories, 
 the `Core profile` presents values count,  
