@@ -305,16 +305,17 @@ def render_cell(task_id, task_title, action, report_text, track='a', is_first_ac
         anchors=anchors, track=track.lower(), TRACK=track.upper(), eyebrow_suffix=eyebrow_suffix,
         action=action, task_title=title_html, report=report_text), raw=True)
 
+
 # Data Profiling ..............................................................................
 
 class ProfileResult(NamedTuple):
     table         : object
+    styled        : object
+    distributions : object
     legend        : str = ''
     report        : str = ''
     report_help   : str = ''
     see_also      : str = ''
-    styled        : object
-    distributions : object
 
 
 # --- versions ---
@@ -797,15 +798,14 @@ def extract_outlier_thresholds(df, col):
 
 def style_profile_table(table, track):
     return style_table(
-    table, 
-    track,
-    min_width='44rem', 
-    max_height='360px',
-    sticky_first_col=True,
-    right_cols=PROFILE_RIGHT_COLS,
-    nowrap_cols=('Core profile',),
-)
-
+        table,
+        track,
+        min_width='44rem',
+        max_height='360px',
+        sticky_first_col=True,
+        right_cols=PROFILE_RIGHT_COLS,
+        nowrap_cols=('Core profile',),
+    )
 
 # Data Quality Tests ..........................................................................
 
@@ -848,27 +848,6 @@ def get_dq_tests(df, rules_config, version=None):
         report   = get_dq_tests_report(table),
         see_also = build_see_also(name, shown, 'Data Quality Tests'),
     )
-
-
-# def get_dq_test_results(dq_tests):
-#     """
-#     For the full suite of Data Quality tests:
-#     Returns a summary df and a report.
-#     """
-    
-#     dq_tests_df = pd.DataFrame(dq_tests)
-#     dq_tests_df.set_index(['ID', 'Dimension', 'Field', 'Rule'], inplace=True)
-#     dq_tests_report = get_dq_tests_report(dq_tests_df)
-
-#     dq_tests_legend = build_legend(DQ_TESTS_LEGEND)
-
-#     # see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
-    
-#     return TestsResult(
-#         table  = dq_tests_df, 
-#         legend = dq_tests_legend, 
-#         report = dq_tests_report
-#     )
 
 
 # --- versions ---
