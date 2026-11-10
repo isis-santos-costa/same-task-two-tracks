@@ -643,7 +643,7 @@ def get_data_profile_v3(df, track):
     profile_distributions = get_distributions_html(df, track, show_box_plot=True)
     profile_styled =style_profile_table(profile_df, track)
 
-    profile_see_also = build_see_also('get_data_profile', 1, 'Data Profiling')
+    profile_see_also = build_see_also('get_data_profile', 3, 'Data Profiling')
 
     profile_core_sections = [
           profile_styled
