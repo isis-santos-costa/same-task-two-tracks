@@ -283,18 +283,28 @@ def get_metric_shift(raw_series, proc_series, func):
     
 
 def get_iso_date(df, date_col_name):
-    """Replace mixed date values with ISO."""
-    
+    """
+    Replace mixed date values with ISO format.
+    Raises ValueError if any unparsed values or nulls are detected.
+    """
     new_col_name = date_col_name + '_iso'
     
-    df[new_col_name] = pd.to_datetime(
-                df[date_col_name], 
-                format='mixed', 
-                errors='coerce'
-            ).dt.strftime('%Y-%m-%d')
+    parsed_dates = pd.to_datetime(
+        df[date_col_name], 
+        format='mixed', 
+        errors='coerce'
+    )
     
+    nat_count = parsed_dates.isna().sum()
+    if nat_count > 0:
+        raise ValueError(
+            f"Date parsing error: Found {nat_count} unparsed or missing entry(ies) "
+            f"in column '{date_col_name}'."
+        )
+    
+    df[new_col_name] = parsed_dates.dt.strftime('%Y-%m-%d')
     df = df.drop(columns=date_col_name)
-
+    
     return df
     
 
