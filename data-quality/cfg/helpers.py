@@ -793,6 +793,18 @@ def extract_outlier_thresholds(df, col):
     return outlier_thresh_low, outlier_thresh_high
 
 
+def style_profile_table(table, track):
+    return style_table(
+    table, 
+    track,
+    min_width='44rem', 
+    max_height='360px',
+    sticky_first_col=True,
+    right_cols=PROFILE_RIGHT_COLS,
+    nowrap_cols=('Core profile',),
+)
+
+
 # Data Quality Tests ..........................................................................
 
 class TestsResult(NamedTuple):
