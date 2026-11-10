@@ -335,7 +335,11 @@ class ProfileResult(NamedTuple):
     see_also      : str    = ''
     styled        : object = None
     distributions : object = None
-    core_sections : list   = []
+
+    def sections(self, show_help=False):
+        parts = [self.styled, self.legend, self.see_also, self.report,
+                 self.report_help if show_help else '', self.distributions]
+        return [p for p in parts if p]
 
 
 # --- versions ---
@@ -661,7 +665,6 @@ def get_data_profile_v3(df, track):
         report_help   = profile_report_help,
         distributions = profile_distributions,
         styled        = profile_styled,
-        core_sections = profile_core_sections,
         see_also      = profile_see_also,
     )
 
