@@ -14,9 +14,9 @@ from dataclasses import dataclass
 @dataclass
 class DevFlags:
     record_version          : bool = False
-	allow_version_overwrite : bool = True
-	export_zip              : bool = True
-	render_md               : bool = False
+    allow_version_overwrite : bool = True
+    export_zip              : bool = True
+    render_md               : bool = False
 
 DEV = DevFlags()
 
