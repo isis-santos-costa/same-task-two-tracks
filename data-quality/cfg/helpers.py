@@ -265,6 +265,17 @@ def get_clean_dict(d):
     content = ", ".join(f"{k}: {v}" for k, v in d.items())
     return f"{{{content}}}"
 
+
+def style_raw_table(df, track, sticky_first_col=True):
+    return style_table(
+        df, 
+        track,
+        min_width='44rem', 
+        max_height='360px',
+        sticky_first_col=True,
+    )
+    
+
 # code cells ..............................................................................................
 
 class CellMeta(NamedTuple):
