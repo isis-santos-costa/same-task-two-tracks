@@ -312,6 +312,7 @@ class ProfileResult(NamedTuple):
     table         : object
     styled        : object
     distributions : object
+    sections      : list = []
     legend        : str = ''
     report        : str = ''
     report_help   : str = ''
