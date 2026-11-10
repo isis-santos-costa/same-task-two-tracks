@@ -327,7 +327,7 @@ class ProfileResult(NamedTuple):
     see_also      : str    = ''
     styled        : object = None
     distributions : object = None
-    sections      : list   = []
+    core_sections : list   = []
 
 
 # --- versions ---
@@ -522,7 +522,7 @@ def get_data_profile_v2(df):
 
 
 @versioned('get_data_profile', 3)   # current
-def get_data_profile_v3(df):
+def get_data_profile_v3(df, track):
 
     
     def _fmt_value(x, kind):
@@ -632,12 +632,26 @@ def get_data_profile_v3(df):
 
     profile_legend = build_legend(PROFILE_LEGEND)
     profile_report, profile_report_help = get_profile_report(profile_data)
+    profile_distributions = get_distributions_html(df, track, show_box_plot=True)
+    profile_styled =style_profile_table(profile_df, track)
+
+    profile_core_sections = [
+          profile_raw.styled
+        , profile_raw.legend
+        , profile_raw.see_also
+        , profile_raw.report
+        , profile_raw.report_help
+        , profile_raw.distributions
+    ]
 
     return ProfileResult(
-        table       = profile_df, 
-        legend      = profile_legend, 
-        report      = profile_report,
-        report_help = profile_report_help,
+        table         = profile_df,
+        legend        = profile_legend,
+        report        = profile_report,
+        report_help   = profile_report_help,
+        distributions = profile_distributions,
+        styled        = profile_styled,
+        core_sections = profile_core_sections,
     )
 
 
