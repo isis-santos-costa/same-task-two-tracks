@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 @dataclass
 class DevFlags:
+    record_version          : bool = False
 	allow_version_overwrite : bool = True
 	export_zip              : bool = True
 	render_md               : bool = False
@@ -121,6 +122,8 @@ CODE_HEADER = """
 """
 
 # Data Profiling ..........................................................................................
+
+PROFILE_RIGHT_COLS = ('Null', 'nNulls') if DEV.record_version else ('Core profile', 'Null', 'nNulls')
 
 PROFILE_CLASS_ORDER    = ['num', 'cat']
 PROFILE_SUBCLASS_ORDER = ['integer', 'float', 'date', 'low-cardinality', 'high-cardinality']
