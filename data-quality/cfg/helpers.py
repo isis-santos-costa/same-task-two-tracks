@@ -636,12 +636,12 @@ def get_data_profile_v3(df, track):
     profile_styled =style_profile_table(profile_df, track)
 
     profile_core_sections = [
-          profile_raw.styled
-        , profile_raw.legend
-        , profile_raw.see_also
-        , profile_raw.report
-        , profile_raw.report_help
-        , profile_raw.distributions
+          profile.styled
+        , profile.legend
+        , profile.see_also
+        , profile.report
+        , profile.report_help
+        , profile.distributions
     ]
 
     return ProfileResult(
