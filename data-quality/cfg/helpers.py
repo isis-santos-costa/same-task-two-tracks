@@ -274,6 +274,14 @@ def style_raw_table(df, track, sticky_first_col=True):
         max_height='360px',
         sticky_first_col=True,
     )
+
+
+def get_metric_shift(raw_series, proc_series, func):
+    """Compute raw value, processed value, and % reduction in one call."""
+    raw_val = func(raw_series)
+    proc_val = func(proc_series)
+    pct_diff = 1 - (proc_val / raw_val)
+    return raw_val, proc_val, pct_diff
     
 
 # code cells ..............................................................................................
