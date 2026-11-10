@@ -390,11 +390,11 @@ def get_data_profile_v1(df):
         }
     )
 
-    see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
+    profile_see_also = build_see_also('get_data_profile', 1, 'Data Profiling')
 
     return ProfileResult(
         table    = profile_df, 
-        see_also = see_also_note
+        see_also = profile_see_also
     )
 
 
@@ -510,14 +510,14 @@ def get_data_profile_v2(df):
     profile_legend = build_legend(PROFILE_LEGEND)
     profile_report, profile_report_help = get_profile_report(profile_data)
 
-    see_also_note = build_see_also('get_data_profile', 1, 'Data Profiling')
+    profile_see_also = build_see_also('get_data_profile', 2, 'Data Profiling')
 
     return ProfileResult(
         table       = profile_df, 
         legend      = profile_legend, 
         report      = profile_report,
         report_help = profile_report_help,
-        see_also    = see_also_note,
+        see_also    = profile_see_also,
     )
 
 
@@ -635,13 +635,15 @@ def get_data_profile_v3(df, track):
     profile_distributions = get_distributions_html(df, track, show_box_plot=True)
     profile_styled =style_profile_table(profile_df, track)
 
+    profile_see_also = build_see_also('get_data_profile', 1, 'Data Profiling')
+
     profile_core_sections = [
-          profile.styled
-        , profile.legend
-        , profile.see_also
-        , profile.report
-        , profile.report_help
-        , profile.distributions
+          profile_styled
+        , profile_legend
+        , profile_see_also
+        , profile_report
+        , profile_report_help
+        , profile_distributions
     ]
 
     return ProfileResult(
@@ -652,6 +654,7 @@ def get_data_profile_v3(df, track):
         distributions = profile_distributions,
         styled        = profile_styled,
         core_sections = profile_core_sections,
+        see_also      = profile_see_also,
     )
 
 
