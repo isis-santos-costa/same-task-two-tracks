@@ -282,6 +282,22 @@ def get_metric_shift(raw_series, proc_series, func):
     return raw_val, proc_val, proc_val / raw_val - 1
     
 
+def get_iso_date(df, date_col_name):
+    """Replace mixed date values with ISO."""
+    
+    new_col_name = date_col_name + '_iso'
+    
+    df[new_col_name] = pd.to_datetime(
+                df[date_col_name], 
+                format='mixed', 
+                errors='coerce'
+            ).dt.strftime('%Y-%m-%d')
+    
+    df = df.drop(columns=date_col_name)
+
+    return df
+    
+
 # code cells ..............................................................................................
 
 class CellMeta(NamedTuple):
