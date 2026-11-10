@@ -310,13 +310,13 @@ def render_cell(task_id, task_title, action, report_text, track='a', is_first_ac
 
 class ProfileResult(NamedTuple):
     table         : object
-    styled        : object
-    distributions : object
-    sections      : list = []
-    legend        : str = ''
-    report        : str = ''
-    report_help   : str = ''
-    see_also      : str = ''
+    legend        : str    = ''
+    report        : str    = ''
+    report_help   : str    = ''
+    see_also      : str    = ''
+    styled        : object = None
+    distributions : object = None
+    sections      : list   = []
 
 
 # --- versions ---
