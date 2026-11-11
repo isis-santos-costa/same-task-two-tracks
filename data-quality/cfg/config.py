@@ -243,7 +243,7 @@ RULES_CONFIG = [
         , "relevance" : "Email without an @ is not directly actionable via machine."
         , "class"     : "FORMAT"
         , "noun"      : "invalid email"
-        , "eval_fn"   : lambda df: df.loc[~df['email'].str.contains('@'), 'email'].tolist()
+        , "eval_fn"   : lambda df: df.loc[~df['email'].str.contains('@', na=False), 'email'].tolist()
     },
     {
           "key"       : "r05"
@@ -259,7 +259,7 @@ RULES_CONFIG = [
           "key"       : "r06"
         , "dim"       : "Validity"
         , "field"     : "purchase_amount"
-        , "rule"      : "Must be > 0"
+        , "rule"      : "Must be ≥ 0"
         , "relevance" : "Non-negative purchases are required for P&L accuracy."
         , "class"     : "RANGE"
         , "noun"      : "negative purchase"
@@ -299,7 +299,7 @@ RULES_CONFIG_SERVICE_TICKETS = [
         , 'relevance' : 'Valid category options are essential for accurate group reporting.'
         , 'class'     : 'RANGE'
         , 'noun'      : 'invalid priority value'
-        , 'eval_fn'   : lambda df: df.loc[~df['priority'].apply(lambda x: pd.notna(x) and x % 1 == 0 and 1 <= x <= 5), 'priority'].tolist()
+        , 'eval_fn'   : lambda df: df.loc[~(lambda s: s.between(1, 5) & (s % 1 == 0))(pd.to_numeric(df['priority'], errors='coerce')), 'priority'].tolist()
     },
     {
           'key'       : 'r03'
@@ -309,11 +309,11 @@ RULES_CONFIG_SERVICE_TICKETS = [
         , 'relevance' : 'Valid category options are essential for accurate group reporting.'
         , 'class'     : 'DOMAIN'
         , 'noun'      : 'invalid status value'
-        , 'eval_fn'   : lambda df: df.loc[~df['status'].apply(lambda x: pd.notna(x) and x in ('Open', 'In Progress', 'Closed')), 'status'].tolist()
+        , 'eval_fn'   : lambda df: df.loc[~df['status'].isin(['Open', 'In Progress', 'Closed']), 'status'].tolist()
     },
     {
           'key'       : 'r04'
-        , 'dim'       : 'Validity'
+        , 'dim'       : 'Completeness'
         , 'field'     : 'agent_id'
         , 'rule'      : 'Non-nullable'
         , 'relevance' : 'Tickets with NULL agent_id would keep open and unassigned.'
