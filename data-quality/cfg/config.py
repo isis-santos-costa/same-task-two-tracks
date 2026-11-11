@@ -5,6 +5,7 @@ from identity import TRACKS
 
 # --- libraries: standard ---
 import warnings
+import pandas as pd
 from pathlib import Path
 
 # development flags .......................................................................................
