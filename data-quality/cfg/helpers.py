@@ -19,6 +19,7 @@ from pathlib       import Path
 
 # --- libraries • third-party ---
 import pandas as pd
+import numpy  as np
 import matplotlib.pyplot as plt
 
 # --- libraries • display ---
@@ -1042,3 +1043,106 @@ def build_dq_tests_labels(df):
         0, 'Test', out[cols].astype(str).agg(' · '.join, axis=1)
     )
     return out.drop(columns=cols)
+
+
+# Data Reconciliation .........................................................................
+
+class ReconcileResult(NamedTuple):
+    reconciled : bool
+    notes      : list
+    mismatches : object = None
+
+
+def build_reconciliation_report(result, track):
+    status = '✅ **Reconciled**' if result.reconciled else '❌ **Not reconciled**'
+    parts  = [status] + [f'* {n}' for n in result.notes]
+    if result.mismatches is not None:
+        parts += [
+            style_table(result.mismatches.reset_index(), track,
+                        min_width='30rem', max_height='360px', sticky_first_col=True),
+            't: target · s: source',
+        ]
+    return '\n\n'.join(parts)
+    
+
+def reconcile_tables(source_df, target_df):
+    """
+    Return a string on reconciliation between source and target tables,
+    including an HTML mismatch matrix.
+    """
+    
+    if target_df.equals(source_df):
+        reconciled = True
+        notes = 'Reconciled: Target is identical to source.'
+        mismatch_df = None
+        return ReconcileResult(reconciled, notes, mismatch_df)
+
+    reconciled = False
+    notes = []
+    
+    if source_df.shape != target_df.shape:
+        notes.append(f'Shape mismatch -> Source: {source_df.shape}, Target: {target_df.shape}<br>')
+    
+    key_col = source_df.columns[0]
+    is_key_unique = source_df[key_col].is_unique
+    
+    if is_key_unique:
+        src_indexed = source_df.set_index(key_col)
+        tgt_indexed = target_df.set_index(key_col)
+        tgt_aligned = tgt_indexed.reindex(src_indexed.index).reset_index()
+        src_aligned = src_indexed.reset_index()
+        row_identifier = src_aligned[key_col]
+    else:
+        src_aligned = source_df.copy().reset_index(drop=True)
+        tgt_aligned = target_df.copy().reset_index(drop=True)
+        
+        if len(tgt_aligned) < len(src_aligned):
+            padding = pd.DataFrame(
+                np.nan, 
+                index=range(len(src_aligned) - len(tgt_aligned)), 
+                columns=tgt_aligned.columns
+            )
+            tgt_aligned = pd.concat([tgt_aligned, padding], ignore_index=True)
+            
+        row_identifier = pd.Series([f'row #{i+1}' for i in range(len(src_aligned))])
+    
+    if is_key_unique:
+        missing_keys = set(src_indexed.index) - set(tgt_indexed.index)
+        extra_keys   = set(tgt_indexed.index) - set(src_indexed.index)
+        if missing_keys:
+            notes.append(f'Missing rows in target (Keys: {list(missing_keys)})')
+        if extra_keys:
+            notes.append(f'Extra rows in target (Keys: {list(extra_keys)})')
+    
+    common_cols = [c for c in source_df.columns if c in target_df.columns and c != key_col]
+    
+    mismatch_data = {}
+    for col in common_cols:
+        s_col = src_aligned[col]
+        t_col = tgt_aligned[col]
+        
+        diff_mask = (t_col != s_col) | (t_col.isna() ^ s_col.isna())
+        
+        if diff_mask.any():
+            col_mismatches = []
+            for idx, is_diff in enumerate(diff_mask):
+                if is_diff:
+                    t_val = 'empty' if pd.isna(t_col.iloc[idx]) else t_col.iloc[idx]
+                    s_val = 'empty' if pd.isna(s_col.iloc[idx]) else s_col.iloc[idx]
+                    col_mismatches.append(f't: {t_val}, s: {s_val}')
+                else:
+                    col_mismatches.append('✓')
+            mismatch_data[col] = col_mismatches
+    
+    if not mismatch_data:
+        base_msg = '\n'.join(report_lines)
+        return f'{base_msg}\nReconciled: Contents match after alignment.' if base_msg else 'Reconciled: Contents match.'
+    
+    mismatch_df = pd.DataFrame(mismatch_data, index=row_identifier)
+    
+    row_has_diff = (mismatch_df != '✓').any(axis=1)
+    mismatch_df = mismatch_df[row_has_diff]
+    
+    notes.append('\nDifferences found:')
+    
+    return ReconcileResult(reconciled, notes, mismatch_df)
