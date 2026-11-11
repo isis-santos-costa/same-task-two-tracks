@@ -164,7 +164,7 @@ Numerical field distributions (in v3+) complement this.
 <br>
     """
 
-# Data Quality Tests ......................................................................................
+# Data Quality Tests 1/2 ..................................................................................
 
 AUDIT_ANALYSIS_TEMPLATE = """
 <br>
@@ -277,6 +277,8 @@ RULES_CONFIG = [
     },
 ]
 
+# job task 1.2 ............................................................................................
+
 RULES_CONFIG_SERVICE_TICKETS = [
     {
           'key'       : 'r01'
@@ -320,3 +322,11 @@ RULES_CONFIG_SERVICE_TICKETS = [
         , 'eval_fn'   : lambda df: df.loc[df['agent_id'].isna(), 'agent_id'].tolist()
     },
 ]
+
+# Data Quality Tests 2/2 ..................................................................................
+
+DQ_TESTS_CLASSES = {'NULL', 'UNIQUE', 'RANGE', 'DOMAIN', 'FORMAT'}
+
+for _rules in (RULES_CONFIG, RULES_CONFIG_SERVICE_TICKETS):
+    _bad = {r['class'] for r in _rules} - DQ_TESTS_CLASSES
+    assert not _bad, f'Unknown rule classes: {_bad}'
