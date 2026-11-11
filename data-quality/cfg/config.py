@@ -68,7 +68,9 @@ PROGRAMS = {   # key used in the registry -> (full name, link)
 }
 
 MODULES = {
-    ('Coursera', 1): 'Data Quality · Profiling & Tests'
+    ('Coursera', 1): 'Data Quality · Profiling & Tests',
+    ('Coursera', 2): 'Data Quality · Validation & Debugging',
+    ('Coursera', 3): 'Data Quality · Monitoring & Prevention',
 }
 
 TASKS = [   # (program, kind, module, task, title): the single source of truth, ordered by program, module
@@ -76,6 +78,8 @@ TASKS = [   # (program, kind, module, task, title): the single source of truth, 
     ('Coursera', 'task',     1, 2, 'Run validation checks and flag errors'),
     ('Coursera', 'task',     1, 3, 'Reconcile data across systems'),
     ('Coursera', 'job_task', 1, 1, 'Profile a dataset and surface quality risks'),
+    ('Coursera', 'job_task', 1, 2, 'Run validation checks and flag capture errors'),
+    ('Coursera', 'job_task', 1, 3, 'Reconcile data across systems'),
 ]
 TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
 
@@ -83,8 +87,8 @@ _ids = [(k, m, t) for _, k, m, t, _ in TASKS]
 assert len(_ids) == len(set(_ids)), 'Cell IDs must be unique across programs: give the newcomer its own kind'
 
 TASK_OUTPUT_FILES = {
-    "1_1": "dq_audit_report.md",
-    "1_2": "dq_validation_findings.md",
+    '1_1': 'dq_audit_report.md',
+    '1_2': 'dq_validation_findings.md',
 }
 
 KINDS  = {'task': 'Task', 'job_task': 'Job Task'}
@@ -101,7 +105,8 @@ COMPARISON = [   # (program, kind, module, task, action): keep each task's rows 
     ('Coursera', 'task',     1, 2, 'Data Quality Tests'),
     ('Coursera', 'task',     1, 3, 'Data Reconciliation'),
     ('Coursera', 'job_task', 1, 1, 'Data Profiling'),
-    ('Coursera', 'job_task', 1, 1, 'Data Quality Tests'),
+    ('Coursera', 'job_task', 1, 2, 'Data Profiling'),
+    ('Coursera', 'job_task', 1, 2, 'Data Quality Tests'),
 ]
 
 # guards: loud on purpose
