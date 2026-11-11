@@ -274,3 +274,47 @@ RULES_CONFIG = [
         , "eval_fn"   : lambda df: df.loc[~df['loyalty_tier'].isin(TIER_DOMAIN), 'loyalty_tier'].tolist()
     },
 ]
+
+RULES_CONFIG_SERVICE_TICKETS = [
+    {
+          'key'       : 'r01'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'ticket_id'
+        , 'rule'      : 'Must start with "T-" followed by four digits (e.g., T-1234).'
+        , 'relevance' : 'Valid IDs are crucial for cross-table analyses (JOIN).'
+        , 'class'     : 'String'
+        , 'noun'      : 'invalid ticket_id'
+        , 'eval_fn'   : lambda df: df.loc[~df['ticket_id'].str.contains(r'^T-\d{4}$', regex=True, na=False), 'ticket_id'].tolist()
+        
+    },
+    {
+          'key'       : 'r02'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'priority'
+        , 'rule'      : 'Must be integer [1, 5]'
+        , 'relevance' : 'Valid category options are essential for accurate group reporting.'
+        , 'class'     : 'Range'
+        , 'noun'      : 'invalid priority value'
+        , 'eval_fn'   : lambda df: df.loc[~df['priority'].apply(lambda x: pd.notna(x) and x % 1 == 0 and 1 <= x <= 5), 'priority'].tolist()
+    },
+    {
+          'key'       : 'r03'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'status'
+        , 'rule'      : 'Is one of "Open", "In Progress", "Closed"'
+        , 'relevance' : 'Valid category options are essential for accurate group reporting.'
+        , 'class'     : 'Domain'
+        , 'noun'      : 'invalid status value'
+        , 'eval_fn'   : lambda df: df.loc[~df['status'].apply(lambda x: pd.notna(x) and x in ('Open', 'In Progress', 'Closed')), 'status'].tolist()
+    },
+    {
+          'key'       : 'r04'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'agent_id'
+        , 'rule'      : 'Non-nullable'
+        , 'relevance' : 'Tickets with NULL agent_id would keep open and unassigned.'
+        , 'class'     : 'NULL'
+        , 'noun'      : 'null agent_id'
+        , 'eval_fn'   : lambda df: df.loc[df['agent_id'].isna(), 'agent_id'].tolist()
+    },
+]
