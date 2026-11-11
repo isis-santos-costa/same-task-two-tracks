@@ -294,12 +294,14 @@ def get_iso_date(df, date_col_name):
         format='mixed', 
         errors='coerce'
     )
+
+    unparsed_sample = df.loc[parsed_dates.isna(), date_col_name].unique()[:5]
     
     nat_count = parsed_dates.isna().sum()
     if nat_count > 0:
         raise ValueError(
             f"Date parsing error: Found {nat_count} unparsed or missing entry(ies) "
-            f"in column '{date_col_name}'."
+            f"in column '{date_col_name}'. First 5: {unparsed_sample}"
         )
     
     df[new_col_name] = parsed_dates.dt.strftime('%Y-%m-%d')
