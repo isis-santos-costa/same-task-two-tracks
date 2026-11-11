@@ -79,7 +79,7 @@ TASKS = [   # (program, kind, module, task, title): the single source of truth, 
     ('Coursera', 'task',     1, 2, 'Run validation checks and flag errors'),
     ('Coursera', 'task',     1, 3, 'Reconcile data across systems'),
     ('Coursera', 'job_task', 1, 1, 'Profile a dataset and surface quality risks'),
-    ('Coursera', 'job_task', 1, 2, 'Run validation checks and flag capture errors'),
+    ('Coursera', 'job_task', 1, 2, 'Run validation checks and flag errors'),
     ('Coursera', 'job_task', 1, 3, 'Reconcile data across systems'),
 ]
 TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
