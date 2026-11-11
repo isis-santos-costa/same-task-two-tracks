@@ -220,7 +220,7 @@ RULES_CONFIG = [
         , "field"     : "customer_id"
         , "rule"      : "Index"
         , "relevance" : "Entity integrity is crucial for cross-table analyses (JOIN)."
-        , "class"     : "Uniques"
+        , "class"     : "UNIQUE"
         , "noun"      : "duplicate ID"
         , "eval_fn"   : lambda df: df[df['customer_id'].duplicated()]['customer_id'].tolist()
     },
@@ -231,7 +231,7 @@ RULES_CONFIG = [
         , "rule"      : f"[{MIN_AGE}, {MAX_AGE}]"
         , "relevance" : ("Non-valid values can distort non-robust summarizing metrics, like"
                        " the mean.")
-        , "class"     : "Range"
+        , "class"     : "RANGE"
         , "noun"      : "out-of-range age"
         , "eval_fn"   : lambda df: df.loc[df['age'] < MIN_AGE, 'age'].tolist() + df.loc[df['age'] > MAX_AGE, 'age'].tolist()
     },
@@ -241,7 +241,7 @@ RULES_CONFIG = [
         , "field"     : "email"
         , "rule"      : 'Must have an "@"'
         , "relevance" : "Email without an @ is not directly actionable via machine."
-        , "class"     : "String"
+        , "class"     : "FORMAT"
         , "noun"      : "invalid email"
         , "eval_fn"   : lambda df: df.loc[~df['email'].str.contains('@'), 'email'].tolist()
     },
@@ -251,7 +251,7 @@ RULES_CONFIG = [
         , "field"     : "state"
         , "rule"      : "Must be within domain"
         , "relevance" : "Valid category options are essential for accurate group reporting."
-        , "class"     : "Domain"
+        , "class"     : "DOMAIN"
         , "noun"      : "invalid state"
         , "eval_fn"   : lambda df: df.loc[~df['state'].isin(STATE_DOMAIN), 'state'].tolist()
     },
@@ -261,7 +261,7 @@ RULES_CONFIG = [
         , "field"     : "purchase_amount"
         , "rule"      : "Must be > 0"
         , "relevance" : "Non-negative purchases are required for P&L accuracy."
-        , "class"     : "Non-negative"
+        , "class"     : "RANGE"
         , "noun"      : "negative purchase"
         , "eval_fn"   : lambda df: df.loc[df['purchase_amount'] < 0, 'purchase_amount'].tolist()
     },
@@ -271,7 +271,7 @@ RULES_CONFIG = [
         , "field"     : "loyalty_tier"
         , "rule"      : "Must be within domain"
         , "relevance" : "Valid category options are essential for accurate group reporting."
-        , "class"     : "Domain"
+        , "class"     : "DOMAIN"
         , "noun"      : "invalid loyalty tier"
         , "eval_fn"   : lambda df: df.loc[~df['loyalty_tier'].isin(TIER_DOMAIN), 'loyalty_tier'].tolist()
     },
@@ -286,7 +286,7 @@ RULES_CONFIG_SERVICE_TICKETS = [
         , 'field'     : 'ticket_id'
         , 'rule'      : 'Must start with "T-" followed by four digits (e.g., T-1234).'
         , 'relevance' : 'Valid IDs are crucial for cross-table analyses (JOIN).'
-        , 'class'     : 'String'
+        , 'class'     : 'FORMAT'
         , 'noun'      : 'invalid ticket_id'
         , 'eval_fn'   : lambda df: df.loc[~df['ticket_id'].str.contains(r'^T-\d{4}$', regex=True, na=False), 'ticket_id'].tolist()
         
@@ -297,7 +297,7 @@ RULES_CONFIG_SERVICE_TICKETS = [
         , 'field'     : 'priority'
         , 'rule'      : 'Must be integer [1, 5]'
         , 'relevance' : 'Valid category options are essential for accurate group reporting.'
-        , 'class'     : 'Range'
+        , 'class'     : 'RANGE'
         , 'noun'      : 'invalid priority value'
         , 'eval_fn'   : lambda df: df.loc[~df['priority'].apply(lambda x: pd.notna(x) and x % 1 == 0 and 1 <= x <= 5), 'priority'].tolist()
     },
@@ -307,7 +307,7 @@ RULES_CONFIG_SERVICE_TICKETS = [
         , 'field'     : 'status'
         , 'rule'      : 'Is one of "Open", "In Progress", "Closed"'
         , 'relevance' : 'Valid category options are essential for accurate group reporting.'
-        , 'class'     : 'Domain'
+        , 'class'     : 'DOMAIN'
         , 'noun'      : 'invalid status value'
         , 'eval_fn'   : lambda df: df.loc[~df['status'].apply(lambda x: pd.notna(x) and x in ('Open', 'In Progress', 'Closed')), 'status'].tolist()
     },
