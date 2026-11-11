@@ -108,6 +108,7 @@ COMPARISON = [   # (program, kind, module, task, action): keep each task's rows 
     ('Coursera', 'job_task', 1, 1, 'Data Profiling'),
     ('Coursera', 'job_task', 1, 2, 'Data Profiling'),
     ('Coursera', 'job_task', 1, 2, 'Data Quality Tests'),
+    ('Coursera', 'job_task', 1, 3, 'Data Reconciliation'),
 ]
 
 # guards: loud on purpose
