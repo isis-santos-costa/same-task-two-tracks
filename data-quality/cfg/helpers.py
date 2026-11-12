@@ -61,13 +61,14 @@ def build_see_also(name, current, function_title):
 
 # overall .................................................................................................
 
-def style_table(df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, right_cols=(), nowrap_cols=()):
+def style_table(
+    df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, 
+    index=False, right_cols=(), nowrap_cols=()):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
     """
 
-    index = False if len(df) <= 10 else True
     t = THEMES[track.lower()]
 
     styler = df.style
@@ -138,6 +139,17 @@ def style_table(df, track, caption=None, min_width=None, max_height=None, sticky
     
     return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; {box}border:1px solid {t["outer"]}; '
             f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
+
+
+def style_raw_table(df, track, sticky_first_col=True):
+    return style_table(
+        df, 
+        track,
+        min_width='44rem', 
+        max_height='360px',
+        sticky_first_col=True,
+        index=False,
+    )
 
 
 def get_code_from_eval(eval_fn):
@@ -265,16 +277,6 @@ def get_clean_dict(d):
     """Return a dictionary without string quotation marks on keys."""
     content = ", ".join(f"{k}: {v}" for k, v in d.items())
     return f"{{{content}}}"
-
-
-def style_raw_table(df, track, sticky_first_col=True):
-    return style_table(
-        df, 
-        track,
-        min_width='44rem', 
-        max_height='360px',
-        sticky_first_col=True,
-    )
 
 
 def get_metric_shift(raw_series, proc_series, func):
