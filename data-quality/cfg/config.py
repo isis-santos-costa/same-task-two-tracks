@@ -140,7 +140,7 @@ PROFILE_ANALYSIS_TEMPLATE = """
 <br>
 
 The Data Profiling reviewed **{total_records} customer records** on completeness and quality. 
-{date_assessment} {completeness_text} {outlier_text}
+{completeness_text} {outlier_text} {date_assessment}
     """
 
 PROFILE_ANALYSIS_HELP_TEMPLATE = """
