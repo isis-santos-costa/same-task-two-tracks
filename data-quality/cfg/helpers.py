@@ -566,6 +566,7 @@ def get_data_profile_v2(df):
 @versioned('get_data_profile', 3)   # current
 def get_data_profile_v3(df, track):
 
+    warnings.filterwarnings('ignore', message='.*Parsing dates.*', category=UserWarning)
     
     def _fmt_value(x, kind):
         if kind == 'date':
@@ -616,7 +617,7 @@ def get_data_profile_v3(df, track):
             if is_dt:
                 parsing_warnings = [str(warn.message) for warn in w if 'Parsing dates' in str(warn.message)]
                 if parsing_warnings:
-                    date_fmt_warn_cols.append(col)
+                    date_fmt_warn_cols.append(f'{col}: {parsing_warnings}')
 
             try:
                 q     = series.quantile(CORE_DISTRIBUTION)
@@ -748,7 +749,7 @@ def get_profile_report(df, date_assessment=''):
 
     counts   = df['outlier_cnt'] if 'outlier_cnt' in df.columns else pd.Series(0, index=df.index)
     out_cols = df.loc[counts > 0, 'column_name']
-    outlier_text = '' if out_cols.empty else (
+    outlier_text = '**No outliers** found.' if out_cols.empty else (
         ' **Outliers** (beyond 1.5×IQR from the quartiles) were flagged in: '
         + ', '.join(f'`{c}`' for c in out_cols) + '.')
     
