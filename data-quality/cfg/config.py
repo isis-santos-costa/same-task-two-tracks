@@ -102,9 +102,8 @@ INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
 }
 
 TASK_OUTPUT_FILES = {
-    '1_1'    : 'dq_audit_report.md',
-    '1_2'    : 'dq_validation_findings.md',
-    'sa_2_1' : 'actual_vs_profit_data.csv'
+    '1_1' : 'dq_audit_report.md',
+    '1_2' : 'dq_validation_findings.md',
 }
 
 KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
@@ -124,6 +123,7 @@ COMPARISON = [   # (program, kind, module, task, action): keep each task's rows 
     ('Coursera', 'job_task', 1, 2, 'Data Profiling'),
     ('Coursera', 'job_task', 1, 2, 'Data Quality Tests'),
     ('Coursera', 'job_task', 1, 3, 'Data Reconciliation'),
+    ('Coursera', 'task',     2, 1, 'Data Profiling'),
 ]
 
 # guards: loud on purpose
