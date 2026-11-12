@@ -89,8 +89,9 @@ _ids = [(k, m, t) for _, k, m, t, _ in TASKS]
 assert len(_ids) == len(set(_ids)), 'Cell IDs must be unique across programs: give the newcomer its own kind'
 
 TASK_OUTPUT_FILES = {
-    '1_1': 'dq_audit_report.md',
-    '1_2': 'dq_validation_findings.md',
+    '1_1'    : 'dq_audit_report.md',
+    '1_2'    : 'dq_validation_findings.md',
+    'sa_2_1' : 'actual_vs_profit_data.csv'
 }
 
 KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
