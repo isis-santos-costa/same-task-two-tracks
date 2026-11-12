@@ -98,7 +98,7 @@ INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
     'jt_1_2_service_tickets_rules' : 'service_tickets_rules.txt',
     'jt_1_3_sales_source'          : 'sales_source.csv',
     'jt_1_3_sales_target'          : 'sales_target.csv',
-    'sa_2_1_sales_performance'     : 'sales_performance.csv',
+    't_2_1_sales_performance'      : 'sales_performance.csv',
 }
 
 TASK_OUTPUT_FILES = {
