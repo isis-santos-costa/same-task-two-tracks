@@ -104,6 +104,7 @@ INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
 TASK_OUTPUT_FILES = {
     '1_1' : 'dq_audit_report.md',
     '1_2' : 'dq_validation_findings.md',
+    '2_1' : 'actual_vs_profit_data.csv',
 }
 
 KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
