@@ -1060,15 +1060,17 @@ def build_reconciliation_report(result, track):
         parts += [
             style_table(result.mismatches.reset_index(), track,
                         min_width='30rem', max_height='360px', sticky_first_col=True),
-            't: target · s: source',
         ]
     return '\n\n'.join(parts)
     
 
 def reconcile_tables(source_df, target_df):
     """
-    Return a string on reconciliation between source and target tables,
-    including an HTML mismatch matrix.
+    Assess whether a source and a target table identically macht.
+    Return:
+    • reconciled (bool)
+    • notes (str list)
+    • mismatches matrix (df)
     """
     
     if target_df.equals(source_df):
@@ -1115,8 +1117,8 @@ def reconcile_tables(source_df, target_df):
             notes.append(f'Extra rows in target (Keys: {list(extra_keys)})')
     
     common_cols = [c for c in source_df.columns if c in target_df.columns and c != key_col]
-    
-    mismatch_data = {}
+
+    mismatch_df_rows = []
     for col in common_cols:
         s_col = src_aligned[col]
         t_col = tgt_aligned[col]
@@ -1124,25 +1126,28 @@ def reconcile_tables(source_df, target_df):
         diff_mask = (t_col != s_col) | (t_col.isna() ^ s_col.isna())
         
         if diff_mask.any():
-            col_mismatches = []
-            for idx, is_diff in enumerate(diff_mask):
-                if is_diff:
-                    t_val = 'empty' if pd.isna(t_col.iloc[idx]) else t_col.iloc[idx]
-                    s_val = 'empty' if pd.isna(s_col.iloc[idx]) else s_col.iloc[idx]
-                    col_mismatches.append(f't: {t_val}, s: {s_val}')
-                else:
-                    col_mismatches.append('✓')
-            mismatch_data[col] = col_mismatches
+            row_df = pd.DataFrame({
+                'row_id': src_aligned.loc[diff_mask, key_col],
+                'column': col,
+                'target_value': t_col[diff_mask].fillna('empty'),
+                'source_value': s_col[diff_mask].fillna('empty'),
+            })
+            mismatch_df_rows.append(row_df)
+
+    mismatch_df = pd.DataFrame()
     
-    if not mismatch_data:
-        base_msg = '\n'.join(report_lines)
-        return f'{base_msg}\nReconciled: Contents match after alignment.' if base_msg else 'Reconciled: Contents match.'
-    
-    mismatch_df = pd.DataFrame(mismatch_data, index=row_identifier)
-    
-    row_has_diff = (mismatch_df != '✓').any(axis=1)
-    mismatch_df = mismatch_df[row_has_diff]
-    
-    notes.append('\nDifferences found:')
+    if mismatch_df_rows:
+        mismatch_df = (
+            pd.concat(mismatch_df_rows, ignore_index=True)
+            .sort_values(by='row_id', key=lambda s: s.astype(str))
+            .set_index('row_id', drop=True)
+        )
+
+    total = len(mismatch_df)
+    if total > 200:
+        mismatch_df = mismatch_df.head(200)
+        notes.append(f'Differences found (showing 200 of {total}):')
+    else:
+        notes.append('Differences found:')
     
     return ReconcileResult(reconciled, notes, mismatch_df)
