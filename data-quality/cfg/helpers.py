@@ -597,6 +597,7 @@ def get_data_profile_v3(df, track):
         p['data_type']     .append(str(df[c].dtype))
     
     core_profile = []
+    date_fmt_warn_cols = []
    
     for col, f_class, f_subclass in zip(df.columns, p['field_class'], p['field_subclass']):
         
@@ -606,7 +607,15 @@ def get_data_profile_v3(df, track):
             
             is_dt  = is_date(df[col])
             kind   = 'date' if is_dt else ('int' if is_int(df[col]) else 'float')
-            series = to_dt(df[col]) if is_dt else df[col]
+
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter('always')
+                series = to_dt(df[col]) if is_dt else df[col]
+            
+            if is_dt:
+                parsing_warnings = [str(warn.message) for warn in w if 'Parsing dates' in str(warn.message)]
+                if parsing_warnings:
+                    date_fmt_warn_cols.append(col)
 
             try:
                 q     = series.quantile(CORE_DISTRIBUTION)
@@ -643,6 +652,11 @@ def get_data_profile_v3(df, track):
             else:
                 txt += 'error'
 
+        if date_fmt_warn_cols:
+            date_assessment = (f"**Date format** warnings found, further inspection recommended (columns: {date_fmt_warn_cols}).")
+        else:
+            date_assessment = '**Date format** confirmed consistent for the dataset.'
+                    
         p['core_profile'].append(txt)
         p['outlier_cnt'] .append(n_out)
     
@@ -672,7 +686,7 @@ def get_data_profile_v3(df, track):
     )
 
     profile_legend = build_legend(PROFILE_LEGEND)
-    profile_report, profile_report_help = get_profile_report(profile_data)
+    profile_report, profile_report_help = get_profile_report(profile_data, date_assessment)
     profile_distributions = get_distributions_html(df, track, show_box_plot=True)
     profile_styled =style_profile_table(profile_df, track)
 
@@ -700,15 +714,14 @@ def get_data_profile_v3(df, track):
 
 # --- helpers ---
 
-def get_profile_report(df):
+def get_profile_report(df, date_assessment=''):
     
     total_records = int(df['non_null_cnt'].max())
 
     incomplete_rows = df[df['non_null_cnt'] < total_records]
     if incomplete_rows.empty:
         completeness_text = (
-            "The assessment confirms complete data across all fields, with no"
-            " missing values."
+            "**No missing values** found across any of the fields."
         )
     else:
         missing_summary = ", ".join(
@@ -740,6 +753,7 @@ def get_profile_report(df):
     
     profiling_analysis = PROFILE_ANALYSIS_TEMPLATE.format(
         total_records      = total_records,
+        date_assessment    = date_assessment,
         completeness_text  = completeness_text,
         outlier_text       = outlier_text,
     ).strip()
