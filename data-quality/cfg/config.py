@@ -81,6 +81,7 @@ TASKS = [   # (program, kind, module, task, title): the single source of truth, 
     ('Coursera', 'job_task', 1, 1, 'Profile a dataset and surface quality risks'),
     ('Coursera', 'job_task', 1, 2, 'Run validation checks and flag errors'),
     ('Coursera', 'job_task', 1, 3, 'Reconcile data across systems'),
+    ('Coursera', 'task'    , 2, 1, 'Profile a dataset and surface quality risks'),
 ]
 TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
 
@@ -92,7 +93,7 @@ TASK_OUTPUT_FILES = {
     '1_2': 'dq_validation_findings.md',
 }
 
-KINDS  = {'task': 'Task', 'job_task': 'Job Task'}
+KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
 
 # comparison ..............................................................................................
 
