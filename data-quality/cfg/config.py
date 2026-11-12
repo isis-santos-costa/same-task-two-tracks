@@ -88,6 +88,19 @@ TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
 _ids = [(k, m, t) for _, k, m, t, _ in TASKS]
 assert len(_ids) == len(set(_ids)), 'Cell IDs must be unique across programs: give the newcomer its own kind'
 
+INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
+    't_1_1_rules'                  : 'dq_rules.txt',
+    't_1_1_data'                   : 'customer_data.csv',
+    'jt_1_1_city_data'             : 'city_data.xlsx',
+    'jt_1_1_retail_data'           : 'retail_data.xlsx',
+    'jt_1_1_product_inventory'     : 'product_inventory.csv',
+    'jt_1_2_service_tickets'       : 'service_tickets.csv',
+    'jt_1_2_service_tickets_rules' : 'service_tickets_rules.txt',
+    'jt_1_3_sales_source'          : 'sales_source.csv',
+    'jt_1_3_sales_target'          : 'sales_target.csv',
+    'sa_2_1_sales_performance'     : 'sales_performance.csv',
+}
+
 TASK_OUTPUT_FILES = {
     '1_1'    : 'dq_audit_report.md',
     '1_2'    : 'dq_validation_findings.md',
