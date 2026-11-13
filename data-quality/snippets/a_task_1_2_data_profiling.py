@@ -9,41 +9,45 @@
 
 action = 'Data Profiling'
 is_first_action = True
+show_title = False
 
 track, kind, module, task = 'A', 'task', 1, 2
-task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS)
+task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS, show_title)
 
 
-# initializing --------------------------------------------------------------------------------------------
+# load ----------------------------------------------------------------------------------------------------
 
-df = pd.read_csv(PATH_IN_T_1_1_DATA)
+df = pd.read_csv((PATH_IN_FILES['t_1_1_data']))
 
 
 # Data Profiling ------------------------------------------------------------------------------------------
 
-profiling = use('get_data_profiling', 2)(df)
+profile = use('get_data_profile', 2)(df)
 
 
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-profiling_styled = style_table(
-    profiling.table, 
+profile_styled = style_table(
+    profile.table, 
     track,
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
-    right_cols=('Null', 'nNulls'),
+    # right_cols=('Null', 'nNulls'),                 # record version
+    right_cols=('Core profile', 'Null', 'nNulls'),   # display version
+    nowrap_cols=('Core profile',),
 )
 
 sections = [
       f'<div class="t-{track.lower()}">'
     , f"\n### {action}"
     , "`customer_data_profile`"
-    , profiling_styled
-    , profiling.legend
-    , profiling.report
-    , profiling.see_also
+    , profile_styled
+    , profile.legend
+    , profile.report
+    , profile.report_help
+    , profile.see_also
     , '</div>'
 ]
 

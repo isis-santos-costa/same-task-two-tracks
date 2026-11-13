@@ -5,9 +5,10 @@
 
 action = 'Data Reconciliation'
 is_first_action = True
+show_title = True
 
 track, kind, module, task = 'A', 'task', 1, 3
-task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS)
+task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS, show_title)
 
 reconciliation_df = pd.DataFrame(
     data=[
@@ -18,9 +19,9 @@ reconciliation_df = pd.DataFrame(
 )
 
 
-# initializing --------------------------------------------------------------------------------------------
+# load ----------------------------------------------------------------------------------------------------
 
-df = pd.read_csv(PATH_IN_T_1_1_DATA)
+df = pd.read_csv((PATH_IN_FILES['t_1_1_data']))
 
 
 # report --------------------------------------------------------------------------------------------------

@@ -9,36 +9,38 @@
 
 action = 'Data Quality Tests'
 is_first_action = False
+show_title = False
 
 track, kind, module, task = 'A', 'task', 1, 2
-task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS)
+task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS, show_title)
 
 
 # Data Quality Tests --------------------------------------------------------------------------------------
 
-dq_tests_data = get_dq_test_data(df, RULES_CONFIG)
-dq_tests_df, dq_tests_legend, dq_tests_report = get_dq_test_results(dq_tests_data)
+tests = get_dq_tests(df, RULES_CONFIG, version=2)
 
 
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-dq_tests_table = style_table(
-    build_dq_tests_labels(dq_tests_df), 
+
+tests_styled = style_table(
+    build_dq_tests_labels(tests.table), 
     track,
     min_width='44rem', 
     max_height='360px',
     sticky_first_col=True,
-    bold_first_col=True,
+    bold_first_col=True
 )
 
 sections = [
       f'<div class="t-{track.lower()}">'
     , f"\n### {action}"
     , "`dq_tests`"
-    , dq_tests_table
-    , dq_tests_legend
-    , dq_tests_report
+    , tests_styled
+    , tests.legend
+    , tests.report
+    , tests.see_also
     , '</div>'
 ]
 
