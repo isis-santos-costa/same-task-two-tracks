@@ -29,7 +29,7 @@ TOC_CSS = TRACK_CSS + '<style>.toc{' + ''.join(
 .toc .track span{font-size:12.5px;color:var(--fg)}
 .toc .row{display:flex;align-items:baseline;gap:10px;padding:3px 0}
 .toc .txt{flex:1}
-.toc .kind{flex:none;min-width:5.6em;color:var(--ix-muted)}
+.toc .kind{flex:none;width:9em;color:var(--ix-muted)}
 .toc .mod{font-weight:700;margin-top:10px;padding-top:10px;border-top:1px solid var(--ix-line)}
 .toc .pills{flex:none;white-space:nowrap}
 .toc a.pill{display:inline-block;margin-left:4px;padding:.15em .75em;border:1px solid var(--rl);border-radius:999px;
