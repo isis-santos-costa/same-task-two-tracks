@@ -17,7 +17,7 @@ from pathlib   import Path
 TOC_CSS = TRACK_CSS + '<style>.toc{' + ''.join(
     f'--ix-{k.replace("_", "-")}:{v};' for k, v in IX.items()
 ) + '}' + """
-.toc{max-width:36rem;background:var(--ix-bg);color:var(--ix-fg);border:1px solid var(--ix-line);border-radius:10px;
+.toc{max-width:29rem;background:var(--ix-bg);color:var(--ix-fg);border:1px solid var(--ix-line);border-radius:10px;
      padding:16px 22px;font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}
 .toc .prog{font-weight:400;color:var(--ix-muted);font-size:12px}
 .toc a{text-decoration:none!important}
