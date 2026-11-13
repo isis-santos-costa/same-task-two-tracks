@@ -98,7 +98,8 @@ INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
     'jt_1_2_service_tickets_rules' : 'service_tickets_rules.txt',
     'jt_1_3_sales_source'          : 'sales_source.csv',
     'jt_1_3_sales_target'          : 'sales_target.csv',
-    't_2_1_sales_performance'      : 'sales_performance.csv',
+    'sa_2_1_sales_performance'     : 'sales_performance.csv',
+    'l_2_1_missing_data'           : 'transactions_obt_w_missing_data.csv'
 }
 
 TASK_OUTPUT_FILES = {
@@ -107,7 +108,7 @@ TASK_OUTPUT_FILES = {
     '2_1' : 'actual_vs_profit_data.csv',
 }
 
-KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
+KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment', 'lab': 'Lab'}
 
 # comparison ..............................................................................................
 
