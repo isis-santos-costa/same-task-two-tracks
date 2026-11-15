@@ -109,7 +109,9 @@ TASK_OUTPUT_FILES = {
     '2_1' : 'actual_vs_profit_data.csv',
 }
 
-KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
+KINDS = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
+
+TOOLS = {'a': 'pandas', 'b': 'SQL · dbt'}
 
 # comparison ..............................................................................................
 
