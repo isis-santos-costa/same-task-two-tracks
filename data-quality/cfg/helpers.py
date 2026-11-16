@@ -592,8 +592,8 @@ def get_data_profile_v3(df, track):
         non_null_cnt = df[c].notnull().sum()
         
         p['column_name']   .append(c)
-        p['non_null_cnt']  .append(non_null_cnt)
-        p['null_pct']      .append(f"{(1 - non_null_cnt / len(df)):.1%}")
+        p['non_null_cnt']  .append(f'{non_null_cnt:,}')
+        p['null_pct']      .append(f'{(1 - non_null_cnt / len(df)):.1%}')
         p['field_subclass'].append(use('get_field_subclass', 1)(df[c]))
         p['field_class']   .append(use('get_field_class'   , 1)(df[c]))
         p['data_type']     .append(str(df[c].dtype))
@@ -657,7 +657,7 @@ def get_data_profile_v3(df, track):
         if date_fmt_warn_cols:
             date_assessment = (f"**Date format** warnings found, further inspection recommended (columns: {date_fmt_warn_cols}).")
         else:
-            date_assessment = '**Date format** confirmed consistent for the dataset.'
+            date_assessment = '**Date format** was confirmed consistent for the entire dataset.'
                     
         p['core_profile'].append(txt)
         p['outlier_cnt'] .append(n_out)
