@@ -111,7 +111,7 @@ TASK_OUTPUT_FILES = {
 
 KINDS = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
 
-TOOLS = {'a': 'pandas', 'b': 'SQL · dbt'}
+TOOLS = {'a': 'pandas', 'b': 'dbt · SQL'}
 
 # comparison ..............................................................................................
 
