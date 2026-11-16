@@ -135,8 +135,6 @@ def style_table(
         styles += [{'selector': f'tbody td:nth-child({n})',
                     'props': [('white-space', 'nowrap'), ('overflow-wrap', 'normal')]}]
 
-    print('DEBUG', df.columns, styler)
-
     if numerical_fmt:
         styler = styler.format(numerical_fmt)
 
@@ -695,6 +693,7 @@ def get_data_profile_v3(df, track):
     profile_legend = build_legend(PROFILE_LEGEND)
     profile_report, profile_report_help = get_profile_report(profile_data, date_assessment)
     profile_distributions = get_distributions_html(df, track, show_box_plot=True)
+
     profile_styled = style_profile_table(profile_df, track)
 
     profile_see_also = build_see_also('get_data_profile', 3, 'Data Profiling')
