@@ -14,6 +14,7 @@ from dataclasses import dataclass
 
 @dataclass
 class DevFlags:
+    chart_dpi               : int  = 150
     record_version          : bool = False
     allow_version_overwrite : bool = True
     export_zip              : bool = True
