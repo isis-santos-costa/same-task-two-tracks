@@ -64,7 +64,7 @@ def build_see_also(name, current, function_title):
 
 def style_table(
     df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, 
-    index=False, right_cols=(), nowrap_cols=()):
+    index=False, right_cols=(), nowrap_cols=(), numerical_fmt=None):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -134,6 +134,11 @@ def style_table(
         n = visible.index(name) + 1 + offset
         styles += [{'selector': f'tbody td:nth-child({n})',
                     'props': [('white-space', 'nowrap'), ('overflow-wrap', 'normal')]}]
+
+    print('DEBUG', df.columns, styler)
+
+    if numerical_fmt:
+        styler = styler.format(numerical_fmt)
 
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
@@ -881,20 +886,16 @@ def extract_outlier_thresholds(df, col):
     return outlier_thresh_low, outlier_thresh_high
 
 
-def style_profile_table(df, track):
-    formatted = df.assign(**{
-        col: df[col].map(fmt.format)
-        for col, fmt in PROFILE_FMT.items()
-        if col in df
-    })
+def style_profile_table(table, track):
     return style_table(
-        formatted,
+        table,
         track,
         min_width='44rem',
         max_height='360px',
         sticky_first_col=True,
         right_cols=PROFILE_RIGHT_COLS,
         nowrap_cols=('Core profile',),
+        numerical_fmt=PROFILE_FMT,
     )
 
 # Data Quality Tests ..........................................................................
