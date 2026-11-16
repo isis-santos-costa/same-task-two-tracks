@@ -592,8 +592,8 @@ def get_data_profile_v3(df, track):
         non_null_cnt = df[c].notnull().sum()
         
         p['column_name']   .append(c)
-        p['non_null_cnt']  .append(f'{non_null_cnt:,}')
-        p['null_pct']      .append(f'{(1 - non_null_cnt / len(df)):.1%}')
+        p['non_null_cnt']  .append(non_null_cnt)
+        p['null_pct']      .append((1 - int(non_null_cnt) / len(df)))
         p['field_subclass'].append(use('get_field_subclass', 1)(df[c]))
         p['field_class']   .append(use('get_field_class'   , 1)(df[c]))
         p['data_type']     .append(str(df[c].dtype))
@@ -690,7 +690,7 @@ def get_data_profile_v3(df, track):
     profile_legend = build_legend(PROFILE_LEGEND)
     profile_report, profile_report_help = get_profile_report(profile_data, date_assessment)
     profile_distributions = get_distributions_html(df, track, show_box_plot=True)
-    profile_styled =style_profile_table(profile_df, track)
+    profile_styled = style_profile_table(profile_df, track)
 
     profile_see_also = build_see_also('get_data_profile', 3, 'Data Profiling')
 
@@ -881,9 +881,14 @@ def extract_outlier_thresholds(df, col):
     return outlier_thresh_low, outlier_thresh_high
 
 
-def style_profile_table(table, track):
+def style_profile_table(df, track):
+    formatted = df.assign(**{
+        col: df[col].map(fmt.format)
+        for col, fmt in PROFILE_FMT.items()
+        if col in df
+    })
     return style_table(
-        table,
+        formatted,
         track,
         min_width='44rem',
         max_height='360px',
