@@ -151,11 +151,7 @@ CODE_HEADER = """
 
 # Data Profiling ..........................................................................................
 
-PROFILE_FMT = {
-    'non_null_cnt' : '{:,}',
-        'null_pct' : '{:.1%}',
-}
-
+PROFILE_FMT = {'Null': '{:.1%}', 'nNulls': '{:,}'}
 PROFILE_RIGHT_COLS = ('Null', 'nNulls') if DEV.record_version else ('Core profile', 'Null', 'nNulls')
 
 PROFILE_CLASS_ORDER    = ['num', 'cat']
