@@ -64,7 +64,7 @@ def build_see_also(name, current, function_title):
 
 def style_table(
     df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, 
-    index=False, right_cols=(), nowrap_cols=(), numerical_fmt=None, max_rows=0):
+    index=False, right_cols=(), nowrap_cols=(), formats=None, cell_styles=None, max_rows=0):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -72,7 +72,7 @@ def style_table(
 
     total = len(df)
     if max_rows and total > max_rows:
-        df = df.head(max_rows)
+        df = df.sample(max_rows, random_state=42).sort_index()
         caption = f'Showing first {max_rows:,} of {total:,} rows' + (f' · {caption}' if caption else '')
 
     t = THEMES[track.lower()]
@@ -82,6 +82,10 @@ def style_table(
         styler = styler.hide(axis='index')
     if caption:
         styler = styler.set_caption(caption)
+    if formats:
+        styler = styler.format(formats)
+    for col, fn in (cell_styles or {}).items():
+        styler = styler.map(fn, subset=[col])
 
     fit   = [('overflow-wrap', 'break-word'), ('white-space', 'normal')]
     body  =  ('tbody td'                   , 'tbody th'                   )
@@ -140,9 +144,6 @@ def style_table(
         styles += [{'selector': f'tbody td:nth-child({n})',
                     'props': [('white-space', 'nowrap'), ('overflow-wrap', 'normal')]}]
 
-    if numerical_fmt:
-        styler = styler.format(numerical_fmt)
-
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
     
@@ -150,7 +151,7 @@ def style_table(
             f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
 
 
-def style_raw_table(df, track, sticky_first_col=True):
+def style_raw_table(df, track, **kw):
     return style_table(
         df, 
         track,
@@ -158,6 +159,8 @@ def style_raw_table(df, track, sticky_first_col=True):
         max_height='360px',
         sticky_first_col=True,
         index=False,
+        max_rows=DEV.max_rows, 
+        **kw
     )
 
 
@@ -837,7 +840,7 @@ def get_distributions_html(df, track, show_box_plot=False, max_per_row=6):
         fig.patch.set_alpha(0)
         ax.patch.set_alpha(0)
         buf = io.BytesIO()
-        fig.savefig(buf, format='png', transparent=True, dpi=150)
+        fig.savefig(buf, format='png', transparent=True, dpi=DEV.chart_dpi)
         plt.close(fig)
         img = base64.b64encode(buf.getvalue()).decode('utf-8')
         return f'<img src="data:image/png;base64,{img}" alt="{col}" />'
@@ -890,7 +893,7 @@ def extract_outlier_thresholds(df, col):
     return outlier_thresh_low, outlier_thresh_high
 
 
-def style_profile_table(table, track):
+def style_profile_table(table, track, **kw):
     return style_table(
         table,
         track,
@@ -899,7 +902,9 @@ def style_profile_table(table, track):
         sticky_first_col=True,
         right_cols=PROFILE_RIGHT_COLS,
         nowrap_cols=('Core profile',),
-        numerical_fmt=PROFILE_FMT,
+        formats=PROFILE_FMT,
+        max_rows=DEV.max_rows, 
+        **kw,
     )
 
 # Data Quality Tests ..........................................................................
