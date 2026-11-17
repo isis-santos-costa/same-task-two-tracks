@@ -64,7 +64,7 @@ def build_see_also(name, current, function_title):
 
 def style_table(
     df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, 
-    index=False, right_cols=(), nowrap_cols=(), formats=None, cell_styles=None, max_rows=0):
+    index=False, right_cols=(), nowrap_cols=(), formats=None, cell_styles=None, row_styles=None, max_rows=0):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -73,7 +73,7 @@ def style_table(
     total = len(df)
     if max_rows and total > max_rows:
         df = df.sample(max_rows, random_state=42).sort_index()
-        caption = f'Showing first {max_rows:,} of {total:,} rows' + (f' · {caption}' if caption else '')
+        caption = f'Random sample of {max_rows:,} of {total:,} rows' + (f' · {caption}' if caption else '')
 
     t = THEMES[track.lower()]
 
@@ -86,6 +86,8 @@ def style_table(
         styler = styler.format(formats)
     for col, fn in (cell_styles or {}).items():
         styler = styler.map(fn, subset=[col])
+    for fn in (row_styles or ()):
+        styler = styler.apply(fn, axis=1)
 
     fit   = [('overflow-wrap', 'break-word'), ('white-space', 'normal')]
     body  =  ('tbody td'                   , 'tbody th'                   )
@@ -147,8 +149,8 @@ def style_table(
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
     
-    return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; {box}border:1px solid {t["outer"]}; '
-            f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
+    return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; {box}border:1px solid {t['outer']}; '
+            f'border-radius:8px; box-shadow:{t['shadow']}; background:{t['body_bg']};">{html}</div>')
 
 
 def style_raw_table(df, track, sticky_first_col=True, **kw):
@@ -1188,3 +1190,172 @@ def reconcile_tables(source_df, target_df):
         notes.append('Differences found:')
     
     return ReconcileResult(reconciled, notes, mismatch_df)
+
+
+# Missing Data ................................................................................
+
+def render_missing_rates(target, rates, overall, observations, track, min_effect=0.10):
+    """
+    Render results from get_missing_rates:
+    • target       : str   : Target column, focus of missingness
+    • rates        : df    : Rate by column group
+    • overall      : float : Overall missingess of target_col
+    • observations : str   : Analyst observations
+    • track        : str   : A/B
+    • min_effect   : float : Minimal lift to highlight
+    """
+    
+    rate_col_name = rates.columns[3]
+    
+    flagged = rates[rates['lift'] > 0].sort_values('lift', ascending=False).copy()
+    flagged['display'] = flagged['group'] + ' (' + flagged['lift'].map('{:+.0%}'.format) + ')'
+    
+    summary_df = (
+        flagged.groupby('column', as_index=False, sort=False)
+        .agg(
+            positive_lift_groups=('display', list),
+            max_lift=('lift', 'max'),
+        )
+        .sort_values('max_lift', ascending=False)
+        .drop(columns='max_lift')
+        .reset_index(drop=True)
+    )
+
+    missingness_summary_table = style_table(summary_df, track)
+    missingness_summary_chart = get_missing_rates_chart(rates, overall, target, track, min_effect)
+    
+    num_fmt = {
+            'n'           : '{:,}',
+            rate_col_name : '{:.2%}',
+            'lift'        : '{:.2%}',
+        }
+
+    cell_styles = {'lift': make_lift_style(track, min_effect)}
+    full_missingness_table = style_table(
+        rates, track,
+        formats=num_fmt,
+        row_styles=[make_lift_row_style(track, min_effect)],
+        max_height='360px',
+    )
+
+    t = THEMES[track.lower()]
+    alt = f"`{target}` missingness"
+    cols = rates['column'].unique()
+    fig, axes = plt.subplots(len(cols), 1, figsize=(6, 1.1 * len(cols)), sharex=True)
+    
+    for ax, col in zip(np.atleast_1d(axes), cols):
+        r = rates[rates['column'] == col].sort_values(by=rate_col_name)
+        
+        colors = [
+            t['warn'] if v >= min_effect else (t['ok'] if v <= -min_effect else '#aaa')
+            for v in r['lift']
+        ]
+        
+        ax.barh(r['group'], r[rate_col_name], color=colors)
+        ax.axvline(overall, color=t['body_fg'], ls='--', lw=1)
+        ax.set_ylabel(col, rotation=0, ha='right')
+        
+    plt.xlabel(f'% {target_col} missing (dashed = overall {overall:.0%})')
+    full_missingness_chart = fig_to_img_html(fig, alt)
+    
+    display_markdown(f"""
+Overall missing `{target}`: **{overall:.1%}**<br><br>
+**Core findings: Missing `{target}` rates above the overall value were found for the following groups:**  
+{missingness_summary_table}
+{observations}<br>
+{missingness_summary_chart}<br><br>
+**Details: Full missing `{target}` group ranking by column:**
+{full_missingness_table}<br>
+{full_missingness_chart}
+""", raw=True)
+
+
+def make_lift_row_style(track, min_effect, col='lift'):
+    t = THEMES[track.lower()]
+    def fn(row):
+        v = row[col]
+        if pd.isna(v) or abs(v) < min_effect:
+            return [''] * len(row)
+        c, bg = (t['warn'], t['warn_bg']) if v >= min_effect else ((t['ok'], t['ok_bg']) if v <= -min_effect else ('', ''))
+        css = f'color: {c} !important; background-color: {bg} !important; font-weight: 600 !important;'
+        return [css] * len(row)
+    return fn
+
+
+def get_missing_rates_chart(rates, overall, target, track, min_effect=0.10, top=15, min_n=100):
+    t = THEMES[track.lower()]
+    d = rates[rates['n'] >= min_n]
+    d = d.loc[d['lift'].abs().sort_values(ascending=False).index].head(top).sort_values('lift')
+    if d.empty:
+        return ''
+    fig, ax = plt.subplots(figsize=(6, 0.34 * len(d) + 1))
+    ax.barh(d['column'] + ' · ' + d['group'], d['lift'] * 100,
+            color=[t['warn'] if v >= min_effect else (t['ok'] if v <= -min_effect else '#aaa') for v in d['lift']])
+    ax.axvline(0, color=t['body_fg'], lw=1)
+    ax.set_xlabel(f'% vs overall missing {target} ({overall:.1%}) · Top {top} lift magnitude', color=t['body_fg'], fontsize=10)
+    ax.tick_params(colors=t['body_fg'], labelsize=9)
+    for s in ('top', 'right'):
+        ax.spines[s].set_visible(False)
+    for s in ('left', 'bottom'):
+        ax.spines[s].set_color(t['line'])
+    fig.patch.set_alpha(0); ax.patch.set_alpha(0)
+    return fig_to_img_html(fig, f'Missing {target} by group')
+        
+
+def get_missing_rates(df, target, n_buckets=5):
+    """
+    Missing rate of `target_col` per group, for every other column.
+    Numbers -> quantile buckets, dates -> months, categories as they are.
+    """    
+    
+    from pandas.api.types import is_datetime64_any_dtype as is_dt
+    from pandas.api.types import is_numeric_dtype        as is_num
+    from pandas.api.types import is_integer_dtype        as is_int
+    
+    miss    = df[target].isna()
+    overall = miss.mean()
+    rows    = []
+
+    for col in df.columns.drop(target):
+        s = df[col]
+        if not is_dt(s) and not is_num(s) and s.dtype == 'object':
+            parsed = pd.to_datetime(s, format='%Y-%m-%d', errors='coerce')
+            if s.notna().sum() > 0 and (parsed.notna().sum() / s.notna().sum()) > 0.90:
+                s = parsed
+        if is_dt(s):
+            groups  = s.dt.to_period('M').astype(str)
+        elif is_num(s) and (s.nunique() > n_buckets):
+            cats = pd.qcut(s, q=n_buckets, duplicates='drop')
+            if is_int(s):
+                cats = cats.cat.rename_categories([
+                f"[{int(c.left) + 1}, {int(c.right)}]" 
+                for c in cats.cat.categories
+                ])
+            else:
+                cats = cats.cat.rename_categories([
+                f"[{c.left:,.2f}, {c.right:,.2f}]" 
+                for c in cats.cat.categories
+                ])
+            groups = cats.astype(str)
+        else:
+            groups = s.astype(str)
+        
+        if not is_num(s):
+            top    = groups.value_counts().index[:n_buckets-1]
+            groups = groups.where(groups.isin(top), 'other')
+
+        g = miss.groupby(groups.where(s.notna(), 'missing')).agg(rate='mean', n='size')
+        
+        g['column']  = col
+        g['group']   = g.index
+        g['lift']    = g['rate'] / overall - 1
+        rows.append(g.reset_index(drop=True))
+    
+    rate_col_name = 'missing_' + target.lower()
+    out = (
+        pd.concat(rows, ignore_index=True)
+        .rename(columns={'rate': rate_col_name})
+        .sort_values('lift', ascending=False)
+        .reset_index(drop=True)
+    )
+    return out[['column', 'group', 'n', rate_col_name, 'lift']], overall
