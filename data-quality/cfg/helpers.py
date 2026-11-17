@@ -64,11 +64,16 @@ def build_see_also(name, current, function_title):
 
 def style_table(
     df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, 
-    index=False, right_cols=(), nowrap_cols=(), numerical_fmt=None):
+    index=False, right_cols=(), nowrap_cols=(), numerical_fmt=None, max_rows=0):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
     """
+
+    total = len(df)
+    if max_rows and total > max_rows:
+        df = df.head(max_rows)
+        caption = f'Showing first {max_rows:,} of {total:,} rows' + (f' · {caption}' if caption else '')
 
     t = THEMES[track.lower()]
 
