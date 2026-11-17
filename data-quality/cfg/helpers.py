@@ -1204,12 +1204,12 @@ def render_missing_rates(target, rates, overall, observations, track, min_effect
     • track        : str   : A/B
     • min_effect   : float : Minimal lift to highlight
     """
-    
+
     rate_col_name = rates.columns[3]
-    
+
     flagged = rates[rates['lift'] > 0].sort_values('lift', ascending=False).copy()
     flagged['display'] = flagged['group'] + ' (' + flagged['lift'].map('{:+.0%}'.format) + ')'
-    
+
     summary_df = (
         flagged.groupby('column', as_index=False, sort=False)
         .agg(
@@ -1223,14 +1223,13 @@ def render_missing_rates(target, rates, overall, observations, track, min_effect
 
     missingness_summary_table = style_table(summary_df, track)
     missingness_summary_chart = get_missing_rates_chart(rates, overall, target, track, min_effect)
-    
+
     num_fmt = {
             'n'           : '{:,}',
             rate_col_name : '{:.2%}',
             'lift'        : '{:.2%}',
         }
 
-    cell_styles = {'lift': make_lift_style(track, min_effect)}
     full_missingness_table = style_table(
         rates, track,
         formats=num_fmt,
@@ -1242,22 +1241,22 @@ def render_missing_rates(target, rates, overall, observations, track, min_effect
     alt = f"`{target}` missingness"
     cols = rates['column'].unique()
     fig, axes = plt.subplots(len(cols), 1, figsize=(6, 1.1 * len(cols)), sharex=True)
-    
+
     for ax, col in zip(np.atleast_1d(axes), cols):
         r = rates[rates['column'] == col].sort_values(by=rate_col_name)
-        
+
         colors = [
             t['warn'] if v >= min_effect else (t['ok'] if v <= -min_effect else '#aaa')
             for v in r['lift']
         ]
-        
+
         ax.barh(r['group'], r[rate_col_name], color=colors)
         ax.axvline(overall, color=t['body_fg'], ls='--', lw=1)
         ax.set_ylabel(col, rotation=0, ha='right')
-        
+
     plt.xlabel(f'% {target_col} missing (dashed = overall {overall:.0%})')
     full_missingness_chart = fig_to_img_html(fig, alt)
-    
+
     display_markdown(f"""
 Overall missing `{target}`: **{overall:.1%}**<br><br>
 **Core findings: Missing `{target}` rates above the overall value were found for the following groups:**  
@@ -1300,18 +1299,18 @@ def get_missing_rates_chart(rates, overall, target, track, min_effect=0.10, top=
         ax.spines[s].set_color(t['line'])
     fig.patch.set_alpha(0); ax.patch.set_alpha(0)
     return fig_to_img_html(fig, f'Missing {target} by group')
-        
+
 
 def get_missing_rates(df, target, n_buckets=5):
     """
     Missing rate of `target_col` per group, for every other column.
     Numbers -> quantile buckets, dates -> months, categories as they are.
-    """    
-    
+    """
+
     from pandas.api.types import is_datetime64_any_dtype as is_dt
     from pandas.api.types import is_numeric_dtype        as is_num
     from pandas.api.types import is_integer_dtype        as is_int
-    
+
     miss    = df[target].isna()
     overall = miss.mean()
     rows    = []
@@ -1328,29 +1327,29 @@ def get_missing_rates(df, target, n_buckets=5):
             cats = pd.qcut(s, q=n_buckets, duplicates='drop')
             if is_int(s):
                 cats = cats.cat.rename_categories([
-                f"[{int(c.left) + 1}, {int(c.right)}]" 
+                f'[{int(c.left) + 1}, {int(c.right)}]'
                 for c in cats.cat.categories
                 ])
             else:
                 cats = cats.cat.rename_categories([
-                f"[{c.left:,.2f}, {c.right:,.2f}]" 
+                f'[{c.left:,.2f}, {c.right:,.2f}]'
                 for c in cats.cat.categories
                 ])
             groups = cats.astype(str)
         else:
             groups = s.astype(str)
-        
+
         if not is_num(s):
             top    = groups.value_counts().index[:n_buckets-1]
             groups = groups.where(groups.isin(top), 'other')
 
         g = miss.groupby(groups.where(s.notna(), 'missing')).agg(rate='mean', n='size')
-        
+
         g['column']  = col
         g['group']   = g.index
         g['lift']    = g['rate'] / overall - 1
         rows.append(g.reset_index(drop=True))
-    
+
     rate_col_name = 'missing_' + target.lower()
     out = (
         pd.concat(rows, ignore_index=True)
