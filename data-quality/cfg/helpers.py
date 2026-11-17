@@ -1199,7 +1199,7 @@ def render_missing_rates(target, rates, overall, observations, track, min_effect
     Render results from get_missing_rates:
     • target       : str   : Target column, focus of missingness
     • rates        : df    : Rate by column group
-    • overall      : float : Overall missingess of target_col
+    • overall      : float : Overall missingess of target
     • observations : str   : Analyst observations
     • track        : str   : A/B
     • min_effect   : float : Minimal lift to highlight
@@ -1254,7 +1254,7 @@ def render_missing_rates(target, rates, overall, observations, track, min_effect
         ax.axvline(overall, color=t['body_fg'], ls='--', lw=1)
         ax.set_ylabel(col, rotation=0, ha='right')
 
-    plt.xlabel(f'% {target_col} missing (dashed = overall {overall:.0%})')
+    plt.xlabel(f'% {target} missing (dashed = overall {overall:.0%})')
     full_missingness_chart = fig_to_img_html(fig, alt)
 
     display_markdown(f"""
@@ -1303,7 +1303,7 @@ def get_missing_rates_chart(rates, overall, target, track, min_effect=0.10, top=
 
 def get_missing_rates(df, target, n_buckets=5):
     """
-    Missing rate of `target_col` per group, for every other column.
+    Missing rate of `target` per group, for every other column.
     Numbers -> quantile buckets, dates -> months, categories as they are.
     """
 
