@@ -151,7 +151,7 @@ def style_table(
             f'border-radius:8px; box-shadow:{t["shadow"]}; background:{t["body_bg"]};">{html}</div>')
 
 
-def style_raw_table(df, track, **kw):
+def style_raw_table(df, track, sticky_first_col=True, **kw):
     return style_table(
         df, 
         track,
@@ -159,9 +159,17 @@ def style_raw_table(df, track, **kw):
         max_height='360px',
         sticky_first_col=True,
         index=False,
-        max_rows=DEV.max_rows, 
+        max_rows=DEV.max_rows,
         **kw
     )
+
+
+def fig_to_img_html(fig, alt, dpi=None):
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', transparent=True, dpi=dpi or DEV.chart_dpi, bbox_inches='tight')
+    plt.close(fig)
+    img = base64.b64encode(buf.getvalue()).decode('utf-8')
+    return f'<img src="data:image/png;base64,{img}" alt="{alt}" style="max-width:100%;height:auto" />'
 
 
 def get_code_from_eval(eval_fn):
@@ -839,11 +847,7 @@ def get_distributions_html(df, track, show_box_plot=False, max_per_row=6):
             ax.spines[s].set_color(t['line'])
         fig.patch.set_alpha(0)
         ax.patch.set_alpha(0)
-        buf = io.BytesIO()
-        fig.savefig(buf, format='png', transparent=True, dpi=DEV.chart_dpi)
-        plt.close(fig)
-        img = base64.b64encode(buf.getvalue()).decode('utf-8')
-        return f'<img src="data:image/png;base64,{img}" alt="{col}" />'
+        return fig_to_img_html(fig, col)
 
     def make_rows(items):
         n_rows = math.ceil(len(items) / max_per_row)
@@ -893,7 +897,7 @@ def extract_outlier_thresholds(df, col):
     return outlier_thresh_low, outlier_thresh_high
 
 
-def style_profile_table(table, track, **kw):
+def style_profile_table(table, track, sticky_first_col=True, **kw):
     return style_table(
         table,
         track,
@@ -903,7 +907,7 @@ def style_profile_table(table, track, **kw):
         right_cols=PROFILE_RIGHT_COLS,
         nowrap_cols=('Core profile',),
         formats=PROFILE_FMT,
-        max_rows=DEV.max_rows, 
+        max_rows=DEV.max_rows,
         **kw,
     )
 
