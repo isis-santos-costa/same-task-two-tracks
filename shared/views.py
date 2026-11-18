@@ -87,6 +87,7 @@ COMPARISON_CSS = TRACK_CSS + '<style>.cmp-wrap,.cmp-prog{' + ''.join(
                      border-bottom:1px solid var(--ix-muted)}
 
 /* index columns: Task, Action */
+.cmp-wrap .cmp .dim{opacity:.65;font-size:.85em}
 .cmp-wrap .cmp .ix{background:var(--ix-bg);color:var(--ix-fg);font-weight:500}
 .cmp-wrap .cmp thead .ix{background:var(--ix-head-bg);color:var(--ix-head-fg);font-size:.95em;font-weight:600;
                          border-bottom-color:var(--ix-muted)}
@@ -136,6 +137,16 @@ def _group_sizes(rows, key):
     return sizes
 
 
+def render_comparison(comparison, kinds, titles, modules, programs, cfg, widths):
+    parts = [COMPARISON_CSS]
+    for program, p_rows in groupby(comparison, key=itemgetter(0)):
+        name, url = programs[program]
+        parts.append(f'<p class="cmp-prog"><a href="{escape(url)}">{escape(name)}</a></p>')
+        parts.append(f'<p class="cmp-tip">{escape(FIT_TIP)}</p>')
+        parts.append(_comparison_table(list(p_rows), kinds, titles, modules, cfg, widths))
+    return ''.join(parts) + '<br><hr>'
+
+
 def _comparison_table(rows, kinds, titles, modules, cfg, widths):
     cols = ''.join(f'<col style="width:{w}%">' for w in widths.values())
     head = ('<thead><tr><th class="ix">Task</th><th class="ix">Action</th>'
@@ -157,7 +168,9 @@ def _comparison_table(rows, kinds, titles, modules, cfg, widths):
                          f'{escape(titles[(kind, module, task)])}<br><small>{jump}</small></th>')
         sid_a = make_snippet_id(make_task_id('a', kind, module, task), action)
         sid_b = make_snippet_id(make_task_id('b', kind, module, task), action)
-        cells += [f'<th class="ix" scope="row">{escape(action)}</th>',
+        name, _, note = action.partition(' (')
+        action_html = escape(name) + (f'<br><small class="dim">{escape(note.rstrip(")"))}</small>' if note else '')
+        cells += [f'<th class="ix" scope="row">{escape(action_html)}</th>',
                   f'<td class="t-a">{_snippet(sid_a, cfg)}</td>',
                   f'<td class="t-b">{_snippet(sid_b, cfg)}</td>']
         trs.append('<tr>' + ''.join(cells) + '</tr>')
@@ -166,15 +179,6 @@ def _comparison_table(rows, kinds, titles, modules, cfg, widths):
             f'{head}<tbody>{"".join(trs)}</tbody></table></div>')
 
 FIT_TIP = 'Tip: for the best fit, close the left and right menus, or zoom out with Ctrl/Cmd + minus.'
-
-def render_comparison(comparison, kinds, titles, modules, programs, cfg, widths):
-    parts = [COMPARISON_CSS]
-    for program, p_rows in groupby(comparison, key=itemgetter(0)):
-        name, url = programs[program]
-        parts.append(f'<p class="cmp-prog"><a href="{escape(url)}">{escape(name)}</a></p>')
-        parts.append(f'<p class="cmp-tip">{escape(FIT_TIP)}</p>')
-        parts.append(_comparison_table(list(p_rows), kinds, titles, modules, cfg, widths))
-    return ''.join(parts) + '<br><hr>'
 
 # appendix ................................................................................................
 

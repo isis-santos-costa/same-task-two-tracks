@@ -1,0 +1,2516 @@
+<p></p>
+<div class="bn t-a">
+<div class="bn-eb">Track A</div>
+<h3>Job Task 2.1: Analyze missing data</h3>
+<div class="t-a">
+<p><code>raw_data</code></p>
+<div style="container-type:inline-size; overflow:auto; max-width:100%; max-height:360px; border:1px solid #CBD5E1; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,.10); background:#F8FAFC;"><style type="text/css">
+#T_44576  {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: auto;
+  font-family: system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size: clamp(10px, 2.4cqw, 13px);
+  min-width: 44rem;
+}
+#T_44576 caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 .6em;
+  color: #475569;
+  font-weight: 600;
+}
+#T_44576 thead th {
+  background-color: #EEF2F7;
+  color: #475569;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-size: .85em;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: .8em .9em;
+  border-bottom: 2px solid #64748B;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_44576 tbody td {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  padding: .6em .9em;
+  border-bottom: 1px solid #E2E8F0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_44576 tbody th {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  padding: .6em .9em;
+  border-bottom: 1px solid #E2E8F0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_44576 tbody tr:nth-child(even) td {
+  background-color: #F1F5F9;
+}
+#T_44576 tbody tr:nth-child(even) th {
+  background-color: #F1F5F9;
+}
+#T_44576 tbody tr:hover td {
+  background-color: #E2E8F0;
+}
+#T_44576 tbody tr:hover th {
+  background-color: #E2E8F0;
+}
+#T_44576 tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  max-width: 11rem;
+  box-shadow: 1px 0 0 #E2E8F0;
+}
+#T_44576 thead th:first-child {
+  left: 0;
+  z-index: 4;
+}
+#T_44576 thead th:nth-child(1) {
+  text-align: right;
+}
+#T_44576 tbody td:nth-child(1) {
+  text-align: right;
+}
+#T_44576 thead th:nth-child(6) {
+  text-align: right;
+}
+#T_44576 tbody td:nth-child(6) {
+  text-align: right;
+}
+</style>
+<table id="T_44576">
+  <caption>Random sample of 200 of 50,000 rows</caption>
+  <thead>
+    <tr>
+      <th id="T_44576_level0_col0" class="col_heading level0 col0" >Customer ID</th>
+      <th id="T_44576_level0_col1" class="col_heading level0 col1" >Name</th>
+      <th id="T_44576_level0_col2" class="col_heading level0 col2" >Surname</th>
+      <th id="T_44576_level0_col3" class="col_heading level0 col3" >Gender</th>
+      <th id="T_44576_level0_col4" class="col_heading level0 col4" >Birthdate</th>
+      <th id="T_44576_level0_col5" class="col_heading level0 col5" >Transaction Amount</th>
+      <th id="T_44576_level0_col6" class="col_heading level0 col6" >Date</th>
+      <th id="T_44576_level0_col7" class="col_heading level0 col7" >Merchant Name</th>
+      <th id="T_44576_level0_col8" class="col_heading level0 col8" >Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td id="T_44576_row0_col0" class="data row0 col0" >59423</td>
+      <td id="T_44576_row0_col1" class="data row0 col1" >Franklin</td>
+      <td id="T_44576_row0_col2" class="data row0 col2" >Mason</td>
+      <td id="T_44576_row0_col3" class="data row0 col3" >F</td>
+      <td id="T_44576_row0_col4" class="data row0 col4" >1962-10-30</td>
+      <td id="T_44576_row0_col5" class="data row0 col5" >290.500000</td>
+      <td id="T_44576_row0_col6" class="data row0 col6" >2023-05-16</td>
+      <td id="T_44576_row0_col7" class="data row0 col7" >Parsons, Ballard and Kelley</td>
+      <td id="T_44576_row0_col8" class="data row0 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row1_col0" class="data row1 col0" >459845</td>
+      <td id="T_44576_row1_col1" class="data row1 col1" >Pamela</td>
+      <td id="T_44576_row1_col2" class="data row1 col2" >Kennedy</td>
+      <td id="T_44576_row1_col3" class="data row1 col3" >F</td>
+      <td id="T_44576_row1_col4" class="data row1 col4" >1949-11-02</td>
+      <td id="T_44576_row1_col5" class="data row1 col5" >2379.840000</td>
+      <td id="T_44576_row1_col6" class="data row1 col6" >2023-08-10</td>
+      <td id="T_44576_row1_col7" class="data row1 col7" >Garcia, Smith and Gay</td>
+      <td id="T_44576_row1_col8" class="data row1 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row2_col0" class="data row2 col0" >595156</td>
+      <td id="T_44576_row2_col1" class="data row2 col1" >Debbie</td>
+      <td id="T_44576_row2_col2" class="data row2 col2" >Bradley</td>
+      <td id="T_44576_row2_col3" class="data row2 col3" >F</td>
+      <td id="T_44576_row2_col4" class="data row2 col4" >2001-10-20</td>
+      <td id="T_44576_row2_col5" class="data row2 col5" >68.850000</td>
+      <td id="T_44576_row2_col6" class="data row2 col6" >2023-05-07</td>
+      <td id="T_44576_row2_col7" class="data row2 col7" >Mason-Solis</td>
+      <td id="T_44576_row2_col8" class="data row2 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row3_col0" class="data row3 col0" >218105</td>
+      <td id="T_44576_row3_col1" class="data row3 col1" >Jennifer</td>
+      <td id="T_44576_row3_col2" class="data row3 col2" >Fitzpatrick</td>
+      <td id="T_44576_row3_col3" class="data row3 col3" >M</td>
+      <td id="T_44576_row3_col4" class="data row3 col4" >1967-10-29</td>
+      <td id="T_44576_row3_col5" class="data row3 col5" >350.440000</td>
+      <td id="T_44576_row3_col6" class="data row3 col6" >2023-07-08</td>
+      <td id="T_44576_row3_col7" class="data row3 col7" >Adams PLC</td>
+      <td id="T_44576_row3_col8" class="data row3 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row4_col0" class="data row4 col0" >486034</td>
+      <td id="T_44576_row4_col1" class="data row4 col1" >Michele</td>
+      <td id="T_44576_row4_col2" class="data row4 col2" >Mathis</td>
+      <td id="T_44576_row4_col3" class="data row4 col3" >F</td>
+      <td id="T_44576_row4_col4" class="data row4 col4" >1983-10-25</td>
+      <td id="T_44576_row4_col5" class="data row4 col5" >565.810000</td>
+      <td id="T_44576_row4_col6" class="data row4 col6" >2023-02-01</td>
+      <td id="T_44576_row4_col7" class="data row4 col7" >Gonzalez PLC</td>
+      <td id="T_44576_row4_col8" class="data row4 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row5_col0" class="data row5 col0" >324270</td>
+      <td id="T_44576_row5_col1" class="data row5 col1" >Tammy</td>
+      <td id="T_44576_row5_col2" class="data row5 col2" >Hawkins</td>
+      <td id="T_44576_row5_col3" class="data row5 col3" >nan</td>
+      <td id="T_44576_row5_col4" class="data row5 col4" >1949-11-02</td>
+      <td id="T_44576_row5_col5" class="data row5 col5" >379.530000</td>
+      <td id="T_44576_row5_col6" class="data row5 col6" >2023-03-25</td>
+      <td id="T_44576_row5_col7" class="data row5 col7" >Robinson, Black and Taylor</td>
+      <td id="T_44576_row5_col8" class="data row5 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row6_col0" class="data row6 col0" >670972</td>
+      <td id="T_44576_row6_col1" class="data row6 col1" >Tanya</td>
+      <td id="T_44576_row6_col2" class="data row6 col2" >Terry</td>
+      <td id="T_44576_row6_col3" class="data row6 col3" >F</td>
+      <td id="T_44576_row6_col4" class="data row6 col4" >1995-10-22</td>
+      <td id="T_44576_row6_col5" class="data row6 col5" >239.580000</td>
+      <td id="T_44576_row6_col6" class="data row6 col6" >2023-02-14</td>
+      <td id="T_44576_row6_col7" class="data row6 col7" >King-Luna</td>
+      <td id="T_44576_row6_col8" class="data row6 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row7_col0" class="data row7 col0" >774671</td>
+      <td id="T_44576_row7_col1" class="data row7 col1" >Robert</td>
+      <td id="T_44576_row7_col2" class="data row7 col2" >Rodriguez</td>
+      <td id="T_44576_row7_col3" class="data row7 col3" >F</td>
+      <td id="T_44576_row7_col4" class="data row7 col4" >1977-10-26</td>
+      <td id="T_44576_row7_col5" class="data row7 col5" >24.790000</td>
+      <td id="T_44576_row7_col6" class="data row7 col6" >2023-03-03</td>
+      <td id="T_44576_row7_col7" class="data row7 col7" >Robinson, Roberts and Lindsey</td>
+      <td id="T_44576_row7_col8" class="data row7 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row8_col0" class="data row8 col0" >284391</td>
+      <td id="T_44576_row8_col1" class="data row8 col1" >Jared</td>
+      <td id="T_44576_row8_col2" class="data row8 col2" >Gray</td>
+      <td id="T_44576_row8_col3" class="data row8 col3" >M</td>
+      <td id="T_44576_row8_col4" class="data row8 col4" >1991-10-23</td>
+      <td id="T_44576_row8_col5" class="data row8 col5" >40.680000</td>
+      <td id="T_44576_row8_col6" class="data row8 col6" >2023-07-07</td>
+      <td id="T_44576_row8_col7" class="data row8 col7" >Chandler, Houston and Dickerson</td>
+      <td id="T_44576_row8_col8" class="data row8 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row9_col0" class="data row9 col0" >962355</td>
+      <td id="T_44576_row9_col1" class="data row9 col1" >Kayla</td>
+      <td id="T_44576_row9_col2" class="data row9 col2" >Mcfarland</td>
+      <td id="T_44576_row9_col3" class="data row9 col3" >M</td>
+      <td id="T_44576_row9_col4" class="data row9 col4" >1985-10-24</td>
+      <td id="T_44576_row9_col5" class="data row9 col5" >348.770000</td>
+      <td id="T_44576_row9_col6" class="data row9 col6" >2023-05-25</td>
+      <td id="T_44576_row9_col7" class="data row9 col7" >Parker, Parker and Hernandez</td>
+      <td id="T_44576_row9_col8" class="data row9 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row10_col0" class="data row10 col0" >133342</td>
+      <td id="T_44576_row10_col1" class="data row10 col1" >Melissa</td>
+      <td id="T_44576_row10_col2" class="data row10 col2" >Bond</td>
+      <td id="T_44576_row10_col3" class="data row10 col3" >F</td>
+      <td id="T_44576_row10_col4" class="data row10 col4" >1952-11-01</td>
+      <td id="T_44576_row10_col5" class="data row10 col5" >51.210000</td>
+      <td id="T_44576_row10_col6" class="data row10 col6" >2023-07-09</td>
+      <td id="T_44576_row10_col7" class="data row10 col7" >Tate, Smith and Owens</td>
+      <td id="T_44576_row10_col8" class="data row10 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row11_col0" class="data row11 col0" >54580</td>
+      <td id="T_44576_row11_col1" class="data row11 col1" >Annette</td>
+      <td id="T_44576_row11_col2" class="data row11 col2" >Key</td>
+      <td id="T_44576_row11_col3" class="data row11 col3" >M</td>
+      <td id="T_44576_row11_col4" class="data row11 col4" >1950-11-02</td>
+      <td id="T_44576_row11_col5" class="data row11 col5" >43.360000</td>
+      <td id="T_44576_row11_col6" class="data row11 col6" >2023-07-14</td>
+      <td id="T_44576_row11_col7" class="data row11 col7" >Lam, Davis and Humphrey</td>
+      <td id="T_44576_row11_col8" class="data row11 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row12_col0" class="data row12 col0" >745752</td>
+      <td id="T_44576_row12_col1" class="data row12 col1" >Michael</td>
+      <td id="T_44576_row12_col2" class="data row12 col2" >Smith</td>
+      <td id="T_44576_row12_col3" class="data row12 col3" >nan</td>
+      <td id="T_44576_row12_col4" class="data row12 col4" >1963-10-30</td>
+      <td id="T_44576_row12_col5" class="data row12 col5" >64.650000</td>
+      <td id="T_44576_row12_col6" class="data row12 col6" >2023-07-11</td>
+      <td id="T_44576_row12_col7" class="data row12 col7" >Fernandez PLC</td>
+      <td id="T_44576_row12_col8" class="data row12 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row13_col0" class="data row13 col0" >973854</td>
+      <td id="T_44576_row13_col1" class="data row13 col1" >Anthony</td>
+      <td id="T_44576_row13_col2" class="data row13 col2" >Spence</td>
+      <td id="T_44576_row13_col3" class="data row13 col3" >F</td>
+      <td id="T_44576_row13_col4" class="data row13 col4" >1955-11-01</td>
+      <td id="T_44576_row13_col5" class="data row13 col5" >258.990000</td>
+      <td id="T_44576_row13_col6" class="data row13 col6" >2023-04-30</td>
+      <td id="T_44576_row13_col7" class="data row13 col7" >Moore-Johnson</td>
+      <td id="T_44576_row13_col8" class="data row13 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row14_col0" class="data row14 col0" >978957</td>
+      <td id="T_44576_row14_col1" class="data row14 col1" >Jason</td>
+      <td id="T_44576_row14_col2" class="data row14 col2" >Underwood</td>
+      <td id="T_44576_row14_col3" class="data row14 col3" >M</td>
+      <td id="T_44576_row14_col4" class="data row14 col4" >1966-10-29</td>
+      <td id="T_44576_row14_col5" class="data row14 col5" >113.010000</td>
+      <td id="T_44576_row14_col6" class="data row14 col6" >2023-02-14</td>
+      <td id="T_44576_row14_col7" class="data row14 col7" >Navarro, Branch and Vasquez</td>
+      <td id="T_44576_row14_col8" class="data row14 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row15_col0" class="data row15 col0" >780340</td>
+      <td id="T_44576_row15_col1" class="data row15 col1" >Samuel</td>
+      <td id="T_44576_row15_col2" class="data row15 col2" >Williams</td>
+      <td id="T_44576_row15_col3" class="data row15 col3" >F</td>
+      <td id="T_44576_row15_col4" class="data row15 col4" >1962-10-30</td>
+      <td id="T_44576_row15_col5" class="data row15 col5" >62.980000</td>
+      <td id="T_44576_row15_col6" class="data row15 col6" >2023-02-22</td>
+      <td id="T_44576_row15_col7" class="data row15 col7" >Martinez, Walker and Mathews</td>
+      <td id="T_44576_row15_col8" class="data row15 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row16_col0" class="data row16 col0" >315608</td>
+      <td id="T_44576_row16_col1" class="data row16 col1" >Krystal</td>
+      <td id="T_44576_row16_col2" class="data row16 col2" >Meyer</td>
+      <td id="T_44576_row16_col3" class="data row16 col3" >F</td>
+      <td id="T_44576_row16_col4" class="data row16 col4" >1975-10-27</td>
+      <td id="T_44576_row16_col5" class="data row16 col5" >172.210000</td>
+      <td id="T_44576_row16_col6" class="data row16 col6" >2023-07-11</td>
+      <td id="T_44576_row16_col7" class="data row16 col7" >Peters LLC</td>
+      <td id="T_44576_row16_col8" class="data row16 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row17_col0" class="data row17 col0" >690856</td>
+      <td id="T_44576_row17_col1" class="data row17 col1" >Ashley</td>
+      <td id="T_44576_row17_col2" class="data row17 col2" >Jensen</td>
+      <td id="T_44576_row17_col3" class="data row17 col3" >M</td>
+      <td id="T_44576_row17_col4" class="data row17 col4" >2001-10-20</td>
+      <td id="T_44576_row17_col5" class="data row17 col5" >968.420000</td>
+      <td id="T_44576_row17_col6" class="data row17 col6" >2023-08-20</td>
+      <td id="T_44576_row17_col7" class="data row17 col7" >Wilson-Young</td>
+      <td id="T_44576_row17_col8" class="data row17 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row18_col0" class="data row18 col0" >331107</td>
+      <td id="T_44576_row18_col1" class="data row18 col1" >Sarah</td>
+      <td id="T_44576_row18_col2" class="data row18 col2" >Sandoval</td>
+      <td id="T_44576_row18_col3" class="data row18 col3" >F</td>
+      <td id="T_44576_row18_col4" class="data row18 col4" >1993-10-22</td>
+      <td id="T_44576_row18_col5" class="data row18 col5" >182.560000</td>
+      <td id="T_44576_row18_col6" class="data row18 col6" >2023-04-18</td>
+      <td id="T_44576_row18_col7" class="data row18 col7" >Lindsey LLC</td>
+      <td id="T_44576_row18_col8" class="data row18 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row19_col0" class="data row19 col0" >95343</td>
+      <td id="T_44576_row19_col1" class="data row19 col1" >Pam</td>
+      <td id="T_44576_row19_col2" class="data row19 col2" >Johnson</td>
+      <td id="T_44576_row19_col3" class="data row19 col3" >M</td>
+      <td id="T_44576_row19_col4" class="data row19 col4" >1957-10-31</td>
+      <td id="T_44576_row19_col5" class="data row19 col5" >433.050000</td>
+      <td id="T_44576_row19_col6" class="data row19 col6" >2023-06-15</td>
+      <td id="T_44576_row19_col7" class="data row19 col7" >Reese Group</td>
+      <td id="T_44576_row19_col8" class="data row19 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row20_col0" class="data row20 col0" >708261</td>
+      <td id="T_44576_row20_col1" class="data row20 col1" >Shannon</td>
+      <td id="T_44576_row20_col2" class="data row20 col2" >Sandoval</td>
+      <td id="T_44576_row20_col3" class="data row20 col3" >M</td>
+      <td id="T_44576_row20_col4" class="data row20 col4" >1954-11-01</td>
+      <td id="T_44576_row20_col5" class="data row20 col5" >308.980000</td>
+      <td id="T_44576_row20_col6" class="data row20 col6" >2023-08-23</td>
+      <td id="T_44576_row20_col7" class="data row20 col7" >Davis, Garcia and Austin</td>
+      <td id="T_44576_row20_col8" class="data row20 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row21_col0" class="data row21 col0" >124320</td>
+      <td id="T_44576_row21_col1" class="data row21 col1" >Jennifer</td>
+      <td id="T_44576_row21_col2" class="data row21 col2" >Vazquez</td>
+      <td id="T_44576_row21_col3" class="data row21 col3" >F</td>
+      <td id="T_44576_row21_col4" class="data row21 col4" >1988-10-23</td>
+      <td id="T_44576_row21_col5" class="data row21 col5" >66.080000</td>
+      <td id="T_44576_row21_col6" class="data row21 col6" >2023-02-14</td>
+      <td id="T_44576_row21_col7" class="data row21 col7" >Lowery-Young</td>
+      <td id="T_44576_row21_col8" class="data row21 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row22_col0" class="data row22 col0" >854933</td>
+      <td id="T_44576_row22_col1" class="data row22 col1" >Jared</td>
+      <td id="T_44576_row22_col2" class="data row22 col2" >Ellis</td>
+      <td id="T_44576_row22_col3" class="data row22 col3" >nan</td>
+      <td id="T_44576_row22_col4" class="data row22 col4" >1949-11-02</td>
+      <td id="T_44576_row22_col5" class="data row22 col5" >105.850000</td>
+      <td id="T_44576_row22_col6" class="data row22 col6" >2023-07-12</td>
+      <td id="T_44576_row22_col7" class="data row22 col7" >Wallace, Calderon and Livingston</td>
+      <td id="T_44576_row22_col8" class="data row22 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row23_col0" class="data row23 col0" >16151</td>
+      <td id="T_44576_row23_col1" class="data row23 col1" >Debra</td>
+      <td id="T_44576_row23_col2" class="data row23 col2" >Cole</td>
+      <td id="T_44576_row23_col3" class="data row23 col3" >F</td>
+      <td id="T_44576_row23_col4" class="data row23 col4" >1969-10-28</td>
+      <td id="T_44576_row23_col5" class="data row23 col5" >260.190000</td>
+      <td id="T_44576_row23_col6" class="data row23 col6" >2023-09-03</td>
+      <td id="T_44576_row23_col7" class="data row23 col7" >Frye Inc</td>
+      <td id="T_44576_row23_col8" class="data row23 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row24_col0" class="data row24 col0" >475558</td>
+      <td id="T_44576_row24_col1" class="data row24 col1" >Daniel</td>
+      <td id="T_44576_row24_col2" class="data row24 col2" >Erickson</td>
+      <td id="T_44576_row24_col3" class="data row24 col3" >F</td>
+      <td id="T_44576_row24_col4" class="data row24 col4" >1967-10-29</td>
+      <td id="T_44576_row24_col5" class="data row24 col5" >539.980000</td>
+      <td id="T_44576_row24_col6" class="data row24 col6" >2023-04-30</td>
+      <td id="T_44576_row24_col7" class="data row24 col7" >Calderon Ltd</td>
+      <td id="T_44576_row24_col8" class="data row24 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row25_col0" class="data row25 col0" >634388</td>
+      <td id="T_44576_row25_col1" class="data row25 col1" >Rickey</td>
+      <td id="T_44576_row25_col2" class="data row25 col2" >Bryant</td>
+      <td id="T_44576_row25_col3" class="data row25 col3" >F</td>
+      <td id="T_44576_row25_col4" class="data row25 col4" >1962-10-30</td>
+      <td id="T_44576_row25_col5" class="data row25 col5" >40.430000</td>
+      <td id="T_44576_row25_col6" class="data row25 col6" >2023-06-25</td>
+      <td id="T_44576_row25_col7" class="data row25 col7" >Lowe, Evans and Jensen</td>
+      <td id="T_44576_row25_col8" class="data row25 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row26_col0" class="data row26 col0" >140155</td>
+      <td id="T_44576_row26_col1" class="data row26 col1" >Amanda</td>
+      <td id="T_44576_row26_col2" class="data row26 col2" >Smith</td>
+      <td id="T_44576_row26_col3" class="data row26 col3" >nan</td>
+      <td id="T_44576_row26_col4" class="data row26 col4" >1982-10-25</td>
+      <td id="T_44576_row26_col5" class="data row26 col5" >31.490000</td>
+      <td id="T_44576_row26_col6" class="data row26 col6" >2023-09-16</td>
+      <td id="T_44576_row26_col7" class="data row26 col7" >Jones, Reyes and Johnson</td>
+      <td id="T_44576_row26_col8" class="data row26 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row27_col0" class="data row27 col0" >868585</td>
+      <td id="T_44576_row27_col1" class="data row27 col1" >Robert</td>
+      <td id="T_44576_row27_col2" class="data row27 col2" >Bartlett</td>
+      <td id="T_44576_row27_col3" class="data row27 col3" >nan</td>
+      <td id="T_44576_row27_col4" class="data row27 col4" >1975-10-27</td>
+      <td id="T_44576_row27_col5" class="data row27 col5" >368.010000</td>
+      <td id="T_44576_row27_col6" class="data row27 col6" >2023-05-10</td>
+      <td id="T_44576_row27_col7" class="data row27 col7" >Wright Ltd</td>
+      <td id="T_44576_row27_col8" class="data row27 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row28_col0" class="data row28 col0" >729972</td>
+      <td id="T_44576_row28_col1" class="data row28 col1" >Steven</td>
+      <td id="T_44576_row28_col2" class="data row28 col2" >French</td>
+      <td id="T_44576_row28_col3" class="data row28 col3" >M</td>
+      <td id="T_44576_row28_col4" class="data row28 col4" >1996-10-21</td>
+      <td id="T_44576_row28_col5" class="data row28 col5" >113.900000</td>
+      <td id="T_44576_row28_col6" class="data row28 col6" >2023-01-15</td>
+      <td id="T_44576_row28_col7" class="data row28 col7" >Ryan-Mendez</td>
+      <td id="T_44576_row28_col8" class="data row28 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row29_col0" class="data row29 col0" >260941</td>
+      <td id="T_44576_row29_col1" class="data row29 col1" >Mark</td>
+      <td id="T_44576_row29_col2" class="data row29 col2" >Barron</td>
+      <td id="T_44576_row29_col3" class="data row29 col3" >F</td>
+      <td id="T_44576_row29_col4" class="data row29 col4" >1964-10-29</td>
+      <td id="T_44576_row29_col5" class="data row29 col5" >46.350000</td>
+      <td id="T_44576_row29_col6" class="data row29 col6" >2023-05-13</td>
+      <td id="T_44576_row29_col7" class="data row29 col7" >Johnson LLC</td>
+      <td id="T_44576_row29_col8" class="data row29 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row30_col0" class="data row30 col0" >393447</td>
+      <td id="T_44576_row30_col1" class="data row30 col1" >Laura</td>
+      <td id="T_44576_row30_col2" class="data row30 col2" >Williams</td>
+      <td id="T_44576_row30_col3" class="data row30 col3" >F</td>
+      <td id="T_44576_row30_col4" class="data row30 col4" >1967-10-29</td>
+      <td id="T_44576_row30_col5" class="data row30 col5" >415.420000</td>
+      <td id="T_44576_row30_col6" class="data row30 col6" >2023-03-06</td>
+      <td id="T_44576_row30_col7" class="data row30 col7" >Greer-Dorsey</td>
+      <td id="T_44576_row30_col8" class="data row30 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row31_col0" class="data row31 col0" >771217</td>
+      <td id="T_44576_row31_col1" class="data row31 col1" >Daniel</td>
+      <td id="T_44576_row31_col2" class="data row31 col2" >Jackson</td>
+      <td id="T_44576_row31_col3" class="data row31 col3" >nan</td>
+      <td id="T_44576_row31_col4" class="data row31 col4" >1972-10-27</td>
+      <td id="T_44576_row31_col5" class="data row31 col5" >94.470000</td>
+      <td id="T_44576_row31_col6" class="data row31 col6" >2023-02-24</td>
+      <td id="T_44576_row31_col7" class="data row31 col7" >Scott, Rubio and Sampson</td>
+      <td id="T_44576_row31_col8" class="data row31 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row32_col0" class="data row32 col0" >570437</td>
+      <td id="T_44576_row32_col1" class="data row32 col1" >Steven</td>
+      <td id="T_44576_row32_col2" class="data row32 col2" >Reed</td>
+      <td id="T_44576_row32_col3" class="data row32 col3" >F</td>
+      <td id="T_44576_row32_col4" class="data row32 col4" >1954-11-01</td>
+      <td id="T_44576_row32_col5" class="data row32 col5" >76.870000</td>
+      <td id="T_44576_row32_col6" class="data row32 col6" >2023-08-19</td>
+      <td id="T_44576_row32_col7" class="data row32 col7" >Gallagher PLC</td>
+      <td id="T_44576_row32_col8" class="data row32 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row33_col0" class="data row33 col0" >260814</td>
+      <td id="T_44576_row33_col1" class="data row33 col1" >Daniel</td>
+      <td id="T_44576_row33_col2" class="data row33 col2" >Nelson</td>
+      <td id="T_44576_row33_col3" class="data row33 col3" >F</td>
+      <td id="T_44576_row33_col4" class="data row33 col4" >1965-10-29</td>
+      <td id="T_44576_row33_col5" class="data row33 col5" >77.670000</td>
+      <td id="T_44576_row33_col6" class="data row33 col6" >2023-04-14</td>
+      <td id="T_44576_row33_col7" class="data row33 col7" >Gonzalez, Garner and Moore</td>
+      <td id="T_44576_row33_col8" class="data row33 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row34_col0" class="data row34 col0" >345889</td>
+      <td id="T_44576_row34_col1" class="data row34 col1" >Karen</td>
+      <td id="T_44576_row34_col2" class="data row34 col2" >Banks</td>
+      <td id="T_44576_row34_col3" class="data row34 col3" >M</td>
+      <td id="T_44576_row34_col4" class="data row34 col4" >1975-10-27</td>
+      <td id="T_44576_row34_col5" class="data row34 col5" >504.780000</td>
+      <td id="T_44576_row34_col6" class="data row34 col6" >2023-02-26</td>
+      <td id="T_44576_row34_col7" class="data row34 col7" >Cook-Mitchell</td>
+      <td id="T_44576_row34_col8" class="data row34 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row35_col0" class="data row35 col0" >201713</td>
+      <td id="T_44576_row35_col1" class="data row35 col1" >Spencer</td>
+      <td id="T_44576_row35_col2" class="data row35 col2" >Poole</td>
+      <td id="T_44576_row35_col3" class="data row35 col3" >F</td>
+      <td id="T_44576_row35_col4" class="data row35 col4" >1961-10-30</td>
+      <td id="T_44576_row35_col5" class="data row35 col5" >86.110000</td>
+      <td id="T_44576_row35_col6" class="data row35 col6" >2023-01-31</td>
+      <td id="T_44576_row35_col7" class="data row35 col7" >Smith-Johnson</td>
+      <td id="T_44576_row35_col8" class="data row35 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row36_col0" class="data row36 col0" >884324</td>
+      <td id="T_44576_row36_col1" class="data row36 col1" >Catherine</td>
+      <td id="T_44576_row36_col2" class="data row36 col2" >Martin</td>
+      <td id="T_44576_row36_col3" class="data row36 col3" >F</td>
+      <td id="T_44576_row36_col4" class="data row36 col4" >1990-10-23</td>
+      <td id="T_44576_row36_col5" class="data row36 col5" >460.320000</td>
+      <td id="T_44576_row36_col6" class="data row36 col6" >2023-04-25</td>
+      <td id="T_44576_row36_col7" class="data row36 col7" >Smith-Morris</td>
+      <td id="T_44576_row36_col8" class="data row36 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row37_col0" class="data row37 col0" >38249</td>
+      <td id="T_44576_row37_col1" class="data row37 col1" >Pamela</td>
+      <td id="T_44576_row37_col2" class="data row37 col2" >Benson</td>
+      <td id="T_44576_row37_col3" class="data row37 col3" >M</td>
+      <td id="T_44576_row37_col4" class="data row37 col4" >1974-10-27</td>
+      <td id="T_44576_row37_col5" class="data row37 col5" >126.320000</td>
+      <td id="T_44576_row37_col6" class="data row37 col6" >2023-04-16</td>
+      <td id="T_44576_row37_col7" class="data row37 col7" >Baker-Avila</td>
+      <td id="T_44576_row37_col8" class="data row37 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row38_col0" class="data row38 col0" >842203</td>
+      <td id="T_44576_row38_col1" class="data row38 col1" >James</td>
+      <td id="T_44576_row38_col2" class="data row38 col2" >Ramirez</td>
+      <td id="T_44576_row38_col3" class="data row38 col3" >F</td>
+      <td id="T_44576_row38_col4" class="data row38 col4" >1996-10-21</td>
+      <td id="T_44576_row38_col5" class="data row38 col5" >2956.070000</td>
+      <td id="T_44576_row38_col6" class="data row38 col6" >2023-03-24</td>
+      <td id="T_44576_row38_col7" class="data row38 col7" >Stuart-Thomas</td>
+      <td id="T_44576_row38_col8" class="data row38 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row39_col0" class="data row39 col0" >852349</td>
+      <td id="T_44576_row39_col1" class="data row39 col1" >Theodore</td>
+      <td id="T_44576_row39_col2" class="data row39 col2" >Harmon</td>
+      <td id="T_44576_row39_col3" class="data row39 col3" >nan</td>
+      <td id="T_44576_row39_col4" class="data row39 col4" >1966-10-29</td>
+      <td id="T_44576_row39_col5" class="data row39 col5" >220.490000</td>
+      <td id="T_44576_row39_col6" class="data row39 col6" >2023-06-11</td>
+      <td id="T_44576_row39_col7" class="data row39 col7" >Dixon-Pierce</td>
+      <td id="T_44576_row39_col8" class="data row39 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row40_col0" class="data row40 col0" >424916</td>
+      <td id="T_44576_row40_col1" class="data row40 col1" >Mary</td>
+      <td id="T_44576_row40_col2" class="data row40 col2" >Harris</td>
+      <td id="T_44576_row40_col3" class="data row40 col3" >F</td>
+      <td id="T_44576_row40_col4" class="data row40 col4" >1970-10-28</td>
+      <td id="T_44576_row40_col5" class="data row40 col5" >66.600000</td>
+      <td id="T_44576_row40_col6" class="data row40 col6" >2023-07-09</td>
+      <td id="T_44576_row40_col7" class="data row40 col7" >Blake-Shaffer</td>
+      <td id="T_44576_row40_col8" class="data row40 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row41_col0" class="data row41 col0" >125488</td>
+      <td id="T_44576_row41_col1" class="data row41 col1" >Brandon</td>
+      <td id="T_44576_row41_col2" class="data row41 col2" >Baird</td>
+      <td id="T_44576_row41_col3" class="data row41 col3" >M</td>
+      <td id="T_44576_row41_col4" class="data row41 col4" >1976-10-26</td>
+      <td id="T_44576_row41_col5" class="data row41 col5" >13.720000</td>
+      <td id="T_44576_row41_col6" class="data row41 col6" >2023-09-26</td>
+      <td id="T_44576_row41_col7" class="data row41 col7" >Blackwell and Sons</td>
+      <td id="T_44576_row41_col8" class="data row41 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row42_col0" class="data row42 col0" >355325</td>
+      <td id="T_44576_row42_col1" class="data row42 col1" >Andrew</td>
+      <td id="T_44576_row42_col2" class="data row42 col2" >Bright</td>
+      <td id="T_44576_row42_col3" class="data row42 col3" >M</td>
+      <td id="T_44576_row42_col4" class="data row42 col4" >1998-10-21</td>
+      <td id="T_44576_row42_col5" class="data row42 col5" >2826.940000</td>
+      <td id="T_44576_row42_col6" class="data row42 col6" >2023-06-24</td>
+      <td id="T_44576_row42_col7" class="data row42 col7" >Jones, Bailey and Davenport</td>
+      <td id="T_44576_row42_col8" class="data row42 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row43_col0" class="data row43 col0" >117256</td>
+      <td id="T_44576_row43_col1" class="data row43 col1" >Gregory</td>
+      <td id="T_44576_row43_col2" class="data row43 col2" >Long</td>
+      <td id="T_44576_row43_col3" class="data row43 col3" >M</td>
+      <td id="T_44576_row43_col4" class="data row43 col4" >1985-10-24</td>
+      <td id="T_44576_row43_col5" class="data row43 col5" >219.770000</td>
+      <td id="T_44576_row43_col6" class="data row43 col6" >2023-02-21</td>
+      <td id="T_44576_row43_col7" class="data row43 col7" >Carey LLC</td>
+      <td id="T_44576_row43_col8" class="data row43 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row44_col0" class="data row44 col0" >584542</td>
+      <td id="T_44576_row44_col1" class="data row44 col1" >Jasmine</td>
+      <td id="T_44576_row44_col2" class="data row44 col2" >Lewis</td>
+      <td id="T_44576_row44_col3" class="data row44 col3" >F</td>
+      <td id="T_44576_row44_col4" class="data row44 col4" >1958-10-31</td>
+      <td id="T_44576_row44_col5" class="data row44 col5" >39.040000</td>
+      <td id="T_44576_row44_col6" class="data row44 col6" >2023-02-18</td>
+      <td id="T_44576_row44_col7" class="data row44 col7" >Brooks LLC</td>
+      <td id="T_44576_row44_col8" class="data row44 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row45_col0" class="data row45 col0" >944604</td>
+      <td id="T_44576_row45_col1" class="data row45 col1" >Karla</td>
+      <td id="T_44576_row45_col2" class="data row45 col2" >Summers</td>
+      <td id="T_44576_row45_col3" class="data row45 col3" >M</td>
+      <td id="T_44576_row45_col4" class="data row45 col4" >1975-10-27</td>
+      <td id="T_44576_row45_col5" class="data row45 col5" >292.080000</td>
+      <td id="T_44576_row45_col6" class="data row45 col6" >2023-01-12</td>
+      <td id="T_44576_row45_col7" class="data row45 col7" >Carter, Vargas and Hood</td>
+      <td id="T_44576_row45_col8" class="data row45 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row46_col0" class="data row46 col0" >917373</td>
+      <td id="T_44576_row46_col1" class="data row46 col1" >Alisha</td>
+      <td id="T_44576_row46_col2" class="data row46 col2" >Reilly</td>
+      <td id="T_44576_row46_col3" class="data row46 col3" >nan</td>
+      <td id="T_44576_row46_col4" class="data row46 col4" >1985-10-24</td>
+      <td id="T_44576_row46_col5" class="data row46 col5" >1566.540000</td>
+      <td id="T_44576_row46_col6" class="data row46 col6" >2023-05-18</td>
+      <td id="T_44576_row46_col7" class="data row46 col7" >Brown and Sons</td>
+      <td id="T_44576_row46_col8" class="data row46 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row47_col0" class="data row47 col0" >460540</td>
+      <td id="T_44576_row47_col1" class="data row47 col1" >Christine</td>
+      <td id="T_44576_row47_col2" class="data row47 col2" >Lutz</td>
+      <td id="T_44576_row47_col3" class="data row47 col3" >F</td>
+      <td id="T_44576_row47_col4" class="data row47 col4" >2005-10-19</td>
+      <td id="T_44576_row47_col5" class="data row47 col5" >479.670000</td>
+      <td id="T_44576_row47_col6" class="data row47 col6" >2023-02-03</td>
+      <td id="T_44576_row47_col7" class="data row47 col7" >Mcintosh LLC</td>
+      <td id="T_44576_row47_col8" class="data row47 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row48_col0" class="data row48 col0" >487044</td>
+      <td id="T_44576_row48_col1" class="data row48 col1" >Alexis</td>
+      <td id="T_44576_row48_col2" class="data row48 col2" >Boone</td>
+      <td id="T_44576_row48_col3" class="data row48 col3" >M</td>
+      <td id="T_44576_row48_col4" class="data row48 col4" >1993-10-22</td>
+      <td id="T_44576_row48_col5" class="data row48 col5" >171.380000</td>
+      <td id="T_44576_row48_col6" class="data row48 col6" >2023-01-25</td>
+      <td id="T_44576_row48_col7" class="data row48 col7" >Larson-Rosales</td>
+      <td id="T_44576_row48_col8" class="data row48 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row49_col0" class="data row49 col0" >234776</td>
+      <td id="T_44576_row49_col1" class="data row49 col1" >Charles</td>
+      <td id="T_44576_row49_col2" class="data row49 col2" >Boone</td>
+      <td id="T_44576_row49_col3" class="data row49 col3" >F</td>
+      <td id="T_44576_row49_col4" class="data row49 col4" >1953-11-01</td>
+      <td id="T_44576_row49_col5" class="data row49 col5" >2832.250000</td>
+      <td id="T_44576_row49_col6" class="data row49 col6" >2023-01-06</td>
+      <td id="T_44576_row49_col7" class="data row49 col7" >Smith Ltd</td>
+      <td id="T_44576_row49_col8" class="data row49 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row50_col0" class="data row50 col0" >354215</td>
+      <td id="T_44576_row50_col1" class="data row50 col1" >Anita</td>
+      <td id="T_44576_row50_col2" class="data row50 col2" >Anderson</td>
+      <td id="T_44576_row50_col3" class="data row50 col3" >M</td>
+      <td id="T_44576_row50_col4" class="data row50 col4" >1992-10-22</td>
+      <td id="T_44576_row50_col5" class="data row50 col5" >146.610000</td>
+      <td id="T_44576_row50_col6" class="data row50 col6" >2023-08-27</td>
+      <td id="T_44576_row50_col7" class="data row50 col7" >Hunt-Burke</td>
+      <td id="T_44576_row50_col8" class="data row50 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row51_col0" class="data row51 col0" >827017</td>
+      <td id="T_44576_row51_col1" class="data row51 col1" >Bruce</td>
+      <td id="T_44576_row51_col2" class="data row51 col2" >Daniels</td>
+      <td id="T_44576_row51_col3" class="data row51 col3" >M</td>
+      <td id="T_44576_row51_col4" class="data row51 col4" >1955-11-01</td>
+      <td id="T_44576_row51_col5" class="data row51 col5" >2448.200000</td>
+      <td id="T_44576_row51_col6" class="data row51 col6" >2023-09-23</td>
+      <td id="T_44576_row51_col7" class="data row51 col7" >Kennedy-Johnson</td>
+      <td id="T_44576_row51_col8" class="data row51 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row52_col0" class="data row52 col0" >331730</td>
+      <td id="T_44576_row52_col1" class="data row52 col1" >Lindsey</td>
+      <td id="T_44576_row52_col2" class="data row52 col2" >Barnes</td>
+      <td id="T_44576_row52_col3" class="data row52 col3" >F</td>
+      <td id="T_44576_row52_col4" class="data row52 col4" >1990-10-23</td>
+      <td id="T_44576_row52_col5" class="data row52 col5" >230.890000</td>
+      <td id="T_44576_row52_col6" class="data row52 col6" >2023-03-08</td>
+      <td id="T_44576_row52_col7" class="data row52 col7" >Perry-Knox</td>
+      <td id="T_44576_row52_col8" class="data row52 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row53_col0" class="data row53 col0" >99597</td>
+      <td id="T_44576_row53_col1" class="data row53 col1" >Leonard</td>
+      <td id="T_44576_row53_col2" class="data row53 col2" >Hamilton</td>
+      <td id="T_44576_row53_col3" class="data row53 col3" >M</td>
+      <td id="T_44576_row53_col4" class="data row53 col4" >2005-10-19</td>
+      <td id="T_44576_row53_col5" class="data row53 col5" >178.100000</td>
+      <td id="T_44576_row53_col6" class="data row53 col6" >2023-07-19</td>
+      <td id="T_44576_row53_col7" class="data row53 col7" >Holmes-Martinez</td>
+      <td id="T_44576_row53_col8" class="data row53 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row54_col0" class="data row54 col0" >995136</td>
+      <td id="T_44576_row54_col1" class="data row54 col1" >Jill</td>
+      <td id="T_44576_row54_col2" class="data row54 col2" >Huff</td>
+      <td id="T_44576_row54_col3" class="data row54 col3" >F</td>
+      <td id="T_44576_row54_col4" class="data row54 col4" >1990-10-23</td>
+      <td id="T_44576_row54_col5" class="data row54 col5" >1890.080000</td>
+      <td id="T_44576_row54_col6" class="data row54 col6" >2023-10-02</td>
+      <td id="T_44576_row54_col7" class="data row54 col7" >Smith Group</td>
+      <td id="T_44576_row54_col8" class="data row54 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row55_col0" class="data row55 col0" >368169</td>
+      <td id="T_44576_row55_col1" class="data row55 col1" >Chelsey</td>
+      <td id="T_44576_row55_col2" class="data row55 col2" >Alexander</td>
+      <td id="T_44576_row55_col3" class="data row55 col3" >F</td>
+      <td id="T_44576_row55_col4" class="data row55 col4" >2000-10-20</td>
+      <td id="T_44576_row55_col5" class="data row55 col5" >1547.760000</td>
+      <td id="T_44576_row55_col6" class="data row55 col6" >2023-05-21</td>
+      <td id="T_44576_row55_col7" class="data row55 col7" >Henderson, Jacobs and Ingram</td>
+      <td id="T_44576_row55_col8" class="data row55 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row56_col0" class="data row56 col0" >221896</td>
+      <td id="T_44576_row56_col1" class="data row56 col1" >Martha</td>
+      <td id="T_44576_row56_col2" class="data row56 col2" >Wells</td>
+      <td id="T_44576_row56_col3" class="data row56 col3" >F</td>
+      <td id="T_44576_row56_col4" class="data row56 col4" >1968-10-28</td>
+      <td id="T_44576_row56_col5" class="data row56 col5" >2887.110000</td>
+      <td id="T_44576_row56_col6" class="data row56 col6" >2023-10-05</td>
+      <td id="T_44576_row56_col7" class="data row56 col7" >Alexander PLC</td>
+      <td id="T_44576_row56_col8" class="data row56 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row57_col0" class="data row57 col0" >788240</td>
+      <td id="T_44576_row57_col1" class="data row57 col1" >Joseph</td>
+      <td id="T_44576_row57_col2" class="data row57 col2" >Gray</td>
+      <td id="T_44576_row57_col3" class="data row57 col3" >M</td>
+      <td id="T_44576_row57_col4" class="data row57 col4" >1993-10-22</td>
+      <td id="T_44576_row57_col5" class="data row57 col5" >93.210000</td>
+      <td id="T_44576_row57_col6" class="data row57 col6" >2023-08-04</td>
+      <td id="T_44576_row57_col7" class="data row57 col7" >Davis, Ramirez and Smith</td>
+      <td id="T_44576_row57_col8" class="data row57 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row58_col0" class="data row58 col0" >182998</td>
+      <td id="T_44576_row58_col1" class="data row58 col1" >Megan</td>
+      <td id="T_44576_row58_col2" class="data row58 col2" >Stephens</td>
+      <td id="T_44576_row58_col3" class="data row58 col3" >F</td>
+      <td id="T_44576_row58_col4" class="data row58 col4" >1957-10-31</td>
+      <td id="T_44576_row58_col5" class="data row58 col5" >443.410000</td>
+      <td id="T_44576_row58_col6" class="data row58 col6" >2023-08-09</td>
+      <td id="T_44576_row58_col7" class="data row58 col7" >Jones Ltd</td>
+      <td id="T_44576_row58_col8" class="data row58 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row59_col0" class="data row59 col0" >892905</td>
+      <td id="T_44576_row59_col1" class="data row59 col1" >Michael</td>
+      <td id="T_44576_row59_col2" class="data row59 col2" >Rogers</td>
+      <td id="T_44576_row59_col3" class="data row59 col3" >F</td>
+      <td id="T_44576_row59_col4" class="data row59 col4" >1997-10-21</td>
+      <td id="T_44576_row59_col5" class="data row59 col5" >471.740000</td>
+      <td id="T_44576_row59_col6" class="data row59 col6" >2023-01-12</td>
+      <td id="T_44576_row59_col7" class="data row59 col7" >Gentry, Mcdonald and Mcneil</td>
+      <td id="T_44576_row59_col8" class="data row59 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row60_col0" class="data row60 col0" >617983</td>
+      <td id="T_44576_row60_col1" class="data row60 col1" >Michaela</td>
+      <td id="T_44576_row60_col2" class="data row60 col2" >Fletcher</td>
+      <td id="T_44576_row60_col3" class="data row60 col3" >F</td>
+      <td id="T_44576_row60_col4" class="data row60 col4" >1975-10-27</td>
+      <td id="T_44576_row60_col5" class="data row60 col5" >588.600000</td>
+      <td id="T_44576_row60_col6" class="data row60 col6" >2023-05-21</td>
+      <td id="T_44576_row60_col7" class="data row60 col7" >Hinton-Brock</td>
+      <td id="T_44576_row60_col8" class="data row60 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row61_col0" class="data row61 col0" >895257</td>
+      <td id="T_44576_row61_col1" class="data row61 col1" >Brian</td>
+      <td id="T_44576_row61_col2" class="data row61 col2" >Barnett</td>
+      <td id="T_44576_row61_col3" class="data row61 col3" >F</td>
+      <td id="T_44576_row61_col4" class="data row61 col4" >1993-10-22</td>
+      <td id="T_44576_row61_col5" class="data row61 col5" >478.630000</td>
+      <td id="T_44576_row61_col6" class="data row61 col6" >2023-02-26</td>
+      <td id="T_44576_row61_col7" class="data row61 col7" >Hernandez and Sons</td>
+      <td id="T_44576_row61_col8" class="data row61 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row62_col0" class="data row62 col0" >598349</td>
+      <td id="T_44576_row62_col1" class="data row62 col1" >Kaitlyn</td>
+      <td id="T_44576_row62_col2" class="data row62 col2" >Porter</td>
+      <td id="T_44576_row62_col3" class="data row62 col3" >M</td>
+      <td id="T_44576_row62_col4" class="data row62 col4" >1998-10-21</td>
+      <td id="T_44576_row62_col5" class="data row62 col5" >64.350000</td>
+      <td id="T_44576_row62_col6" class="data row62 col6" >2023-05-04</td>
+      <td id="T_44576_row62_col7" class="data row62 col7" >Perez PLC</td>
+      <td id="T_44576_row62_col8" class="data row62 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row63_col0" class="data row63 col0" >527880</td>
+      <td id="T_44576_row63_col1" class="data row63 col1" >Emily</td>
+      <td id="T_44576_row63_col2" class="data row63 col2" >Spence</td>
+      <td id="T_44576_row63_col3" class="data row63 col3" >M</td>
+      <td id="T_44576_row63_col4" class="data row63 col4" >1980-10-25</td>
+      <td id="T_44576_row63_col5" class="data row63 col5" >60.240000</td>
+      <td id="T_44576_row63_col6" class="data row63 col6" >2023-04-06</td>
+      <td id="T_44576_row63_col7" class="data row63 col7" >Reese-Powell</td>
+      <td id="T_44576_row63_col8" class="data row63 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row64_col0" class="data row64 col0" >483362</td>
+      <td id="T_44576_row64_col1" class="data row64 col1" >Michael</td>
+      <td id="T_44576_row64_col2" class="data row64 col2" >Cooper</td>
+      <td id="T_44576_row64_col3" class="data row64 col3" >M</td>
+      <td id="T_44576_row64_col4" class="data row64 col4" >1988-10-23</td>
+      <td id="T_44576_row64_col5" class="data row64 col5" >187.270000</td>
+      <td id="T_44576_row64_col6" class="data row64 col6" >2023-05-11</td>
+      <td id="T_44576_row64_col7" class="data row64 col7" >Fleming-Lee</td>
+      <td id="T_44576_row64_col8" class="data row64 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row65_col0" class="data row65 col0" >544521</td>
+      <td id="T_44576_row65_col1" class="data row65 col1" >Andrew</td>
+      <td id="T_44576_row65_col2" class="data row65 col2" >Avila</td>
+      <td id="T_44576_row65_col3" class="data row65 col3" >nan</td>
+      <td id="T_44576_row65_col4" class="data row65 col4" >1954-11-01</td>
+      <td id="T_44576_row65_col5" class="data row65 col5" >34.300000</td>
+      <td id="T_44576_row65_col6" class="data row65 col6" >2023-06-30</td>
+      <td id="T_44576_row65_col7" class="data row65 col7" >Grimes-Cochran</td>
+      <td id="T_44576_row65_col8" class="data row65 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row66_col0" class="data row66 col0" >941199</td>
+      <td id="T_44576_row66_col1" class="data row66 col1" >Christopher</td>
+      <td id="T_44576_row66_col2" class="data row66 col2" >Ellis</td>
+      <td id="T_44576_row66_col3" class="data row66 col3" >M</td>
+      <td id="T_44576_row66_col4" class="data row66 col4" >1991-10-23</td>
+      <td id="T_44576_row66_col5" class="data row66 col5" >183.810000</td>
+      <td id="T_44576_row66_col6" class="data row66 col6" >2023-07-12</td>
+      <td id="T_44576_row66_col7" class="data row66 col7" >Park-Branch</td>
+      <td id="T_44576_row66_col8" class="data row66 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row67_col0" class="data row67 col0" >637664</td>
+      <td id="T_44576_row67_col1" class="data row67 col1" >Amy</td>
+      <td id="T_44576_row67_col2" class="data row67 col2" >Wilson</td>
+      <td id="T_44576_row67_col3" class="data row67 col3" >M</td>
+      <td id="T_44576_row67_col4" class="data row67 col4" >1952-11-01</td>
+      <td id="T_44576_row67_col5" class="data row67 col5" >170.280000</td>
+      <td id="T_44576_row67_col6" class="data row67 col6" >2023-10-04</td>
+      <td id="T_44576_row67_col7" class="data row67 col7" >Green, Faulkner and Hart</td>
+      <td id="T_44576_row67_col8" class="data row67 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row68_col0" class="data row68 col0" >813990</td>
+      <td id="T_44576_row68_col1" class="data row68 col1" >Michael</td>
+      <td id="T_44576_row68_col2" class="data row68 col2" >Cooley</td>
+      <td id="T_44576_row68_col3" class="data row68 col3" >F</td>
+      <td id="T_44576_row68_col4" class="data row68 col4" >2000-10-20</td>
+      <td id="T_44576_row68_col5" class="data row68 col5" >549.720000</td>
+      <td id="T_44576_row68_col6" class="data row68 col6" >2023-03-14</td>
+      <td id="T_44576_row68_col7" class="data row68 col7" >Davis, Williams and Taylor</td>
+      <td id="T_44576_row68_col8" class="data row68 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row69_col0" class="data row69 col0" >429723</td>
+      <td id="T_44576_row69_col1" class="data row69 col1" >Ronnie</td>
+      <td id="T_44576_row69_col2" class="data row69 col2" >Smith</td>
+      <td id="T_44576_row69_col3" class="data row69 col3" >nan</td>
+      <td id="T_44576_row69_col4" class="data row69 col4" >2003-10-20</td>
+      <td id="T_44576_row69_col5" class="data row69 col5" >14.280000</td>
+      <td id="T_44576_row69_col6" class="data row69 col6" >2023-02-05</td>
+      <td id="T_44576_row69_col7" class="data row69 col7" >Mills PLC</td>
+      <td id="T_44576_row69_col8" class="data row69 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row70_col0" class="data row70 col0" >973209</td>
+      <td id="T_44576_row70_col1" class="data row70 col1" >Eileen</td>
+      <td id="T_44576_row70_col2" class="data row70 col2" >Dickerson</td>
+      <td id="T_44576_row70_col3" class="data row70 col3" >M</td>
+      <td id="T_44576_row70_col4" class="data row70 col4" >1992-10-22</td>
+      <td id="T_44576_row70_col5" class="data row70 col5" >1133.970000</td>
+      <td id="T_44576_row70_col6" class="data row70 col6" >2023-07-28</td>
+      <td id="T_44576_row70_col7" class="data row70 col7" >Huynh and Sons</td>
+      <td id="T_44576_row70_col8" class="data row70 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row71_col0" class="data row71 col0" >634986</td>
+      <td id="T_44576_row71_col1" class="data row71 col1" >Alex</td>
+      <td id="T_44576_row71_col2" class="data row71 col2" >Villanueva</td>
+      <td id="T_44576_row71_col3" class="data row71 col3" >M</td>
+      <td id="T_44576_row71_col4" class="data row71 col4" >1986-10-24</td>
+      <td id="T_44576_row71_col5" class="data row71 col5" >507.520000</td>
+      <td id="T_44576_row71_col6" class="data row71 col6" >2023-08-09</td>
+      <td id="T_44576_row71_col7" class="data row71 col7" >Peters LLC</td>
+      <td id="T_44576_row71_col8" class="data row71 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row72_col0" class="data row72 col0" >261566</td>
+      <td id="T_44576_row72_col1" class="data row72 col1" >Christopher</td>
+      <td id="T_44576_row72_col2" class="data row72 col2" >Jones</td>
+      <td id="T_44576_row72_col3" class="data row72 col3" >nan</td>
+      <td id="T_44576_row72_col4" class="data row72 col4" >1955-11-01</td>
+      <td id="T_44576_row72_col5" class="data row72 col5" >103.570000</td>
+      <td id="T_44576_row72_col6" class="data row72 col6" >2023-07-25</td>
+      <td id="T_44576_row72_col7" class="data row72 col7" >Phillips PLC</td>
+      <td id="T_44576_row72_col8" class="data row72 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row73_col0" class="data row73 col0" >22321</td>
+      <td id="T_44576_row73_col1" class="data row73 col1" >Lauren</td>
+      <td id="T_44576_row73_col2" class="data row73 col2" >Weaver</td>
+      <td id="T_44576_row73_col3" class="data row73 col3" >F</td>
+      <td id="T_44576_row73_col4" class="data row73 col4" >1976-10-26</td>
+      <td id="T_44576_row73_col5" class="data row73 col5" >26.620000</td>
+      <td id="T_44576_row73_col6" class="data row73 col6" >2023-06-28</td>
+      <td id="T_44576_row73_col7" class="data row73 col7" >Rogers Ltd</td>
+      <td id="T_44576_row73_col8" class="data row73 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row74_col0" class="data row74 col0" >968597</td>
+      <td id="T_44576_row74_col1" class="data row74 col1" >Brittany</td>
+      <td id="T_44576_row74_col2" class="data row74 col2" >Gross</td>
+      <td id="T_44576_row74_col3" class="data row74 col3" >F</td>
+      <td id="T_44576_row74_col4" class="data row74 col4" >1968-10-28</td>
+      <td id="T_44576_row74_col5" class="data row74 col5" >143.520000</td>
+      <td id="T_44576_row74_col6" class="data row74 col6" >2023-02-10</td>
+      <td id="T_44576_row74_col7" class="data row74 col7" >Vaughn-Maldonado</td>
+      <td id="T_44576_row74_col8" class="data row74 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row75_col0" class="data row75 col0" >894606</td>
+      <td id="T_44576_row75_col1" class="data row75 col1" >Danielle</td>
+      <td id="T_44576_row75_col2" class="data row75 col2" >Johnson</td>
+      <td id="T_44576_row75_col3" class="data row75 col3" >M</td>
+      <td id="T_44576_row75_col4" class="data row75 col4" >1963-10-30</td>
+      <td id="T_44576_row75_col5" class="data row75 col5" >71.730000</td>
+      <td id="T_44576_row75_col6" class="data row75 col6" >2023-02-05</td>
+      <td id="T_44576_row75_col7" class="data row75 col7" >Noble, Vazquez and Hanson</td>
+      <td id="T_44576_row75_col8" class="data row75 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row76_col0" class="data row76 col0" >714834</td>
+      <td id="T_44576_row76_col1" class="data row76 col1" >Cheyenne</td>
+      <td id="T_44576_row76_col2" class="data row76 col2" >Sharp</td>
+      <td id="T_44576_row76_col3" class="data row76 col3" >F</td>
+      <td id="T_44576_row76_col4" class="data row76 col4" >1990-10-23</td>
+      <td id="T_44576_row76_col5" class="data row76 col5" >122.890000</td>
+      <td id="T_44576_row76_col6" class="data row76 col6" >2023-08-13</td>
+      <td id="T_44576_row76_col7" class="data row76 col7" >Moore PLC</td>
+      <td id="T_44576_row76_col8" class="data row76 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row77_col0" class="data row77 col0" >154518</td>
+      <td id="T_44576_row77_col1" class="data row77 col1" >Mark</td>
+      <td id="T_44576_row77_col2" class="data row77 col2" >Dunn</td>
+      <td id="T_44576_row77_col3" class="data row77 col3" >M</td>
+      <td id="T_44576_row77_col4" class="data row77 col4" >1993-10-22</td>
+      <td id="T_44576_row77_col5" class="data row77 col5" >251.530000</td>
+      <td id="T_44576_row77_col6" class="data row77 col6" >2023-08-20</td>
+      <td id="T_44576_row77_col7" class="data row77 col7" >Gonzalez-Vasquez</td>
+      <td id="T_44576_row77_col8" class="data row77 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row78_col0" class="data row78 col0" >412356</td>
+      <td id="T_44576_row78_col1" class="data row78 col1" >Michele</td>
+      <td id="T_44576_row78_col2" class="data row78 col2" >Young</td>
+      <td id="T_44576_row78_col3" class="data row78 col3" >F</td>
+      <td id="T_44576_row78_col4" class="data row78 col4" >1960-10-30</td>
+      <td id="T_44576_row78_col5" class="data row78 col5" >993.920000</td>
+      <td id="T_44576_row78_col6" class="data row78 col6" >2023-03-20</td>
+      <td id="T_44576_row78_col7" class="data row78 col7" >Lowe, Giles and Kim</td>
+      <td id="T_44576_row78_col8" class="data row78 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row79_col0" class="data row79 col0" >289709</td>
+      <td id="T_44576_row79_col1" class="data row79 col1" >Susan</td>
+      <td id="T_44576_row79_col2" class="data row79 col2" >Howard</td>
+      <td id="T_44576_row79_col3" class="data row79 col3" >nan</td>
+      <td id="T_44576_row79_col4" class="data row79 col4" >1967-10-29</td>
+      <td id="T_44576_row79_col5" class="data row79 col5" >990.380000</td>
+      <td id="T_44576_row79_col6" class="data row79 col6" >2023-03-15</td>
+      <td id="T_44576_row79_col7" class="data row79 col7" >Mcdonald-Edwards</td>
+      <td id="T_44576_row79_col8" class="data row79 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row80_col0" class="data row80 col0" >512111</td>
+      <td id="T_44576_row80_col1" class="data row80 col1" >Mark</td>
+      <td id="T_44576_row80_col2" class="data row80 col2" >Garcia</td>
+      <td id="T_44576_row80_col3" class="data row80 col3" >F</td>
+      <td id="T_44576_row80_col4" class="data row80 col4" >1980-10-25</td>
+      <td id="T_44576_row80_col5" class="data row80 col5" >554.030000</td>
+      <td id="T_44576_row80_col6" class="data row80 col6" >2023-08-21</td>
+      <td id="T_44576_row80_col7" class="data row80 col7" >Long Group</td>
+      <td id="T_44576_row80_col8" class="data row80 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row81_col0" class="data row81 col0" >896544</td>
+      <td id="T_44576_row81_col1" class="data row81 col1" >Jennifer</td>
+      <td id="T_44576_row81_col2" class="data row81 col2" >Francis</td>
+      <td id="T_44576_row81_col3" class="data row81 col3" >F</td>
+      <td id="T_44576_row81_col4" class="data row81 col4" >1985-10-24</td>
+      <td id="T_44576_row81_col5" class="data row81 col5" >784.340000</td>
+      <td id="T_44576_row81_col6" class="data row81 col6" >2023-01-18</td>
+      <td id="T_44576_row81_col7" class="data row81 col7" >Jordan Inc</td>
+      <td id="T_44576_row81_col8" class="data row81 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row82_col0" class="data row82 col0" >790447</td>
+      <td id="T_44576_row82_col1" class="data row82 col1" >Aaron</td>
+      <td id="T_44576_row82_col2" class="data row82 col2" >Colon</td>
+      <td id="T_44576_row82_col3" class="data row82 col3" >M</td>
+      <td id="T_44576_row82_col4" class="data row82 col4" >1981-10-25</td>
+      <td id="T_44576_row82_col5" class="data row82 col5" >952.690000</td>
+      <td id="T_44576_row82_col6" class="data row82 col6" >2023-04-30</td>
+      <td id="T_44576_row82_col7" class="data row82 col7" >Fernandez, Wall and Jones</td>
+      <td id="T_44576_row82_col8" class="data row82 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row83_col0" class="data row83 col0" >680289</td>
+      <td id="T_44576_row83_col1" class="data row83 col1" >Whitney</td>
+      <td id="T_44576_row83_col2" class="data row83 col2" >Price</td>
+      <td id="T_44576_row83_col3" class="data row83 col3" >M</td>
+      <td id="T_44576_row83_col4" class="data row83 col4" >1966-10-29</td>
+      <td id="T_44576_row83_col5" class="data row83 col5" >457.750000</td>
+      <td id="T_44576_row83_col6" class="data row83 col6" >2023-03-01</td>
+      <td id="T_44576_row83_col7" class="data row83 col7" >Daniel Ltd</td>
+      <td id="T_44576_row83_col8" class="data row83 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row84_col0" class="data row84 col0" >762443</td>
+      <td id="T_44576_row84_col1" class="data row84 col1" >Kayla</td>
+      <td id="T_44576_row84_col2" class="data row84 col2" >Baker</td>
+      <td id="T_44576_row84_col3" class="data row84 col3" >F</td>
+      <td id="T_44576_row84_col4" class="data row84 col4" >1950-11-02</td>
+      <td id="T_44576_row84_col5" class="data row84 col5" >76.180000</td>
+      <td id="T_44576_row84_col6" class="data row84 col6" >2023-08-04</td>
+      <td id="T_44576_row84_col7" class="data row84 col7" >Robbins and Sons</td>
+      <td id="T_44576_row84_col8" class="data row84 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row85_col0" class="data row85 col0" >38681</td>
+      <td id="T_44576_row85_col1" class="data row85 col1" >Nicole</td>
+      <td id="T_44576_row85_col2" class="data row85 col2" >Chen</td>
+      <td id="T_44576_row85_col3" class="data row85 col3" >M</td>
+      <td id="T_44576_row85_col4" class="data row85 col4" >1982-10-25</td>
+      <td id="T_44576_row85_col5" class="data row85 col5" >143.810000</td>
+      <td id="T_44576_row85_col6" class="data row85 col6" >2023-05-28</td>
+      <td id="T_44576_row85_col7" class="data row85 col7" >Garcia and Sons</td>
+      <td id="T_44576_row85_col8" class="data row85 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row86_col0" class="data row86 col0" >843845</td>
+      <td id="T_44576_row86_col1" class="data row86 col1" >Debra</td>
+      <td id="T_44576_row86_col2" class="data row86 col2" >Davis</td>
+      <td id="T_44576_row86_col3" class="data row86 col3" >F</td>
+      <td id="T_44576_row86_col4" class="data row86 col4" >1974-10-27</td>
+      <td id="T_44576_row86_col5" class="data row86 col5" >35.470000</td>
+      <td id="T_44576_row86_col6" class="data row86 col6" >2023-09-30</td>
+      <td id="T_44576_row86_col7" class="data row86 col7" >Scott Group</td>
+      <td id="T_44576_row86_col8" class="data row86 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row87_col0" class="data row87 col0" >787313</td>
+      <td id="T_44576_row87_col1" class="data row87 col1" >Jessica</td>
+      <td id="T_44576_row87_col2" class="data row87 col2" >Perez</td>
+      <td id="T_44576_row87_col3" class="data row87 col3" >F</td>
+      <td id="T_44576_row87_col4" class="data row87 col4" >1951-11-02</td>
+      <td id="T_44576_row87_col5" class="data row87 col5" >49.350000</td>
+      <td id="T_44576_row87_col6" class="data row87 col6" >2023-03-18</td>
+      <td id="T_44576_row87_col7" class="data row87 col7" >Lopez-Castillo</td>
+      <td id="T_44576_row87_col8" class="data row87 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row88_col0" class="data row88 col0" >23811</td>
+      <td id="T_44576_row88_col1" class="data row88 col1" >Daniel</td>
+      <td id="T_44576_row88_col2" class="data row88 col2" >Patton</td>
+      <td id="T_44576_row88_col3" class="data row88 col3" >F</td>
+      <td id="T_44576_row88_col4" class="data row88 col4" >1983-10-25</td>
+      <td id="T_44576_row88_col5" class="data row88 col5" >129.140000</td>
+      <td id="T_44576_row88_col6" class="data row88 col6" >2023-07-28</td>
+      <td id="T_44576_row88_col7" class="data row88 col7" >Smith-Cain</td>
+      <td id="T_44576_row88_col8" class="data row88 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row89_col0" class="data row89 col0" >453841</td>
+      <td id="T_44576_row89_col1" class="data row89 col1" >Jenna</td>
+      <td id="T_44576_row89_col2" class="data row89 col2" >Ochoa</td>
+      <td id="T_44576_row89_col3" class="data row89 col3" >F</td>
+      <td id="T_44576_row89_col4" class="data row89 col4" >2005-10-19</td>
+      <td id="T_44576_row89_col5" class="data row89 col5" >76.720000</td>
+      <td id="T_44576_row89_col6" class="data row89 col6" >2023-08-10</td>
+      <td id="T_44576_row89_col7" class="data row89 col7" >Reyes-Mack</td>
+      <td id="T_44576_row89_col8" class="data row89 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row90_col0" class="data row90 col0" >906645</td>
+      <td id="T_44576_row90_col1" class="data row90 col1" >Barbara</td>
+      <td id="T_44576_row90_col2" class="data row90 col2" >Garcia</td>
+      <td id="T_44576_row90_col3" class="data row90 col3" >M</td>
+      <td id="T_44576_row90_col4" class="data row90 col4" >1989-10-23</td>
+      <td id="T_44576_row90_col5" class="data row90 col5" >373.880000</td>
+      <td id="T_44576_row90_col6" class="data row90 col6" >2023-01-21</td>
+      <td id="T_44576_row90_col7" class="data row90 col7" >Armstrong PLC</td>
+      <td id="T_44576_row90_col8" class="data row90 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row91_col0" class="data row91 col0" >549829</td>
+      <td id="T_44576_row91_col1" class="data row91 col1" >Calvin</td>
+      <td id="T_44576_row91_col2" class="data row91 col2" >Brown</td>
+      <td id="T_44576_row91_col3" class="data row91 col3" >M</td>
+      <td id="T_44576_row91_col4" class="data row91 col4" >1967-10-29</td>
+      <td id="T_44576_row91_col5" class="data row91 col5" >999.850000</td>
+      <td id="T_44576_row91_col6" class="data row91 col6" >2023-08-18</td>
+      <td id="T_44576_row91_col7" class="data row91 col7" >Evans-Kerr</td>
+      <td id="T_44576_row91_col8" class="data row91 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row92_col0" class="data row92 col0" >939292</td>
+      <td id="T_44576_row92_col1" class="data row92 col1" >Dorothy</td>
+      <td id="T_44576_row92_col2" class="data row92 col2" >Smith</td>
+      <td id="T_44576_row92_col3" class="data row92 col3" >F</td>
+      <td id="T_44576_row92_col4" class="data row92 col4" >2000-10-20</td>
+      <td id="T_44576_row92_col5" class="data row92 col5" >1449.890000</td>
+      <td id="T_44576_row92_col6" class="data row92 col6" >2023-09-23</td>
+      <td id="T_44576_row92_col7" class="data row92 col7" >Chan-Hoffman</td>
+      <td id="T_44576_row92_col8" class="data row92 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row93_col0" class="data row93 col0" >504502</td>
+      <td id="T_44576_row93_col1" class="data row93 col1" >David</td>
+      <td id="T_44576_row93_col2" class="data row93 col2" >Benton</td>
+      <td id="T_44576_row93_col3" class="data row93 col3" >nan</td>
+      <td id="T_44576_row93_col4" class="data row93 col4" >1967-10-29</td>
+      <td id="T_44576_row93_col5" class="data row93 col5" >72.090000</td>
+      <td id="T_44576_row93_col6" class="data row93 col6" >2023-02-21</td>
+      <td id="T_44576_row93_col7" class="data row93 col7" >May Group</td>
+      <td id="T_44576_row93_col8" class="data row93 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row94_col0" class="data row94 col0" >139231</td>
+      <td id="T_44576_row94_col1" class="data row94 col1" >Rebecca</td>
+      <td id="T_44576_row94_col2" class="data row94 col2" >King</td>
+      <td id="T_44576_row94_col3" class="data row94 col3" >F</td>
+      <td id="T_44576_row94_col4" class="data row94 col4" >1979-10-26</td>
+      <td id="T_44576_row94_col5" class="data row94 col5" >414.830000</td>
+      <td id="T_44576_row94_col6" class="data row94 col6" >2023-08-09</td>
+      <td id="T_44576_row94_col7" class="data row94 col7" >Reyes, Contreras and Santana</td>
+      <td id="T_44576_row94_col8" class="data row94 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row95_col0" class="data row95 col0" >359876</td>
+      <td id="T_44576_row95_col1" class="data row95 col1" >Joshua</td>
+      <td id="T_44576_row95_col2" class="data row95 col2" >Henson</td>
+      <td id="T_44576_row95_col3" class="data row95 col3" >M</td>
+      <td id="T_44576_row95_col4" class="data row95 col4" >1964-10-29</td>
+      <td id="T_44576_row95_col5" class="data row95 col5" >19.420000</td>
+      <td id="T_44576_row95_col6" class="data row95 col6" >2023-02-04</td>
+      <td id="T_44576_row95_col7" class="data row95 col7" >Compton, Flores and Li</td>
+      <td id="T_44576_row95_col8" class="data row95 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row96_col0" class="data row96 col0" >770217</td>
+      <td id="T_44576_row96_col1" class="data row96 col1" >Benjamin</td>
+      <td id="T_44576_row96_col2" class="data row96 col2" >Harris</td>
+      <td id="T_44576_row96_col3" class="data row96 col3" >M</td>
+      <td id="T_44576_row96_col4" class="data row96 col4" >1974-10-27</td>
+      <td id="T_44576_row96_col5" class="data row96 col5" >170.160000</td>
+      <td id="T_44576_row96_col6" class="data row96 col6" >2023-08-17</td>
+      <td id="T_44576_row96_col7" class="data row96 col7" >Ford-Collins</td>
+      <td id="T_44576_row96_col8" class="data row96 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row97_col0" class="data row97 col0" >852572</td>
+      <td id="T_44576_row97_col1" class="data row97 col1" >Christopher</td>
+      <td id="T_44576_row97_col2" class="data row97 col2" >Walker</td>
+      <td id="T_44576_row97_col3" class="data row97 col3" >M</td>
+      <td id="T_44576_row97_col4" class="data row97 col4" >2004-10-19</td>
+      <td id="T_44576_row97_col5" class="data row97 col5" >266.410000</td>
+      <td id="T_44576_row97_col6" class="data row97 col6" >2023-05-02</td>
+      <td id="T_44576_row97_col7" class="data row97 col7" >Waters Group</td>
+      <td id="T_44576_row97_col8" class="data row97 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row98_col0" class="data row98 col0" >885087</td>
+      <td id="T_44576_row98_col1" class="data row98 col1" >Scott</td>
+      <td id="T_44576_row98_col2" class="data row98 col2" >Patton</td>
+      <td id="T_44576_row98_col3" class="data row98 col3" >M</td>
+      <td id="T_44576_row98_col4" class="data row98 col4" >1971-10-28</td>
+      <td id="T_44576_row98_col5" class="data row98 col5" >2204.980000</td>
+      <td id="T_44576_row98_col6" class="data row98 col6" >2023-05-23</td>
+      <td id="T_44576_row98_col7" class="data row98 col7" >Williams, Smith and Carter</td>
+      <td id="T_44576_row98_col8" class="data row98 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row99_col0" class="data row99 col0" >445276</td>
+      <td id="T_44576_row99_col1" class="data row99 col1" >Michelle</td>
+      <td id="T_44576_row99_col2" class="data row99 col2" >Williamson</td>
+      <td id="T_44576_row99_col3" class="data row99 col3" >F</td>
+      <td id="T_44576_row99_col4" class="data row99 col4" >2001-10-20</td>
+      <td id="T_44576_row99_col5" class="data row99 col5" >438.380000</td>
+      <td id="T_44576_row99_col6" class="data row99 col6" >2023-01-22</td>
+      <td id="T_44576_row99_col7" class="data row99 col7" >Drake, Rodriguez and Rogers</td>
+      <td id="T_44576_row99_col8" class="data row99 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row100_col0" class="data row100 col0" >863735</td>
+      <td id="T_44576_row100_col1" class="data row100 col1" >Robyn</td>
+      <td id="T_44576_row100_col2" class="data row100 col2" >Browning</td>
+      <td id="T_44576_row100_col3" class="data row100 col3" >F</td>
+      <td id="T_44576_row100_col4" class="data row100 col4" >1989-10-23</td>
+      <td id="T_44576_row100_col5" class="data row100 col5" >40.810000</td>
+      <td id="T_44576_row100_col6" class="data row100 col6" >2023-04-12</td>
+      <td id="T_44576_row100_col7" class="data row100 col7" >Smith, Huang and Foley</td>
+      <td id="T_44576_row100_col8" class="data row100 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row101_col0" class="data row101 col0" >575046</td>
+      <td id="T_44576_row101_col1" class="data row101 col1" >Brittany</td>
+      <td id="T_44576_row101_col2" class="data row101 col2" >Young</td>
+      <td id="T_44576_row101_col3" class="data row101 col3" >F</td>
+      <td id="T_44576_row101_col4" class="data row101 col4" >2002-10-20</td>
+      <td id="T_44576_row101_col5" class="data row101 col5" >96.860000</td>
+      <td id="T_44576_row101_col6" class="data row101 col6" >2023-07-11</td>
+      <td id="T_44576_row101_col7" class="data row101 col7" >Garcia, Collins and Underwood</td>
+      <td id="T_44576_row101_col8" class="data row101 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row102_col0" class="data row102 col0" >435019</td>
+      <td id="T_44576_row102_col1" class="data row102 col1" >Thomas</td>
+      <td id="T_44576_row102_col2" class="data row102 col2" >Weiss</td>
+      <td id="T_44576_row102_col3" class="data row102 col3" >M</td>
+      <td id="T_44576_row102_col4" class="data row102 col4" >1963-10-30</td>
+      <td id="T_44576_row102_col5" class="data row102 col5" >83.920000</td>
+      <td id="T_44576_row102_col6" class="data row102 col6" >2023-02-01</td>
+      <td id="T_44576_row102_col7" class="data row102 col7" >Diaz-Martin</td>
+      <td id="T_44576_row102_col8" class="data row102 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row103_col0" class="data row103 col0" >198908</td>
+      <td id="T_44576_row103_col1" class="data row103 col1" >Ashley</td>
+      <td id="T_44576_row103_col2" class="data row103 col2" >Gilbert</td>
+      <td id="T_44576_row103_col3" class="data row103 col3" >F</td>
+      <td id="T_44576_row103_col4" class="data row103 col4" >1979-10-26</td>
+      <td id="T_44576_row103_col5" class="data row103 col5" >45.060000</td>
+      <td id="T_44576_row103_col6" class="data row103 col6" >2023-05-01</td>
+      <td id="T_44576_row103_col7" class="data row103 col7" >Pena LLC</td>
+      <td id="T_44576_row103_col8" class="data row103 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row104_col0" class="data row104 col0" >718833</td>
+      <td id="T_44576_row104_col1" class="data row104 col1" >Scott</td>
+      <td id="T_44576_row104_col2" class="data row104 col2" >Evans</td>
+      <td id="T_44576_row104_col3" class="data row104 col3" >M</td>
+      <td id="T_44576_row104_col4" class="data row104 col4" >1984-10-24</td>
+      <td id="T_44576_row104_col5" class="data row104 col5" >46.810000</td>
+      <td id="T_44576_row104_col6" class="data row104 col6" >2023-09-14</td>
+      <td id="T_44576_row104_col7" class="data row104 col7" >Martin-Simmons</td>
+      <td id="T_44576_row104_col8" class="data row104 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row105_col0" class="data row105 col0" >254397</td>
+      <td id="T_44576_row105_col1" class="data row105 col1" >Michelle</td>
+      <td id="T_44576_row105_col2" class="data row105 col2" >Blair</td>
+      <td id="T_44576_row105_col3" class="data row105 col3" >M</td>
+      <td id="T_44576_row105_col4" class="data row105 col4" >1961-10-30</td>
+      <td id="T_44576_row105_col5" class="data row105 col5" >824.410000</td>
+      <td id="T_44576_row105_col6" class="data row105 col6" >2023-01-16</td>
+      <td id="T_44576_row105_col7" class="data row105 col7" >Butler-Mckinney</td>
+      <td id="T_44576_row105_col8" class="data row105 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row106_col0" class="data row106 col0" >71168</td>
+      <td id="T_44576_row106_col1" class="data row106 col1" >Marie</td>
+      <td id="T_44576_row106_col2" class="data row106 col2" >Anderson</td>
+      <td id="T_44576_row106_col3" class="data row106 col3" >F</td>
+      <td id="T_44576_row106_col4" class="data row106 col4" >1987-10-24</td>
+      <td id="T_44576_row106_col5" class="data row106 col5" >41.270000</td>
+      <td id="T_44576_row106_col6" class="data row106 col6" >2023-03-22</td>
+      <td id="T_44576_row106_col7" class="data row106 col7" >Carter-Anthony</td>
+      <td id="T_44576_row106_col8" class="data row106 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row107_col0" class="data row107 col0" >586567</td>
+      <td id="T_44576_row107_col1" class="data row107 col1" >Joseph</td>
+      <td id="T_44576_row107_col2" class="data row107 col2" >Orozco</td>
+      <td id="T_44576_row107_col3" class="data row107 col3" >M</td>
+      <td id="T_44576_row107_col4" class="data row107 col4" >1976-10-26</td>
+      <td id="T_44576_row107_col5" class="data row107 col5" >59.750000</td>
+      <td id="T_44576_row107_col6" class="data row107 col6" >2023-07-05</td>
+      <td id="T_44576_row107_col7" class="data row107 col7" >Young-Dunn</td>
+      <td id="T_44576_row107_col8" class="data row107 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row108_col0" class="data row108 col0" >802784</td>
+      <td id="T_44576_row108_col1" class="data row108 col1" >Nicole</td>
+      <td id="T_44576_row108_col2" class="data row108 col2" >Gordon</td>
+      <td id="T_44576_row108_col3" class="data row108 col3" >F</td>
+      <td id="T_44576_row108_col4" class="data row108 col4" >1988-10-23</td>
+      <td id="T_44576_row108_col5" class="data row108 col5" >188.270000</td>
+      <td id="T_44576_row108_col6" class="data row108 col6" >2023-09-14</td>
+      <td id="T_44576_row108_col7" class="data row108 col7" >Henderson, Daniels and Gregory</td>
+      <td id="T_44576_row108_col8" class="data row108 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row109_col0" class="data row109 col0" >278212</td>
+      <td id="T_44576_row109_col1" class="data row109 col1" >Matthew</td>
+      <td id="T_44576_row109_col2" class="data row109 col2" >Mason</td>
+      <td id="T_44576_row109_col3" class="data row109 col3" >F</td>
+      <td id="T_44576_row109_col4" class="data row109 col4" >1951-11-02</td>
+      <td id="T_44576_row109_col5" class="data row109 col5" >161.470000</td>
+      <td id="T_44576_row109_col6" class="data row109 col6" >2023-08-25</td>
+      <td id="T_44576_row109_col7" class="data row109 col7" >Aguilar, Stevenson and Chambers</td>
+      <td id="T_44576_row109_col8" class="data row109 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row110_col0" class="data row110 col0" >558213</td>
+      <td id="T_44576_row110_col1" class="data row110 col1" >Katrina</td>
+      <td id="T_44576_row110_col2" class="data row110 col2" >Gilmore</td>
+      <td id="T_44576_row110_col3" class="data row110 col3" >M</td>
+      <td id="T_44576_row110_col4" class="data row110 col4" >1971-10-28</td>
+      <td id="T_44576_row110_col5" class="data row110 col5" >491.890000</td>
+      <td id="T_44576_row110_col6" class="data row110 col6" >2023-02-01</td>
+      <td id="T_44576_row110_col7" class="data row110 col7" >Williams Ltd</td>
+      <td id="T_44576_row110_col8" class="data row110 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row111_col0" class="data row111 col0" >802005</td>
+      <td id="T_44576_row111_col1" class="data row111 col1" >Daniel</td>
+      <td id="T_44576_row111_col2" class="data row111 col2" >Jimenez</td>
+      <td id="T_44576_row111_col3" class="data row111 col3" >F</td>
+      <td id="T_44576_row111_col4" class="data row111 col4" >2000-10-20</td>
+      <td id="T_44576_row111_col5" class="data row111 col5" >2059.910000</td>
+      <td id="T_44576_row111_col6" class="data row111 col6" >2023-09-09</td>
+      <td id="T_44576_row111_col7" class="data row111 col7" >Allen, Hogan and Vaughan</td>
+      <td id="T_44576_row111_col8" class="data row111 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row112_col0" class="data row112 col0" >783982</td>
+      <td id="T_44576_row112_col1" class="data row112 col1" >Cynthia</td>
+      <td id="T_44576_row112_col2" class="data row112 col2" >Vaughn</td>
+      <td id="T_44576_row112_col3" class="data row112 col3" >F</td>
+      <td id="T_44576_row112_col4" class="data row112 col4" >1949-11-02</td>
+      <td id="T_44576_row112_col5" class="data row112 col5" >189.520000</td>
+      <td id="T_44576_row112_col6" class="data row112 col6" >2023-04-01</td>
+      <td id="T_44576_row112_col7" class="data row112 col7" >Camacho, Burns and Smith</td>
+      <td id="T_44576_row112_col8" class="data row112 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row113_col0" class="data row113 col0" >268701</td>
+      <td id="T_44576_row113_col1" class="data row113 col1" >Miguel</td>
+      <td id="T_44576_row113_col2" class="data row113 col2" >Vargas</td>
+      <td id="T_44576_row113_col3" class="data row113 col3" >nan</td>
+      <td id="T_44576_row113_col4" class="data row113 col4" >1989-10-23</td>
+      <td id="T_44576_row113_col5" class="data row113 col5" >186.130000</td>
+      <td id="T_44576_row113_col6" class="data row113 col6" >2023-08-21</td>
+      <td id="T_44576_row113_col7" class="data row113 col7" >Webster Group</td>
+      <td id="T_44576_row113_col8" class="data row113 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row114_col0" class="data row114 col0" >309686</td>
+      <td id="T_44576_row114_col1" class="data row114 col1" >Tyler</td>
+      <td id="T_44576_row114_col2" class="data row114 col2" >Barnes</td>
+      <td id="T_44576_row114_col3" class="data row114 col3" >nan</td>
+      <td id="T_44576_row114_col4" class="data row114 col4" >1990-10-23</td>
+      <td id="T_44576_row114_col5" class="data row114 col5" >84.110000</td>
+      <td id="T_44576_row114_col6" class="data row114 col6" >2023-04-20</td>
+      <td id="T_44576_row114_col7" class="data row114 col7" >Conrad and Sons</td>
+      <td id="T_44576_row114_col8" class="data row114 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row115_col0" class="data row115 col0" >93406</td>
+      <td id="T_44576_row115_col1" class="data row115 col1" >Stephanie</td>
+      <td id="T_44576_row115_col2" class="data row115 col2" >Wright</td>
+      <td id="T_44576_row115_col3" class="data row115 col3" >F</td>
+      <td id="T_44576_row115_col4" class="data row115 col4" >1976-10-26</td>
+      <td id="T_44576_row115_col5" class="data row115 col5" >238.020000</td>
+      <td id="T_44576_row115_col6" class="data row115 col6" >2023-05-08</td>
+      <td id="T_44576_row115_col7" class="data row115 col7" >Kirk, Stewart and Silva</td>
+      <td id="T_44576_row115_col8" class="data row115 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row116_col0" class="data row116 col0" >872449</td>
+      <td id="T_44576_row116_col1" class="data row116 col1" >Misty</td>
+      <td id="T_44576_row116_col2" class="data row116 col2" >White</td>
+      <td id="T_44576_row116_col3" class="data row116 col3" >nan</td>
+      <td id="T_44576_row116_col4" class="data row116 col4" >1964-10-29</td>
+      <td id="T_44576_row116_col5" class="data row116 col5" >323.410000</td>
+      <td id="T_44576_row116_col6" class="data row116 col6" >2023-07-30</td>
+      <td id="T_44576_row116_col7" class="data row116 col7" >Kim, Ramirez and Lewis</td>
+      <td id="T_44576_row116_col8" class="data row116 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row117_col0" class="data row117 col0" >111600</td>
+      <td id="T_44576_row117_col1" class="data row117 col1" >Lori</td>
+      <td id="T_44576_row117_col2" class="data row117 col2" >Vargas</td>
+      <td id="T_44576_row117_col3" class="data row117 col3" >M</td>
+      <td id="T_44576_row117_col4" class="data row117 col4" >1979-10-26</td>
+      <td id="T_44576_row117_col5" class="data row117 col5" >50.450000</td>
+      <td id="T_44576_row117_col6" class="data row117 col6" >2023-07-02</td>
+      <td id="T_44576_row117_col7" class="data row117 col7" >Moore, Hampton and Williams</td>
+      <td id="T_44576_row117_col8" class="data row117 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row118_col0" class="data row118 col0" >975986</td>
+      <td id="T_44576_row118_col1" class="data row118 col1" >Amanda</td>
+      <td id="T_44576_row118_col2" class="data row118 col2" >Kennedy</td>
+      <td id="T_44576_row118_col3" class="data row118 col3" >M</td>
+      <td id="T_44576_row118_col4" class="data row118 col4" >1993-10-22</td>
+      <td id="T_44576_row118_col5" class="data row118 col5" >159.760000</td>
+      <td id="T_44576_row118_col6" class="data row118 col6" >2023-08-06</td>
+      <td id="T_44576_row118_col7" class="data row118 col7" >Fry, Lucas and Hill</td>
+      <td id="T_44576_row118_col8" class="data row118 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row119_col0" class="data row119 col0" >426144</td>
+      <td id="T_44576_row119_col1" class="data row119 col1" >Mark</td>
+      <td id="T_44576_row119_col2" class="data row119 col2" >Salazar</td>
+      <td id="T_44576_row119_col3" class="data row119 col3" >M</td>
+      <td id="T_44576_row119_col4" class="data row119 col4" >1995-10-22</td>
+      <td id="T_44576_row119_col5" class="data row119 col5" >819.730000</td>
+      <td id="T_44576_row119_col6" class="data row119 col6" >2023-07-10</td>
+      <td id="T_44576_row119_col7" class="data row119 col7" >Barnes, Miller and Yu</td>
+      <td id="T_44576_row119_col8" class="data row119 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row120_col0" class="data row120 col0" >638051</td>
+      <td id="T_44576_row120_col1" class="data row120 col1" >Bradley</td>
+      <td id="T_44576_row120_col2" class="data row120 col2" >Clark</td>
+      <td id="T_44576_row120_col3" class="data row120 col3" >F</td>
+      <td id="T_44576_row120_col4" class="data row120 col4" >2000-10-20</td>
+      <td id="T_44576_row120_col5" class="data row120 col5" >292.530000</td>
+      <td id="T_44576_row120_col6" class="data row120 col6" >2023-03-18</td>
+      <td id="T_44576_row120_col7" class="data row120 col7" >Parker-Steele</td>
+      <td id="T_44576_row120_col8" class="data row120 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row121_col0" class="data row121 col0" >890694</td>
+      <td id="T_44576_row121_col1" class="data row121 col1" >Dylan</td>
+      <td id="T_44576_row121_col2" class="data row121 col2" >Graham</td>
+      <td id="T_44576_row121_col3" class="data row121 col3" >F</td>
+      <td id="T_44576_row121_col4" class="data row121 col4" >1969-10-28</td>
+      <td id="T_44576_row121_col5" class="data row121 col5" >72.960000</td>
+      <td id="T_44576_row121_col6" class="data row121 col6" >2023-02-22</td>
+      <td id="T_44576_row121_col7" class="data row121 col7" >Lane, Hudson and Carlson</td>
+      <td id="T_44576_row121_col8" class="data row121 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row122_col0" class="data row122 col0" >803471</td>
+      <td id="T_44576_row122_col1" class="data row122 col1" >Anita</td>
+      <td id="T_44576_row122_col2" class="data row122 col2" >Simpson</td>
+      <td id="T_44576_row122_col3" class="data row122 col3" >F</td>
+      <td id="T_44576_row122_col4" class="data row122 col4" >1985-10-24</td>
+      <td id="T_44576_row122_col5" class="data row122 col5" >832.400000</td>
+      <td id="T_44576_row122_col6" class="data row122 col6" >2023-05-10</td>
+      <td id="T_44576_row122_col7" class="data row122 col7" >Larsen-Wolf</td>
+      <td id="T_44576_row122_col8" class="data row122 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row123_col0" class="data row123 col0" >730333</td>
+      <td id="T_44576_row123_col1" class="data row123 col1" >Patricia</td>
+      <td id="T_44576_row123_col2" class="data row123 col2" >Cruz</td>
+      <td id="T_44576_row123_col3" class="data row123 col3" >M</td>
+      <td id="T_44576_row123_col4" class="data row123 col4" >1956-10-31</td>
+      <td id="T_44576_row123_col5" class="data row123 col5" >386.650000</td>
+      <td id="T_44576_row123_col6" class="data row123 col6" >2023-02-22</td>
+      <td id="T_44576_row123_col7" class="data row123 col7" >Hernandez, Watson and Rowe</td>
+      <td id="T_44576_row123_col8" class="data row123 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row124_col0" class="data row124 col0" >683052</td>
+      <td id="T_44576_row124_col1" class="data row124 col1" >Samuel</td>
+      <td id="T_44576_row124_col2" class="data row124 col2" >Arnold</td>
+      <td id="T_44576_row124_col3" class="data row124 col3" >F</td>
+      <td id="T_44576_row124_col4" class="data row124 col4" >1957-10-31</td>
+      <td id="T_44576_row124_col5" class="data row124 col5" >316.750000</td>
+      <td id="T_44576_row124_col6" class="data row124 col6" >2023-06-02</td>
+      <td id="T_44576_row124_col7" class="data row124 col7" >Larson and Sons</td>
+      <td id="T_44576_row124_col8" class="data row124 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row125_col0" class="data row125 col0" >686347</td>
+      <td id="T_44576_row125_col1" class="data row125 col1" >Katherine</td>
+      <td id="T_44576_row125_col2" class="data row125 col2" >Quinn</td>
+      <td id="T_44576_row125_col3" class="data row125 col3" >M</td>
+      <td id="T_44576_row125_col4" class="data row125 col4" >1976-10-26</td>
+      <td id="T_44576_row125_col5" class="data row125 col5" >162.060000</td>
+      <td id="T_44576_row125_col6" class="data row125 col6" >2023-05-23</td>
+      <td id="T_44576_row125_col7" class="data row125 col7" >Turner-Welch</td>
+      <td id="T_44576_row125_col8" class="data row125 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row126_col0" class="data row126 col0" >534515</td>
+      <td id="T_44576_row126_col1" class="data row126 col1" >Madison</td>
+      <td id="T_44576_row126_col2" class="data row126 col2" >Bowen</td>
+      <td id="T_44576_row126_col3" class="data row126 col3" >M</td>
+      <td id="T_44576_row126_col4" class="data row126 col4" >1991-10-23</td>
+      <td id="T_44576_row126_col5" class="data row126 col5" >38.710000</td>
+      <td id="T_44576_row126_col6" class="data row126 col6" >2023-02-16</td>
+      <td id="T_44576_row126_col7" class="data row126 col7" >Erickson PLC</td>
+      <td id="T_44576_row126_col8" class="data row126 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row127_col0" class="data row127 col0" >324015</td>
+      <td id="T_44576_row127_col1" class="data row127 col1" >Christopher</td>
+      <td id="T_44576_row127_col2" class="data row127 col2" >Dunn</td>
+      <td id="T_44576_row127_col3" class="data row127 col3" >F</td>
+      <td id="T_44576_row127_col4" class="data row127 col4" >1980-10-25</td>
+      <td id="T_44576_row127_col5" class="data row127 col5" >687.140000</td>
+      <td id="T_44576_row127_col6" class="data row127 col6" >2023-01-08</td>
+      <td id="T_44576_row127_col7" class="data row127 col7" >Padilla-Mccoy</td>
+      <td id="T_44576_row127_col8" class="data row127 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row128_col0" class="data row128 col0" >612016</td>
+      <td id="T_44576_row128_col1" class="data row128 col1" >Dylan</td>
+      <td id="T_44576_row128_col2" class="data row128 col2" >Hoover</td>
+      <td id="T_44576_row128_col3" class="data row128 col3" >F</td>
+      <td id="T_44576_row128_col4" class="data row128 col4" >1973-10-27</td>
+      <td id="T_44576_row128_col5" class="data row128 col5" >74.880000</td>
+      <td id="T_44576_row128_col6" class="data row128 col6" >2023-07-17</td>
+      <td id="T_44576_row128_col7" class="data row128 col7" >Shaw, Silva and Sullivan</td>
+      <td id="T_44576_row128_col8" class="data row128 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row129_col0" class="data row129 col0" >473649</td>
+      <td id="T_44576_row129_col1" class="data row129 col1" >Robert</td>
+      <td id="T_44576_row129_col2" class="data row129 col2" >Jackson</td>
+      <td id="T_44576_row129_col3" class="data row129 col3" >F</td>
+      <td id="T_44576_row129_col4" class="data row129 col4" >1989-10-23</td>
+      <td id="T_44576_row129_col5" class="data row129 col5" >171.220000</td>
+      <td id="T_44576_row129_col6" class="data row129 col6" >2023-03-05</td>
+      <td id="T_44576_row129_col7" class="data row129 col7" >Powell, Holland and Carr</td>
+      <td id="T_44576_row129_col8" class="data row129 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row130_col0" class="data row130 col0" >795708</td>
+      <td id="T_44576_row130_col1" class="data row130 col1" >Lisa</td>
+      <td id="T_44576_row130_col2" class="data row130 col2" >Wright</td>
+      <td id="T_44576_row130_col3" class="data row130 col3" >M</td>
+      <td id="T_44576_row130_col4" class="data row130 col4" >1957-10-31</td>
+      <td id="T_44576_row130_col5" class="data row130 col5" >367.290000</td>
+      <td id="T_44576_row130_col6" class="data row130 col6" >2023-07-10</td>
+      <td id="T_44576_row130_col7" class="data row130 col7" >Guzman, Jones and Moreno</td>
+      <td id="T_44576_row130_col8" class="data row130 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row131_col0" class="data row131 col0" >412622</td>
+      <td id="T_44576_row131_col1" class="data row131 col1" >Colleen</td>
+      <td id="T_44576_row131_col2" class="data row131 col2" >Gardner</td>
+      <td id="T_44576_row131_col3" class="data row131 col3" >M</td>
+      <td id="T_44576_row131_col4" class="data row131 col4" >1976-10-26</td>
+      <td id="T_44576_row131_col5" class="data row131 col5" >197.160000</td>
+      <td id="T_44576_row131_col6" class="data row131 col6" >2023-05-20</td>
+      <td id="T_44576_row131_col7" class="data row131 col7" >Rodriguez Inc</td>
+      <td id="T_44576_row131_col8" class="data row131 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row132_col0" class="data row132 col0" >988988</td>
+      <td id="T_44576_row132_col1" class="data row132 col1" >Christian</td>
+      <td id="T_44576_row132_col2" class="data row132 col2" >Owens</td>
+      <td id="T_44576_row132_col3" class="data row132 col3" >M</td>
+      <td id="T_44576_row132_col4" class="data row132 col4" >1968-10-28</td>
+      <td id="T_44576_row132_col5" class="data row132 col5" >101.120000</td>
+      <td id="T_44576_row132_col6" class="data row132 col6" >2023-01-03</td>
+      <td id="T_44576_row132_col7" class="data row132 col7" >Greene and Sons</td>
+      <td id="T_44576_row132_col8" class="data row132 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row133_col0" class="data row133 col0" >303133</td>
+      <td id="T_44576_row133_col1" class="data row133 col1" >Tara</td>
+      <td id="T_44576_row133_col2" class="data row133 col2" >Mitchell</td>
+      <td id="T_44576_row133_col3" class="data row133 col3" >M</td>
+      <td id="T_44576_row133_col4" class="data row133 col4" >1995-10-22</td>
+      <td id="T_44576_row133_col5" class="data row133 col5" >2806.660000</td>
+      <td id="T_44576_row133_col6" class="data row133 col6" >2023-03-05</td>
+      <td id="T_44576_row133_col7" class="data row133 col7" >Guerra-Munoz</td>
+      <td id="T_44576_row133_col8" class="data row133 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row134_col0" class="data row134 col0" >760639</td>
+      <td id="T_44576_row134_col1" class="data row134 col1" >Joseph</td>
+      <td id="T_44576_row134_col2" class="data row134 col2" >Wilson</td>
+      <td id="T_44576_row134_col3" class="data row134 col3" >M</td>
+      <td id="T_44576_row134_col4" class="data row134 col4" >1976-10-26</td>
+      <td id="T_44576_row134_col5" class="data row134 col5" >20.430000</td>
+      <td id="T_44576_row134_col6" class="data row134 col6" >2023-02-04</td>
+      <td id="T_44576_row134_col7" class="data row134 col7" >Hernandez, Turner and Martinez</td>
+      <td id="T_44576_row134_col8" class="data row134 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row135_col0" class="data row135 col0" >878040</td>
+      <td id="T_44576_row135_col1" class="data row135 col1" >Kimberly</td>
+      <td id="T_44576_row135_col2" class="data row135 col2" >Baker</td>
+      <td id="T_44576_row135_col3" class="data row135 col3" >M</td>
+      <td id="T_44576_row135_col4" class="data row135 col4" >1967-10-29</td>
+      <td id="T_44576_row135_col5" class="data row135 col5" >130.490000</td>
+      <td id="T_44576_row135_col6" class="data row135 col6" >2023-10-03</td>
+      <td id="T_44576_row135_col7" class="data row135 col7" >Torres Ltd</td>
+      <td id="T_44576_row135_col8" class="data row135 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row136_col0" class="data row136 col0" >456679</td>
+      <td id="T_44576_row136_col1" class="data row136 col1" >Leslie</td>
+      <td id="T_44576_row136_col2" class="data row136 col2" >Marsh</td>
+      <td id="T_44576_row136_col3" class="data row136 col3" >M</td>
+      <td id="T_44576_row136_col4" class="data row136 col4" >1999-10-21</td>
+      <td id="T_44576_row136_col5" class="data row136 col5" >2799.600000</td>
+      <td id="T_44576_row136_col6" class="data row136 col6" >2023-06-04</td>
+      <td id="T_44576_row136_col7" class="data row136 col7" >Fernandez, Mcdaniel and Marshall</td>
+      <td id="T_44576_row136_col8" class="data row136 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row137_col0" class="data row137 col0" >958710</td>
+      <td id="T_44576_row137_col1" class="data row137 col1" >Thomas</td>
+      <td id="T_44576_row137_col2" class="data row137 col2" >Johnson</td>
+      <td id="T_44576_row137_col3" class="data row137 col3" >F</td>
+      <td id="T_44576_row137_col4" class="data row137 col4" >1959-10-31</td>
+      <td id="T_44576_row137_col5" class="data row137 col5" >868.640000</td>
+      <td id="T_44576_row137_col6" class="data row137 col6" >2023-03-03</td>
+      <td id="T_44576_row137_col7" class="data row137 col7" >Allen-Johnson</td>
+      <td id="T_44576_row137_col8" class="data row137 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row138_col0" class="data row138 col0" >403033</td>
+      <td id="T_44576_row138_col1" class="data row138 col1" >Derek</td>
+      <td id="T_44576_row138_col2" class="data row138 col2" >Berger</td>
+      <td id="T_44576_row138_col3" class="data row138 col3" >M</td>
+      <td id="T_44576_row138_col4" class="data row138 col4" >1976-10-26</td>
+      <td id="T_44576_row138_col5" class="data row138 col5" >170.030000</td>
+      <td id="T_44576_row138_col6" class="data row138 col6" >2023-06-16</td>
+      <td id="T_44576_row138_col7" class="data row138 col7" >Hammond, Flores and Dean</td>
+      <td id="T_44576_row138_col8" class="data row138 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row139_col0" class="data row139 col0" >318702</td>
+      <td id="T_44576_row139_col1" class="data row139 col1" >Dustin</td>
+      <td id="T_44576_row139_col2" class="data row139 col2" >Bennett</td>
+      <td id="T_44576_row139_col3" class="data row139 col3" >M</td>
+      <td id="T_44576_row139_col4" class="data row139 col4" >1948-11-02</td>
+      <td id="T_44576_row139_col5" class="data row139 col5" >11.460000</td>
+      <td id="T_44576_row139_col6" class="data row139 col6" >2023-07-04</td>
+      <td id="T_44576_row139_col7" class="data row139 col7" >Romero Ltd</td>
+      <td id="T_44576_row139_col8" class="data row139 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row140_col0" class="data row140 col0" >365101</td>
+      <td id="T_44576_row140_col1" class="data row140 col1" >George</td>
+      <td id="T_44576_row140_col2" class="data row140 col2" >King</td>
+      <td id="T_44576_row140_col3" class="data row140 col3" >M</td>
+      <td id="T_44576_row140_col4" class="data row140 col4" >1975-10-27</td>
+      <td id="T_44576_row140_col5" class="data row140 col5" >190.040000</td>
+      <td id="T_44576_row140_col6" class="data row140 col6" >2023-02-27</td>
+      <td id="T_44576_row140_col7" class="data row140 col7" >Washington, Lucas and Krause</td>
+      <td id="T_44576_row140_col8" class="data row140 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row141_col0" class="data row141 col0" >417092</td>
+      <td id="T_44576_row141_col1" class="data row141 col1" >Robert</td>
+      <td id="T_44576_row141_col2" class="data row141 col2" >Cross</td>
+      <td id="T_44576_row141_col3" class="data row141 col3" >M</td>
+      <td id="T_44576_row141_col4" class="data row141 col4" >1969-10-28</td>
+      <td id="T_44576_row141_col5" class="data row141 col5" >124.200000</td>
+      <td id="T_44576_row141_col6" class="data row141 col6" >2023-10-09</td>
+      <td id="T_44576_row141_col7" class="data row141 col7" >Curtis, Walker and Williams</td>
+      <td id="T_44576_row141_col8" class="data row141 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row142_col0" class="data row142 col0" >40352</td>
+      <td id="T_44576_row142_col1" class="data row142 col1" >Ricardo</td>
+      <td id="T_44576_row142_col2" class="data row142 col2" >Torres</td>
+      <td id="T_44576_row142_col3" class="data row142 col3" >nan</td>
+      <td id="T_44576_row142_col4" class="data row142 col4" >2002-10-20</td>
+      <td id="T_44576_row142_col5" class="data row142 col5" >64.540000</td>
+      <td id="T_44576_row142_col6" class="data row142 col6" >2023-03-30</td>
+      <td id="T_44576_row142_col7" class="data row142 col7" >Peterson, Carlson and Newton</td>
+      <td id="T_44576_row142_col8" class="data row142 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row143_col0" class="data row143 col0" >184560</td>
+      <td id="T_44576_row143_col1" class="data row143 col1" >Jennifer</td>
+      <td id="T_44576_row143_col2" class="data row143 col2" >Wade</td>
+      <td id="T_44576_row143_col3" class="data row143 col3" >nan</td>
+      <td id="T_44576_row143_col4" class="data row143 col4" >1973-10-27</td>
+      <td id="T_44576_row143_col5" class="data row143 col5" >59.110000</td>
+      <td id="T_44576_row143_col6" class="data row143 col6" >2023-02-26</td>
+      <td id="T_44576_row143_col7" class="data row143 col7" >Harmon Inc</td>
+      <td id="T_44576_row143_col8" class="data row143 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row144_col0" class="data row144 col0" >738286</td>
+      <td id="T_44576_row144_col1" class="data row144 col1" >Carrie</td>
+      <td id="T_44576_row144_col2" class="data row144 col2" >Davis</td>
+      <td id="T_44576_row144_col3" class="data row144 col3" >M</td>
+      <td id="T_44576_row144_col4" class="data row144 col4" >1991-10-23</td>
+      <td id="T_44576_row144_col5" class="data row144 col5" >149.280000</td>
+      <td id="T_44576_row144_col6" class="data row144 col6" >2023-02-04</td>
+      <td id="T_44576_row144_col7" class="data row144 col7" >Garcia-Hernandez</td>
+      <td id="T_44576_row144_col8" class="data row144 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row145_col0" class="data row145 col0" >692326</td>
+      <td id="T_44576_row145_col1" class="data row145 col1" >Andrew</td>
+      <td id="T_44576_row145_col2" class="data row145 col2" >Fisher</td>
+      <td id="T_44576_row145_col3" class="data row145 col3" >F</td>
+      <td id="T_44576_row145_col4" class="data row145 col4" >2000-10-20</td>
+      <td id="T_44576_row145_col5" class="data row145 col5" >191.060000</td>
+      <td id="T_44576_row145_col6" class="data row145 col6" >2023-05-31</td>
+      <td id="T_44576_row145_col7" class="data row145 col7" >Smith LLC</td>
+      <td id="T_44576_row145_col8" class="data row145 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row146_col0" class="data row146 col0" >745092</td>
+      <td id="T_44576_row146_col1" class="data row146 col1" >Kayla</td>
+      <td id="T_44576_row146_col2" class="data row146 col2" >Mcdaniel</td>
+      <td id="T_44576_row146_col3" class="data row146 col3" >M</td>
+      <td id="T_44576_row146_col4" class="data row146 col4" >1986-10-24</td>
+      <td id="T_44576_row146_col5" class="data row146 col5" >1044.100000</td>
+      <td id="T_44576_row146_col6" class="data row146 col6" >2023-01-27</td>
+      <td id="T_44576_row146_col7" class="data row146 col7" >James-Simon</td>
+      <td id="T_44576_row146_col8" class="data row146 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row147_col0" class="data row147 col0" >218074</td>
+      <td id="T_44576_row147_col1" class="data row147 col1" >Melissa</td>
+      <td id="T_44576_row147_col2" class="data row147 col2" >Daniels</td>
+      <td id="T_44576_row147_col3" class="data row147 col3" >F</td>
+      <td id="T_44576_row147_col4" class="data row147 col4" >1988-10-23</td>
+      <td id="T_44576_row147_col5" class="data row147 col5" >403.300000</td>
+      <td id="T_44576_row147_col6" class="data row147 col6" >2023-05-10</td>
+      <td id="T_44576_row147_col7" class="data row147 col7" >Merritt, Valdez and Beck</td>
+      <td id="T_44576_row147_col8" class="data row147 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row148_col0" class="data row148 col0" >467955</td>
+      <td id="T_44576_row148_col1" class="data row148 col1" >Gina</td>
+      <td id="T_44576_row148_col2" class="data row148 col2" >Marshall</td>
+      <td id="T_44576_row148_col3" class="data row148 col3" >M</td>
+      <td id="T_44576_row148_col4" class="data row148 col4" >1984-10-24</td>
+      <td id="T_44576_row148_col5" class="data row148 col5" >62.050000</td>
+      <td id="T_44576_row148_col6" class="data row148 col6" >2023-10-08</td>
+      <td id="T_44576_row148_col7" class="data row148 col7" >Romero, Rhodes and Smith</td>
+      <td id="T_44576_row148_col8" class="data row148 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row149_col0" class="data row149 col0" >936552</td>
+      <td id="T_44576_row149_col1" class="data row149 col1" >Kelly</td>
+      <td id="T_44576_row149_col2" class="data row149 col2" >Case</td>
+      <td id="T_44576_row149_col3" class="data row149 col3" >M</td>
+      <td id="T_44576_row149_col4" class="data row149 col4" >1988-10-23</td>
+      <td id="T_44576_row149_col5" class="data row149 col5" >97.040000</td>
+      <td id="T_44576_row149_col6" class="data row149 col6" >2023-07-27</td>
+      <td id="T_44576_row149_col7" class="data row149 col7" >Wright LLC</td>
+      <td id="T_44576_row149_col8" class="data row149 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row150_col0" class="data row150 col0" >534354</td>
+      <td id="T_44576_row150_col1" class="data row150 col1" >Michael</td>
+      <td id="T_44576_row150_col2" class="data row150 col2" >Larson</td>
+      <td id="T_44576_row150_col3" class="data row150 col3" >F</td>
+      <td id="T_44576_row150_col4" class="data row150 col4" >2002-10-20</td>
+      <td id="T_44576_row150_col5" class="data row150 col5" >2628.790000</td>
+      <td id="T_44576_row150_col6" class="data row150 col6" >2023-02-13</td>
+      <td id="T_44576_row150_col7" class="data row150 col7" >Morrow, Vazquez and Atkins</td>
+      <td id="T_44576_row150_col8" class="data row150 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row151_col0" class="data row151 col0" >74320</td>
+      <td id="T_44576_row151_col1" class="data row151 col1" >Tyler</td>
+      <td id="T_44576_row151_col2" class="data row151 col2" >Cunningham</td>
+      <td id="T_44576_row151_col3" class="data row151 col3" >M</td>
+      <td id="T_44576_row151_col4" class="data row151 col4" >1984-10-24</td>
+      <td id="T_44576_row151_col5" class="data row151 col5" >498.190000</td>
+      <td id="T_44576_row151_col6" class="data row151 col6" >2023-08-06</td>
+      <td id="T_44576_row151_col7" class="data row151 col7" >Thompson-Jones</td>
+      <td id="T_44576_row151_col8" class="data row151 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row152_col0" class="data row152 col0" >245837</td>
+      <td id="T_44576_row152_col1" class="data row152 col1" >Amber</td>
+      <td id="T_44576_row152_col2" class="data row152 col2" >Armstrong</td>
+      <td id="T_44576_row152_col3" class="data row152 col3" >F</td>
+      <td id="T_44576_row152_col4" class="data row152 col4" >1973-10-27</td>
+      <td id="T_44576_row152_col5" class="data row152 col5" >41.020000</td>
+      <td id="T_44576_row152_col6" class="data row152 col6" >2023-08-11</td>
+      <td id="T_44576_row152_col7" class="data row152 col7" >Phillips, Dickson and Jones</td>
+      <td id="T_44576_row152_col8" class="data row152 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row153_col0" class="data row153 col0" >582808</td>
+      <td id="T_44576_row153_col1" class="data row153 col1" >Bradley</td>
+      <td id="T_44576_row153_col2" class="data row153 col2" >Peters</td>
+      <td id="T_44576_row153_col3" class="data row153 col3" >F</td>
+      <td id="T_44576_row153_col4" class="data row153 col4" >1996-10-21</td>
+      <td id="T_44576_row153_col5" class="data row153 col5" >1521.060000</td>
+      <td id="T_44576_row153_col6" class="data row153 col6" >2023-01-28</td>
+      <td id="T_44576_row153_col7" class="data row153 col7" >Kennedy, Lee and Barron</td>
+      <td id="T_44576_row153_col8" class="data row153 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row154_col0" class="data row154 col0" >835735</td>
+      <td id="T_44576_row154_col1" class="data row154 col1" >Elizabeth</td>
+      <td id="T_44576_row154_col2" class="data row154 col2" >Ross</td>
+      <td id="T_44576_row154_col3" class="data row154 col3" >M</td>
+      <td id="T_44576_row154_col4" class="data row154 col4" >1983-10-25</td>
+      <td id="T_44576_row154_col5" class="data row154 col5" >830.540000</td>
+      <td id="T_44576_row154_col6" class="data row154 col6" >2023-02-03</td>
+      <td id="T_44576_row154_col7" class="data row154 col7" >Alvarado, Newman and Jenkins</td>
+      <td id="T_44576_row154_col8" class="data row154 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row155_col0" class="data row155 col0" >6806</td>
+      <td id="T_44576_row155_col1" class="data row155 col1" >William</td>
+      <td id="T_44576_row155_col2" class="data row155 col2" >Stephenson</td>
+      <td id="T_44576_row155_col3" class="data row155 col3" >M</td>
+      <td id="T_44576_row155_col4" class="data row155 col4" >1953-11-01</td>
+      <td id="T_44576_row155_col5" class="data row155 col5" >59.390000</td>
+      <td id="T_44576_row155_col6" class="data row155 col6" >2023-04-17</td>
+      <td id="T_44576_row155_col7" class="data row155 col7" >Smith-Riley</td>
+      <td id="T_44576_row155_col8" class="data row155 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row156_col0" class="data row156 col0" >409623</td>
+      <td id="T_44576_row156_col1" class="data row156 col1" >Jessica</td>
+      <td id="T_44576_row156_col2" class="data row156 col2" >Russo</td>
+      <td id="T_44576_row156_col3" class="data row156 col3" >F</td>
+      <td id="T_44576_row156_col4" class="data row156 col4" >1955-11-01</td>
+      <td id="T_44576_row156_col5" class="data row156 col5" >98.620000</td>
+      <td id="T_44576_row156_col6" class="data row156 col6" >2023-02-07</td>
+      <td id="T_44576_row156_col7" class="data row156 col7" >Johnson-Bradley</td>
+      <td id="T_44576_row156_col8" class="data row156 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row157_col0" class="data row157 col0" >932016</td>
+      <td id="T_44576_row157_col1" class="data row157 col1" >Anthony</td>
+      <td id="T_44576_row157_col2" class="data row157 col2" >Clark</td>
+      <td id="T_44576_row157_col3" class="data row157 col3" >nan</td>
+      <td id="T_44576_row157_col4" class="data row157 col4" >1975-10-27</td>
+      <td id="T_44576_row157_col5" class="data row157 col5" >171.860000</td>
+      <td id="T_44576_row157_col6" class="data row157 col6" >2023-04-28</td>
+      <td id="T_44576_row157_col7" class="data row157 col7" >Dominguez Inc</td>
+      <td id="T_44576_row157_col8" class="data row157 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row158_col0" class="data row158 col0" >796917</td>
+      <td id="T_44576_row158_col1" class="data row158 col1" >Katherine</td>
+      <td id="T_44576_row158_col2" class="data row158 col2" >Lopez</td>
+      <td id="T_44576_row158_col3" class="data row158 col3" >M</td>
+      <td id="T_44576_row158_col4" class="data row158 col4" >1958-10-31</td>
+      <td id="T_44576_row158_col5" class="data row158 col5" >10.820000</td>
+      <td id="T_44576_row158_col6" class="data row158 col6" >2023-03-14</td>
+      <td id="T_44576_row158_col7" class="data row158 col7" >Johnson Inc</td>
+      <td id="T_44576_row158_col8" class="data row158 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row159_col0" class="data row159 col0" >821976</td>
+      <td id="T_44576_row159_col1" class="data row159 col1" >Mark</td>
+      <td id="T_44576_row159_col2" class="data row159 col2" >Gonzalez</td>
+      <td id="T_44576_row159_col3" class="data row159 col3" >nan</td>
+      <td id="T_44576_row159_col4" class="data row159 col4" >1950-11-02</td>
+      <td id="T_44576_row159_col5" class="data row159 col5" >641.260000</td>
+      <td id="T_44576_row159_col6" class="data row159 col6" >2023-08-29</td>
+      <td id="T_44576_row159_col7" class="data row159 col7" >David, Schultz and Herrera</td>
+      <td id="T_44576_row159_col8" class="data row159 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row160_col0" class="data row160 col0" >689626</td>
+      <td id="T_44576_row160_col1" class="data row160 col1" >Ashley</td>
+      <td id="T_44576_row160_col2" class="data row160 col2" >Martin</td>
+      <td id="T_44576_row160_col3" class="data row160 col3" >nan</td>
+      <td id="T_44576_row160_col4" class="data row160 col4" >1971-10-28</td>
+      <td id="T_44576_row160_col5" class="data row160 col5" >183.310000</td>
+      <td id="T_44576_row160_col6" class="data row160 col6" >2023-10-04</td>
+      <td id="T_44576_row160_col7" class="data row160 col7" >Brown and Sons</td>
+      <td id="T_44576_row160_col8" class="data row160 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row161_col0" class="data row161 col0" >240166</td>
+      <td id="T_44576_row161_col1" class="data row161 col1" >Ashley</td>
+      <td id="T_44576_row161_col2" class="data row161 col2" >Mclean</td>
+      <td id="T_44576_row161_col3" class="data row161 col3" >F</td>
+      <td id="T_44576_row161_col4" class="data row161 col4" >1966-10-29</td>
+      <td id="T_44576_row161_col5" class="data row161 col5" >81.640000</td>
+      <td id="T_44576_row161_col6" class="data row161 col6" >2023-06-21</td>
+      <td id="T_44576_row161_col7" class="data row161 col7" >Carpenter-Davidson</td>
+      <td id="T_44576_row161_col8" class="data row161 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row162_col0" class="data row162 col0" >353394</td>
+      <td id="T_44576_row162_col1" class="data row162 col1" >Trevor</td>
+      <td id="T_44576_row162_col2" class="data row162 col2" >Burns</td>
+      <td id="T_44576_row162_col3" class="data row162 col3" >F</td>
+      <td id="T_44576_row162_col4" class="data row162 col4" >1985-10-24</td>
+      <td id="T_44576_row162_col5" class="data row162 col5" >2381.180000</td>
+      <td id="T_44576_row162_col6" class="data row162 col6" >2023-06-07</td>
+      <td id="T_44576_row162_col7" class="data row162 col7" >Williams, Collins and Hull</td>
+      <td id="T_44576_row162_col8" class="data row162 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row163_col0" class="data row163 col0" >771423</td>
+      <td id="T_44576_row163_col1" class="data row163 col1" >Rebecca</td>
+      <td id="T_44576_row163_col2" class="data row163 col2" >Munoz</td>
+      <td id="T_44576_row163_col3" class="data row163 col3" >F</td>
+      <td id="T_44576_row163_col4" class="data row163 col4" >2005-10-19</td>
+      <td id="T_44576_row163_col5" class="data row163 col5" >77.190000</td>
+      <td id="T_44576_row163_col6" class="data row163 col6" >2023-07-15</td>
+      <td id="T_44576_row163_col7" class="data row163 col7" >Mccarthy-Garcia</td>
+      <td id="T_44576_row163_col8" class="data row163 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row164_col0" class="data row164 col0" >706973</td>
+      <td id="T_44576_row164_col1" class="data row164 col1" >Amber</td>
+      <td id="T_44576_row164_col2" class="data row164 col2" >Jones</td>
+      <td id="T_44576_row164_col3" class="data row164 col3" >F</td>
+      <td id="T_44576_row164_col4" class="data row164 col4" >1948-11-02</td>
+      <td id="T_44576_row164_col5" class="data row164 col5" >206.740000</td>
+      <td id="T_44576_row164_col6" class="data row164 col6" >2023-03-02</td>
+      <td id="T_44576_row164_col7" class="data row164 col7" >Edwards-Williams</td>
+      <td id="T_44576_row164_col8" class="data row164 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row165_col0" class="data row165 col0" >511344</td>
+      <td id="T_44576_row165_col1" class="data row165 col1" >Crystal</td>
+      <td id="T_44576_row165_col2" class="data row165 col2" >Gomez</td>
+      <td id="T_44576_row165_col3" class="data row165 col3" >F</td>
+      <td id="T_44576_row165_col4" class="data row165 col4" >1951-11-02</td>
+      <td id="T_44576_row165_col5" class="data row165 col5" >459.530000</td>
+      <td id="T_44576_row165_col6" class="data row165 col6" >2023-07-04</td>
+      <td id="T_44576_row165_col7" class="data row165 col7" >Moore, Gonzalez and Larson</td>
+      <td id="T_44576_row165_col8" class="data row165 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row166_col0" class="data row166 col0" >26428</td>
+      <td id="T_44576_row166_col1" class="data row166 col1" >Matthew</td>
+      <td id="T_44576_row166_col2" class="data row166 col2" >Perez</td>
+      <td id="T_44576_row166_col3" class="data row166 col3" >M</td>
+      <td id="T_44576_row166_col4" class="data row166 col4" >1951-11-02</td>
+      <td id="T_44576_row166_col5" class="data row166 col5" >52.990000</td>
+      <td id="T_44576_row166_col6" class="data row166 col6" >2023-08-31</td>
+      <td id="T_44576_row166_col7" class="data row166 col7" >Rojas-Sheppard</td>
+      <td id="T_44576_row166_col8" class="data row166 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row167_col0" class="data row167 col0" >131683</td>
+      <td id="T_44576_row167_col1" class="data row167 col1" >Brett</td>
+      <td id="T_44576_row167_col2" class="data row167 col2" >Patton</td>
+      <td id="T_44576_row167_col3" class="data row167 col3" >M</td>
+      <td id="T_44576_row167_col4" class="data row167 col4" >1960-10-30</td>
+      <td id="T_44576_row167_col5" class="data row167 col5" >41.620000</td>
+      <td id="T_44576_row167_col6" class="data row167 col6" >2023-04-25</td>
+      <td id="T_44576_row167_col7" class="data row167 col7" >Carr, Koch and Powers</td>
+      <td id="T_44576_row167_col8" class="data row167 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row168_col0" class="data row168 col0" >266778</td>
+      <td id="T_44576_row168_col1" class="data row168 col1" >Donna</td>
+      <td id="T_44576_row168_col2" class="data row168 col2" >Davis</td>
+      <td id="T_44576_row168_col3" class="data row168 col3" >M</td>
+      <td id="T_44576_row168_col4" class="data row168 col4" >1969-10-28</td>
+      <td id="T_44576_row168_col5" class="data row168 col5" >570.600000</td>
+      <td id="T_44576_row168_col6" class="data row168 col6" >2023-02-25</td>
+      <td id="T_44576_row168_col7" class="data row168 col7" >Rodriguez Ltd</td>
+      <td id="T_44576_row168_col8" class="data row168 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row169_col0" class="data row169 col0" >908542</td>
+      <td id="T_44576_row169_col1" class="data row169 col1" >Katrina</td>
+      <td id="T_44576_row169_col2" class="data row169 col2" >Green</td>
+      <td id="T_44576_row169_col3" class="data row169 col3" >F</td>
+      <td id="T_44576_row169_col4" class="data row169 col4" >1952-11-01</td>
+      <td id="T_44576_row169_col5" class="data row169 col5" >202.460000</td>
+      <td id="T_44576_row169_col6" class="data row169 col6" >2023-03-05</td>
+      <td id="T_44576_row169_col7" class="data row169 col7" >Love LLC</td>
+      <td id="T_44576_row169_col8" class="data row169 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row170_col0" class="data row170 col0" >763573</td>
+      <td id="T_44576_row170_col1" class="data row170 col1" >Jason</td>
+      <td id="T_44576_row170_col2" class="data row170 col2" >Cooke</td>
+      <td id="T_44576_row170_col3" class="data row170 col3" >M</td>
+      <td id="T_44576_row170_col4" class="data row170 col4" >1995-10-22</td>
+      <td id="T_44576_row170_col5" class="data row170 col5" >764.850000</td>
+      <td id="T_44576_row170_col6" class="data row170 col6" >2023-03-02</td>
+      <td id="T_44576_row170_col7" class="data row170 col7" >Davis PLC</td>
+      <td id="T_44576_row170_col8" class="data row170 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row171_col0" class="data row171 col0" >458734</td>
+      <td id="T_44576_row171_col1" class="data row171 col1" >Emily</td>
+      <td id="T_44576_row171_col2" class="data row171 col2" >Smith</td>
+      <td id="T_44576_row171_col3" class="data row171 col3" >F</td>
+      <td id="T_44576_row171_col4" class="data row171 col4" >1985-10-24</td>
+      <td id="T_44576_row171_col5" class="data row171 col5" >111.160000</td>
+      <td id="T_44576_row171_col6" class="data row171 col6" >2023-08-24</td>
+      <td id="T_44576_row171_col7" class="data row171 col7" >Morgan Ltd</td>
+      <td id="T_44576_row171_col8" class="data row171 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row172_col0" class="data row172 col0" >109037</td>
+      <td id="T_44576_row172_col1" class="data row172 col1" >Megan</td>
+      <td id="T_44576_row172_col2" class="data row172 col2" >Robinson</td>
+      <td id="T_44576_row172_col3" class="data row172 col3" >nan</td>
+      <td id="T_44576_row172_col4" class="data row172 col4" >2003-10-20</td>
+      <td id="T_44576_row172_col5" class="data row172 col5" >173.370000</td>
+      <td id="T_44576_row172_col6" class="data row172 col6" >2023-03-28</td>
+      <td id="T_44576_row172_col7" class="data row172 col7" >Potter-Woodward</td>
+      <td id="T_44576_row172_col8" class="data row172 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row173_col0" class="data row173 col0" >243756</td>
+      <td id="T_44576_row173_col1" class="data row173 col1" >Brent</td>
+      <td id="T_44576_row173_col2" class="data row173 col2" >Wong</td>
+      <td id="T_44576_row173_col3" class="data row173 col3" >F</td>
+      <td id="T_44576_row173_col4" class="data row173 col4" >1984-10-24</td>
+      <td id="T_44576_row173_col5" class="data row173 col5" >216.630000</td>
+      <td id="T_44576_row173_col6" class="data row173 col6" >2023-03-20</td>
+      <td id="T_44576_row173_col7" class="data row173 col7" >Webb, Holt and Morse</td>
+      <td id="T_44576_row173_col8" class="data row173 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row174_col0" class="data row174 col0" >919458</td>
+      <td id="T_44576_row174_col1" class="data row174 col1" >Justin</td>
+      <td id="T_44576_row174_col2" class="data row174 col2" >Martin</td>
+      <td id="T_44576_row174_col3" class="data row174 col3" >M</td>
+      <td id="T_44576_row174_col4" class="data row174 col4" >1996-10-21</td>
+      <td id="T_44576_row174_col5" class="data row174 col5" >93.850000</td>
+      <td id="T_44576_row174_col6" class="data row174 col6" >2023-07-30</td>
+      <td id="T_44576_row174_col7" class="data row174 col7" >Pittman Group</td>
+      <td id="T_44576_row174_col8" class="data row174 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row175_col0" class="data row175 col0" >64481</td>
+      <td id="T_44576_row175_col1" class="data row175 col1" >Mallory</td>
+      <td id="T_44576_row175_col2" class="data row175 col2" >Paul</td>
+      <td id="T_44576_row175_col3" class="data row175 col3" >M</td>
+      <td id="T_44576_row175_col4" class="data row175 col4" >1996-10-21</td>
+      <td id="T_44576_row175_col5" class="data row175 col5" >97.390000</td>
+      <td id="T_44576_row175_col6" class="data row175 col6" >2023-09-22</td>
+      <td id="T_44576_row175_col7" class="data row175 col7" >Wagner, Williams and Flores</td>
+      <td id="T_44576_row175_col8" class="data row175 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row176_col0" class="data row176 col0" >582136</td>
+      <td id="T_44576_row176_col1" class="data row176 col1" >Monica</td>
+      <td id="T_44576_row176_col2" class="data row176 col2" >Johnson</td>
+      <td id="T_44576_row176_col3" class="data row176 col3" >M</td>
+      <td id="T_44576_row176_col4" class="data row176 col4" >2003-10-20</td>
+      <td id="T_44576_row176_col5" class="data row176 col5" >104.170000</td>
+      <td id="T_44576_row176_col6" class="data row176 col6" >2023-01-20</td>
+      <td id="T_44576_row176_col7" class="data row176 col7" >Jones, Meza and Rodriguez</td>
+      <td id="T_44576_row176_col8" class="data row176 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row177_col0" class="data row177 col0" >409720</td>
+      <td id="T_44576_row177_col1" class="data row177 col1" >Kathleen</td>
+      <td id="T_44576_row177_col2" class="data row177 col2" >Marquez</td>
+      <td id="T_44576_row177_col3" class="data row177 col3" >nan</td>
+      <td id="T_44576_row177_col4" class="data row177 col4" >1971-10-28</td>
+      <td id="T_44576_row177_col5" class="data row177 col5" >176.750000</td>
+      <td id="T_44576_row177_col6" class="data row177 col6" >2023-03-04</td>
+      <td id="T_44576_row177_col7" class="data row177 col7" >Wright-Weaver</td>
+      <td id="T_44576_row177_col8" class="data row177 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row178_col0" class="data row178 col0" >101984</td>
+      <td id="T_44576_row178_col1" class="data row178 col1" >Hannah</td>
+      <td id="T_44576_row178_col2" class="data row178 col2" >Williams</td>
+      <td id="T_44576_row178_col3" class="data row178 col3" >M</td>
+      <td id="T_44576_row178_col4" class="data row178 col4" >1976-10-26</td>
+      <td id="T_44576_row178_col5" class="data row178 col5" >19.840000</td>
+      <td id="T_44576_row178_col6" class="data row178 col6" >2023-07-05</td>
+      <td id="T_44576_row178_col7" class="data row178 col7" >Carter-Leblanc</td>
+      <td id="T_44576_row178_col8" class="data row178 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row179_col0" class="data row179 col0" >244943</td>
+      <td id="T_44576_row179_col1" class="data row179 col1" >Jim</td>
+      <td id="T_44576_row179_col2" class="data row179 col2" >Reynolds</td>
+      <td id="T_44576_row179_col3" class="data row179 col3" >F</td>
+      <td id="T_44576_row179_col4" class="data row179 col4" >1966-10-29</td>
+      <td id="T_44576_row179_col5" class="data row179 col5" >2642.640000</td>
+      <td id="T_44576_row179_col6" class="data row179 col6" >2023-01-03</td>
+      <td id="T_44576_row179_col7" class="data row179 col7" >Wilson, Whitney and Rice</td>
+      <td id="T_44576_row179_col8" class="data row179 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row180_col0" class="data row180 col0" >993024</td>
+      <td id="T_44576_row180_col1" class="data row180 col1" >Andrew</td>
+      <td id="T_44576_row180_col2" class="data row180 col2" >Rasmussen</td>
+      <td id="T_44576_row180_col3" class="data row180 col3" >F</td>
+      <td id="T_44576_row180_col4" class="data row180 col4" >1963-10-30</td>
+      <td id="T_44576_row180_col5" class="data row180 col5" >418.760000</td>
+      <td id="T_44576_row180_col6" class="data row180 col6" >2023-04-29</td>
+      <td id="T_44576_row180_col7" class="data row180 col7" >Gonzalez PLC</td>
+      <td id="T_44576_row180_col8" class="data row180 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row181_col0" class="data row181 col0" >446381</td>
+      <td id="T_44576_row181_col1" class="data row181 col1" >Kristi</td>
+      <td id="T_44576_row181_col2" class="data row181 col2" >Blake</td>
+      <td id="T_44576_row181_col3" class="data row181 col3" >F</td>
+      <td id="T_44576_row181_col4" class="data row181 col4" >1966-10-29</td>
+      <td id="T_44576_row181_col5" class="data row181 col5" >175.100000</td>
+      <td id="T_44576_row181_col6" class="data row181 col6" >2023-09-10</td>
+      <td id="T_44576_row181_col7" class="data row181 col7" >Gomez, Hancock and Baxter</td>
+      <td id="T_44576_row181_col8" class="data row181 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row182_col0" class="data row182 col0" >816847</td>
+      <td id="T_44576_row182_col1" class="data row182 col1" >Louis</td>
+      <td id="T_44576_row182_col2" class="data row182 col2" >Thompson</td>
+      <td id="T_44576_row182_col3" class="data row182 col3" >F</td>
+      <td id="T_44576_row182_col4" class="data row182 col4" >2003-10-20</td>
+      <td id="T_44576_row182_col5" class="data row182 col5" >16.660000</td>
+      <td id="T_44576_row182_col6" class="data row182 col6" >2023-03-27</td>
+      <td id="T_44576_row182_col7" class="data row182 col7" >Morgan Group</td>
+      <td id="T_44576_row182_col8" class="data row182 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row183_col0" class="data row183 col0" >840589</td>
+      <td id="T_44576_row183_col1" class="data row183 col1" >Timothy</td>
+      <td id="T_44576_row183_col2" class="data row183 col2" >Joseph</td>
+      <td id="T_44576_row183_col3" class="data row183 col3" >M</td>
+      <td id="T_44576_row183_col4" class="data row183 col4" >1980-10-25</td>
+      <td id="T_44576_row183_col5" class="data row183 col5" >35.180000</td>
+      <td id="T_44576_row183_col6" class="data row183 col6" >2023-07-14</td>
+      <td id="T_44576_row183_col7" class="data row183 col7" >Jenkins LLC</td>
+      <td id="T_44576_row183_col8" class="data row183 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row184_col0" class="data row184 col0" >53818</td>
+      <td id="T_44576_row184_col1" class="data row184 col1" >Samantha</td>
+      <td id="T_44576_row184_col2" class="data row184 col2" >Allen</td>
+      <td id="T_44576_row184_col3" class="data row184 col3" >nan</td>
+      <td id="T_44576_row184_col4" class="data row184 col4" >1985-10-24</td>
+      <td id="T_44576_row184_col5" class="data row184 col5" >195.090000</td>
+      <td id="T_44576_row184_col6" class="data row184 col6" >2023-08-20</td>
+      <td id="T_44576_row184_col7" class="data row184 col7" >Marshall, Williams and Ramirez</td>
+      <td id="T_44576_row184_col8" class="data row184 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row185_col0" class="data row185 col0" >854086</td>
+      <td id="T_44576_row185_col1" class="data row185 col1" >Gabrielle</td>
+      <td id="T_44576_row185_col2" class="data row185 col2" >Sutton</td>
+      <td id="T_44576_row185_col3" class="data row185 col3" >F</td>
+      <td id="T_44576_row185_col4" class="data row185 col4" >1999-10-21</td>
+      <td id="T_44576_row185_col5" class="data row185 col5" >219.840000</td>
+      <td id="T_44576_row185_col6" class="data row185 col6" >2023-08-27</td>
+      <td id="T_44576_row185_col7" class="data row185 col7" >Michael, Munoz and Mckenzie</td>
+      <td id="T_44576_row185_col8" class="data row185 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row186_col0" class="data row186 col0" >382011</td>
+      <td id="T_44576_row186_col1" class="data row186 col1" >Nicholas</td>
+      <td id="T_44576_row186_col2" class="data row186 col2" >Lopez</td>
+      <td id="T_44576_row186_col3" class="data row186 col3" >F</td>
+      <td id="T_44576_row186_col4" class="data row186 col4" >1969-10-28</td>
+      <td id="T_44576_row186_col5" class="data row186 col5" >118.890000</td>
+      <td id="T_44576_row186_col6" class="data row186 col6" >2023-01-09</td>
+      <td id="T_44576_row186_col7" class="data row186 col7" >Nelson, Smith and Cook</td>
+      <td id="T_44576_row186_col8" class="data row186 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row187_col0" class="data row187 col0" >490907</td>
+      <td id="T_44576_row187_col1" class="data row187 col1" >Gabriella</td>
+      <td id="T_44576_row187_col2" class="data row187 col2" >Bolton</td>
+      <td id="T_44576_row187_col3" class="data row187 col3" >M</td>
+      <td id="T_44576_row187_col4" class="data row187 col4" >1980-10-25</td>
+      <td id="T_44576_row187_col5" class="data row187 col5" >497.300000</td>
+      <td id="T_44576_row187_col6" class="data row187 col6" >2023-08-05</td>
+      <td id="T_44576_row187_col7" class="data row187 col7" >Little LLC</td>
+      <td id="T_44576_row187_col8" class="data row187 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row188_col0" class="data row188 col0" >864424</td>
+      <td id="T_44576_row188_col1" class="data row188 col1" >Alexis</td>
+      <td id="T_44576_row188_col2" class="data row188 col2" >Ramirez</td>
+      <td id="T_44576_row188_col3" class="data row188 col3" >F</td>
+      <td id="T_44576_row188_col4" class="data row188 col4" >1973-10-27</td>
+      <td id="T_44576_row188_col5" class="data row188 col5" >97.860000</td>
+      <td id="T_44576_row188_col6" class="data row188 col6" >2023-05-12</td>
+      <td id="T_44576_row188_col7" class="data row188 col7" >Holmes-Smith</td>
+      <td id="T_44576_row188_col8" class="data row188 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row189_col0" class="data row189 col0" >527887</td>
+      <td id="T_44576_row189_col1" class="data row189 col1" >Charles</td>
+      <td id="T_44576_row189_col2" class="data row189 col2" >Williams</td>
+      <td id="T_44576_row189_col3" class="data row189 col3" >F</td>
+      <td id="T_44576_row189_col4" class="data row189 col4" >1988-10-23</td>
+      <td id="T_44576_row189_col5" class="data row189 col5" >14.390000</td>
+      <td id="T_44576_row189_col6" class="data row189 col6" >2023-09-09</td>
+      <td id="T_44576_row189_col7" class="data row189 col7" >Coleman LLC</td>
+      <td id="T_44576_row189_col8" class="data row189 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row190_col0" class="data row190 col0" >396468</td>
+      <td id="T_44576_row190_col1" class="data row190 col1" >Cole</td>
+      <td id="T_44576_row190_col2" class="data row190 col2" >Rose</td>
+      <td id="T_44576_row190_col3" class="data row190 col3" >nan</td>
+      <td id="T_44576_row190_col4" class="data row190 col4" >1989-10-23</td>
+      <td id="T_44576_row190_col5" class="data row190 col5" >24.670000</td>
+      <td id="T_44576_row190_col6" class="data row190 col6" >2023-05-10</td>
+      <td id="T_44576_row190_col7" class="data row190 col7" >Wong Group</td>
+      <td id="T_44576_row190_col8" class="data row190 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row191_col0" class="data row191 col0" >20673</td>
+      <td id="T_44576_row191_col1" class="data row191 col1" >David</td>
+      <td id="T_44576_row191_col2" class="data row191 col2" >Cooper</td>
+      <td id="T_44576_row191_col3" class="data row191 col3" >nan</td>
+      <td id="T_44576_row191_col4" class="data row191 col4" >1949-11-02</td>
+      <td id="T_44576_row191_col5" class="data row191 col5" >112.780000</td>
+      <td id="T_44576_row191_col6" class="data row191 col6" >2023-06-27</td>
+      <td id="T_44576_row191_col7" class="data row191 col7" >Robinson, Rosario and Lopez</td>
+      <td id="T_44576_row191_col8" class="data row191 col8" >Cosmetic</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row192_col0" class="data row192 col0" >958142</td>
+      <td id="T_44576_row192_col1" class="data row192 col1" >Danny</td>
+      <td id="T_44576_row192_col2" class="data row192 col2" >Donovan</td>
+      <td id="T_44576_row192_col3" class="data row192 col3" >F</td>
+      <td id="T_44576_row192_col4" class="data row192 col4" >1964-10-29</td>
+      <td id="T_44576_row192_col5" class="data row192 col5" >1237.310000</td>
+      <td id="T_44576_row192_col6" class="data row192 col6" >2023-03-26</td>
+      <td id="T_44576_row192_col7" class="data row192 col7" >Jones-Howard</td>
+      <td id="T_44576_row192_col8" class="data row192 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row193_col0" class="data row193 col0" >497648</td>
+      <td id="T_44576_row193_col1" class="data row193 col1" >Dennis</td>
+      <td id="T_44576_row193_col2" class="data row193 col2" >Pena</td>
+      <td id="T_44576_row193_col3" class="data row193 col3" >F</td>
+      <td id="T_44576_row193_col4" class="data row193 col4" >1990-10-23</td>
+      <td id="T_44576_row193_col5" class="data row193 col5" >1530.660000</td>
+      <td id="T_44576_row193_col6" class="data row193 col6" >2023-09-20</td>
+      <td id="T_44576_row193_col7" class="data row193 col7" >Cooke, Wall and Mills</td>
+      <td id="T_44576_row193_col8" class="data row193 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row194_col0" class="data row194 col0" >289649</td>
+      <td id="T_44576_row194_col1" class="data row194 col1" >Kimberly</td>
+      <td id="T_44576_row194_col2" class="data row194 col2" >Roy</td>
+      <td id="T_44576_row194_col3" class="data row194 col3" >nan</td>
+      <td id="T_44576_row194_col4" class="data row194 col4" >1958-10-31</td>
+      <td id="T_44576_row194_col5" class="data row194 col5" >933.060000</td>
+      <td id="T_44576_row194_col6" class="data row194 col6" >2023-01-03</td>
+      <td id="T_44576_row194_col7" class="data row194 col7" >Molina-Sanders</td>
+      <td id="T_44576_row194_col8" class="data row194 col8" >Electronics</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row195_col0" class="data row195 col0" >665501</td>
+      <td id="T_44576_row195_col1" class="data row195 col1" >Rachel</td>
+      <td id="T_44576_row195_col2" class="data row195 col2" >Kennedy</td>
+      <td id="T_44576_row195_col3" class="data row195 col3" >F</td>
+      <td id="T_44576_row195_col4" class="data row195 col4" >1970-10-28</td>
+      <td id="T_44576_row195_col5" class="data row195 col5" >355.980000</td>
+      <td id="T_44576_row195_col6" class="data row195 col6" >2023-05-02</td>
+      <td id="T_44576_row195_col7" class="data row195 col7" >Fleming Inc</td>
+      <td id="T_44576_row195_col8" class="data row195 col8" >Market</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row196_col0" class="data row196 col0" >427928</td>
+      <td id="T_44576_row196_col1" class="data row196 col1" >Katherine</td>
+      <td id="T_44576_row196_col2" class="data row196 col2" >Wagner</td>
+      <td id="T_44576_row196_col3" class="data row196 col3" >M</td>
+      <td id="T_44576_row196_col4" class="data row196 col4" >1977-10-26</td>
+      <td id="T_44576_row196_col5" class="data row196 col5" >25.880000</td>
+      <td id="T_44576_row196_col6" class="data row196 col6" >2023-05-30</td>
+      <td id="T_44576_row196_col7" class="data row196 col7" >Mueller-Harris</td>
+      <td id="T_44576_row196_col8" class="data row196 col8" >Restaurant</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row197_col0" class="data row197 col0" >224983</td>
+      <td id="T_44576_row197_col1" class="data row197 col1" >Bruce</td>
+      <td id="T_44576_row197_col2" class="data row197 col2" >Reynolds</td>
+      <td id="T_44576_row197_col3" class="data row197 col3" >M</td>
+      <td id="T_44576_row197_col4" class="data row197 col4" >1997-10-21</td>
+      <td id="T_44576_row197_col5" class="data row197 col5" >2413.120000</td>
+      <td id="T_44576_row197_col6" class="data row197 col6" >2023-10-06</td>
+      <td id="T_44576_row197_col7" class="data row197 col7" >Dickerson Ltd</td>
+      <td id="T_44576_row197_col8" class="data row197 col8" >Travel</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row198_col0" class="data row198 col0" >429293</td>
+      <td id="T_44576_row198_col1" class="data row198 col1" >Dennis</td>
+      <td id="T_44576_row198_col2" class="data row198 col2" >Evans</td>
+      <td id="T_44576_row198_col3" class="data row198 col3" >M</td>
+      <td id="T_44576_row198_col4" class="data row198 col4" >1978-10-26</td>
+      <td id="T_44576_row198_col5" class="data row198 col5" >202.320000</td>
+      <td id="T_44576_row198_col6" class="data row198 col6" >2023-08-12</td>
+      <td id="T_44576_row198_col7" class="data row198 col7" >Lewis-Bailey</td>
+      <td id="T_44576_row198_col8" class="data row198 col8" >Clothing</td>
+    </tr>
+    <tr>
+      <td id="T_44576_row199_col0" class="data row199 col0" >163908</td>
+      <td id="T_44576_row199_col1" class="data row199 col1" >Kathleen</td>
+      <td id="T_44576_row199_col2" class="data row199 col2" >Flores</td>
+      <td id="T_44576_row199_col3" class="data row199 col3" >F</td>
+      <td id="T_44576_row199_col4" class="data row199 col4" >1960-10-30</td>
+      <td id="T_44576_row199_col5" class="data row199 col5" >414.810000</td>
+      <td id="T_44576_row199_col6" class="data row199 col6" >2023-01-12</td>
+      <td id="T_44576_row199_col7" class="data row199 col7" >Pugh PLC</td>
+      <td id="T_44576_row199_col8" class="data row199 col8" >Market</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<br>
+<h3>Profile · Raw</h3>
+<p><code>profile_raw</code></p>
+<div style="container-type:inline-size; overflow:auto; max-width:100%; max-height:360px; border:1px solid #CBD5E1; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,.10); background:#F8FAFC;"><style type="text/css">
+#T_519e0  {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: auto;
+  font-family: system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size: clamp(10px, 2.4cqw, 13px);
+  min-width: 44rem;
+}
+#T_519e0 caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 .6em;
+  color: #475569;
+  font-weight: 600;
+}
+#T_519e0 thead th {
+  background-color: #EEF2F7;
+  color: #475569;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-size: .85em;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: .8em .9em;
+  border-bottom: 2px solid #64748B;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_519e0 tbody td {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  padding: .6em .9em;
+  border-bottom: 1px solid #E2E8F0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_519e0 tbody th {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  padding: .6em .9em;
+  border-bottom: 1px solid #E2E8F0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_519e0 tbody tr:nth-child(even) td {
+  background-color: #F1F5F9;
+}
+#T_519e0 tbody tr:nth-child(even) th {
+  background-color: #F1F5F9;
+}
+#T_519e0 tbody tr:hover td {
+  background-color: #E2E8F0;
+}
+#T_519e0 tbody tr:hover th {
+  background-color: #E2E8F0;
+}
+#T_519e0 tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  max-width: 11rem;
+  box-shadow: 1px 0 0 #E2E8F0;
+}
+#T_519e0 thead th:first-child {
+  left: 0;
+  z-index: 4;
+}
+#T_519e0 thead th:nth-child(3) {
+  text-align: right;
+}
+#T_519e0 tbody td:nth-child(3) {
+  text-align: right;
+}
+#T_519e0 thead th:nth-child(4) {
+  text-align: right;
+}
+#T_519e0 tbody td:nth-child(4) {
+  text-align: right;
+}
+#T_519e0 thead th:nth-child(2) {
+  text-align: right;
+}
+#T_519e0 tbody td:nth-child(2) {
+  text-align: right;
+}
+#T_519e0 tbody td:nth-child(2) {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+</style>
+<table id="T_519e0">
+  <thead>
+    <tr>
+      <th id="T_519e0_level0_col0" class="col_heading level0 col0" >Column</th>
+      <th id="T_519e0_level0_col1" class="col_heading level0 col1" >Core profile</th>
+      <th id="T_519e0_level0_col2" class="col_heading level0 col2" >nNulls</th>
+      <th id="T_519e0_level0_col3" class="col_heading level0 col3" >Null</th>
+      <th id="T_519e0_level0_col4" class="col_heading level0 col4" >Subclass</th>
+      <th id="T_519e0_level0_col5" class="col_heading level0 col5" >Class</th>
+      <th id="T_519e0_level0_col6" class="col_heading level0 col6" >dType</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td id="T_519e0_row0_col0" class="data row0 col0" >Customer ID</td>
+      <td id="T_519e0_row0_col1" class="data row0 col1" >[rcv]-[out]-[mean]-[q0-25-50-75-100]⸺[[75%], [none], [500136.8], [29, 251191.5, 499520.5, 749854.2, 999997]]</td>
+      <td id="T_519e0_row0_col2" class="data row0 col2" >50,000</td>
+      <td id="T_519e0_row0_col3" class="data row0 col3" >0.0%</td>
+      <td id="T_519e0_row0_col4" class="data row0 col4" >integer</td>
+      <td id="T_519e0_row0_col5" class="data row0 col5" >num</td>
+      <td id="T_519e0_row0_col6" class="data row0 col6" >int64</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row1_col0" class="data row1 col0" >Transaction Amount</td>
+      <td id="T_519e0_row1_col1" class="data row1 col1" >[rcv]-[out]-[mean]-[q0-25-50-75-100]⸺[[161%], [>1057.78: 5617], [442.12], [5.01, 79.01, 182.19, 470.51, 2999.88]]</td>
+      <td id="T_519e0_row1_col2" class="data row1 col2" >50,000</td>
+      <td id="T_519e0_row1_col3" class="data row1 col3" >0.0%</td>
+      <td id="T_519e0_row1_col4" class="data row1 col4" >float</td>
+      <td id="T_519e0_row1_col5" class="data row1 col5" >num</td>
+      <td id="T_519e0_row1_col6" class="data row1 col6" >float64</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row2_col0" class="data row2 col0" >Birthdate</td>
+      <td id="T_519e0_row2_col1" class="data row2 col1" >[mean]-[q0-25-50-75-100]⸺[[1977-04-27], [1948-11-02, 1962-10-30, 1976-10-26, 1991-10-23, 2005-10-19]]</td>
+      <td id="T_519e0_row2_col2" class="data row2 col2" >50,000</td>
+      <td id="T_519e0_row2_col3" class="data row2 col3" >0.0%</td>
+      <td id="T_519e0_row2_col4" class="data row2 col4" >date</td>
+      <td id="T_519e0_row2_col5" class="data row2 col5" >num</td>
+      <td id="T_519e0_row2_col6" class="data row2 col6" >object</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row3_col0" class="data row3 col0" >Date</td>
+      <td id="T_519e0_row3_col1" class="data row3 col1" >[mean]-[q0-25-50-75-100]⸺[[2023-05-23], [2023-01-01, 2023-03-13, 2023-05-24, 2023-08-03, 2023-10-14]]</td>
+      <td id="T_519e0_row3_col2" class="data row3 col2" >50,000</td>
+      <td id="T_519e0_row3_col3" class="data row3 col3" >0.0%</td>
+      <td id="T_519e0_row3_col4" class="data row3 col4" >date</td>
+      <td id="T_519e0_row3_col5" class="data row3 col5" >num</td>
+      <td id="T_519e0_row3_col6" class="data row3 col6" >object</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row4_col0" class="data row4 col0" >Gender</td>
+      <td id="T_519e0_row4_col1" class="data row4 col1" >{F: 51%, M: 49%}</td>
+      <td id="T_519e0_row4_col2" class="data row4 col2" >44,953</td>
+      <td id="T_519e0_row4_col3" class="data row4 col3" >10.1%</td>
+      <td id="T_519e0_row4_col4" class="data row4 col4" >low-cardinality</td>
+      <td id="T_519e0_row4_col5" class="data row4 col5" >cat</td>
+      <td id="T_519e0_row4_col6" class="data row4 col6" >object</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row5_col0" class="data row5 col0" >Category</td>
+      <td id="T_519e0_row5_col1" class="data row5 col1" >{Restaurant: 17%, Market: 17%, Travel: 17%, Electronics: 17%, Clothing: 17%, Cosmetic: 16%}</td>
+      <td id="T_519e0_row5_col2" class="data row5 col2" >50,000</td>
+      <td id="T_519e0_row5_col3" class="data row5 col3" >0.0%</td>
+      <td id="T_519e0_row5_col4" class="data row5 col4" >low-cardinality</td>
+      <td id="T_519e0_row5_col5" class="data row5 col5" >cat</td>
+      <td id="T_519e0_row5_col6" class="data row5 col6" >object</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row6_col0" class="data row6 col0" >Name</td>
+      <td id="T_519e0_row6_col1" class="data row6 col1" >% unique: 1</td>
+      <td id="T_519e0_row6_col2" class="data row6 col2" >50,000</td>
+      <td id="T_519e0_row6_col3" class="data row6 col3" >0.0%</td>
+      <td id="T_519e0_row6_col4" class="data row6 col4" >high-cardinality</td>
+      <td id="T_519e0_row6_col5" class="data row6 col5" >cat</td>
+      <td id="T_519e0_row6_col6" class="data row6 col6" >object</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row7_col0" class="data row7 col0" >Surname</td>
+      <td id="T_519e0_row7_col1" class="data row7 col1" >% unique: 2</td>
+      <td id="T_519e0_row7_col2" class="data row7 col2" >50,000</td>
+      <td id="T_519e0_row7_col3" class="data row7 col3" >0.0%</td>
+      <td id="T_519e0_row7_col4" class="data row7 col4" >high-cardinality</td>
+      <td id="T_519e0_row7_col5" class="data row7 col5" >cat</td>
+      <td id="T_519e0_row7_col6" class="data row7 col6" >object</td>
+    </tr>
+    <tr>
+      <td id="T_519e0_row8_col0" class="data row8 col0" >Merchant Name</td>
+      <td id="T_519e0_row8_col1" class="data row8 col1" >% unique: 73</td>
+      <td id="T_519e0_row8_col2" class="data row8 col2" >50,000</td>
+      <td id="T_519e0_row8_col3" class="data row8 col3" >0.0%</td>
+      <td id="T_519e0_row8_col4" class="data row8 col4" >high-cardinality</td>
+      <td id="T_519e0_row8_col5" class="data row8 col5" >cat</td>
+      <td id="T_519e0_row8_col6" class="data row8 col6" >object</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="legend"><b>Legend</b> · <b>RCV</b>: robust coefficient of variation <a href="#ref-3">[1]</a> · <b>Null</b>: null percentage · <b>nNulls</b>: non-null count · <b>num</b>: numerical · <b>cat</b>: categorical · <b>dtype</b>: data type</p>
+<br>
+<p>The Data Profiling reviewed <strong>50,000 customer records</strong> on completeness and quality.
+<strong>Missing values</strong> were detected in: <code>Gender</code>.  <strong>Outliers</strong> (beyond 1.5×IQR from the quartiles) were flagged in: <code>Transaction Amount</code>. <strong>Date format</strong> was confirmed consistent for the entire dataset.</p>
+<div class="dist-row" style="--n:6"><div><img src="data:image/png;base64,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" alt="Customer ID" style="max-width:100%;height:auto" /></div><div><img src="data:image/png;base64,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" alt="Transaction Amount" style="max-width:100%;height:auto" /></div></div><div class="dist-row" style="--n:6"><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJoAAACUCAYAAABr9TBnAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjAsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvlHJYcgAAAAlwSFlzAAAJOgAACToB8GSSSgAACtlJREFUeJzt3XuwlVUZx/HvFkwoBEGNEHDRpKRLUEorkWVReKnMy4SXvBBe0Lw2YalNkpfEmSYVLTPvDjXewnFUvJEkai7NadS8tbyA6EpQlEBFohRh98d6t77szjl7n733ed5z4PnM7NnnvHu9613rfX97rffdl3NK5XIZpbraRkU3QG0YNGhKhAZNidCgKREaNCWid9ENqDDWTQROAr4I9AUicBdwYQz+9RZu5zjgrRj87a2qswjGupnAqBj8Ltnv44EHckVWAouBh4HfxuCflm5jXrcY0Yx1FwGzgIXAJGAv4GJgAnBZizd3HHBAi+vsTg4HxgL7k/bhaOBxY90xRTaq8BHNWLcvcCpwTAz+utxDDxnrriKFboNkrNsYWBuDX9OJ1Z6JwT+X/TzPWHc1cB1wubHuoRj8gpY3tA6FBw2YCjxZFTIAsh18L6wzNYzO7UiMdQ8C/4rBH5j9vgNwEfBlYBPgn6Sp47Ks7M7Azsa6yVkVR8XgZxrregE/B44GBgMLgPNj8DfmtjUTGAWcDVwAjMjaNAkYBFydbfd54OgY/DO5dTcCTgemAMNJpwbnx+B/X90X4D7gjKz+EcBr9ezItsTg1xrrpgKHZNv+aaN1NaPQqTN7xu4GzGlhtXcCa4AjgP2AS4FNs8dOBF4A7iFNL2OBu7PHfgGcCVyVrfcIcIOx7tCq+rfOyk4jTcO7ZevcnN0OJD2BbzbWlXLrXZqtcxWwD3AbcJ2x7jtV9Y8DTiAFbV/g3Qb2wTpi8G8DjwO7NltXo4oe0Tbn41Gnaca6LYDPAvvH4J/NFt9feTwGH4x1/waWxuAfy603CPgRMD0GPz1b/Cdj3TDgHOCm3GYGAWNj8C9n6+4InAZMjsH/IVtWIgV4O+B5Y902pPAclRvB/mysG0IaHe/K1b8ZMCYG/2Yz+6INi4AxLa6zbt3iYgBo1Ruuy0nTzBXGukOMdZ+uc71RwCeBW6qW/xEYaazbMrfs1UrIMpVznnltLBua3U8A1gK3Get6V26kJ8GYbNqueKILQgZQql2k6xQdtGXA+6TpqGkx+LWki4clpBPgJca6h411X6ix6pDsvvoAV34flFv2TlWZD9pYXlnWJ7vfAuhFmgZX524zSbPKkNy6XREySKHvqrprKjRoMfjVpHOhveso/t/s/hNVywdW1flCDH4iaQrag3Sw785OxtvzRnZfPQIOzu6X19G+jiwHPgS+AnypjdtbubIt/ziNsW4gsAvw11bXXa+iz9EALgFmG+sm56/A4KMrtb1i8HNI5xgA2wNPZo8PJ50Hza+uNAvxPGPdDOBGUvCWk0abPlXFnwNWAQeRTvQrDgZeisEvbaJ/kKbVXsCAGPzcJuvqlGwfXpxt/1rJbecVHrQY/J1ZGK411o0D7iC9qr0dcDzwKjAnBr/IWPc4cJ6xbhVpNP4ZudEmOzG/kHRutZA02p0BPB2Dr5R7AdjbWLc3aep+JQa/zFh3CTDNWPch6Qrtu8C3geqrzkb6+KKx7grSleivsvr7ADsAI2PwU5rdRs6Oxrp+Wf0jgaNIo9kPinoNDbpB0ABi8D821j0KnEwaffqSAjabFJyKQ4FrgOtJI9zppNfhKpaQzkPOBLYinTc9QApbxXTSOeEsoD/pQMwEziJNbyfw8etoR8Tgb25RN08CXgKOJY2aK4BA60eZG7L7VaR99Bfg+KLfgirpJ2yVhKKvOtUGQoOmRGjQlIi6gvbam+/O6OqGqPVbvSPasC5thVrv6dSpRGjQlAgNmhKhQVMiNGhKhAZNidCgKREaNCVCg6ZEaNCUCA2aEqFBUyI0aEqEBk2J0KApERo0JaJbfN2uEdvs9I2nSqXS0NolW2v2LdcMBNjvoClvS2+7olwuL17w9LwxRW2/ET02aKVSaej4Pb+1hfR2+/b9FABFbLviwbn3FrXphunUqURo0JQIDZoSoUFTIjRoSoQGTYnQoCkRGjQlQoOmRGjQlAgNmhKhQVMimgqase6RVjVE9QyNHvNmR7SBtYuo9UxDx1ynTiVCg6ZEaNCUCA2aEqFBUyI0aEqEBk2J0KApERo0JUKDpkRo0JSIZr+pPsJYF1rSkk4qlUqbFbHd7mD16g82K2q/AyMaWanZoL0ag7dN1tGQbcdMWAoU9mcJirTxxp94Z/5T9xey3xsNuE6dSoQGTYnQoCkRGjQlQoOmRGjQlAgNmhKhQVMiNGhKhAZNidCgKRHNBq2wv7WvCtPQMW8qaDH4cc2sr3qeRo+5Tp1KhAZNidCgKREaNCVCg6ZEaNCUCA2aEqFBUyI0aEqEBk2J0KApERo0JaLZb6oXplwuLy7in9gXsc1q5XJ5cdFt6KweG7QFT88bU3QbVP106lQiNGhKhAZNidCgKREaNCVCg6ZEaNCUCA2aEqFBUyI0aEqEBk2J0KApERo0JUKDpkRo0JQIDZoSUSqXyzULvfbmu08AL//f8kWLhw0fNnRRVzSsO9tQ+w0d9n3R8MEDTm13xXK53PBt6+3HzWpm/Z5621D73UzfdepUIpoN2i0taUXPs6H2Gxrse13naEo1S6dOJUKDpkTU/F6nsW5LYCYwHlgEnBiDv7+Ncn2Bq4H9SX8i/IwY/E2tbKykTvR7JnAosDpbFGPwO8i0svWMdScAxwKjgfNj8Oe0U24jYAZwJPA+8MsY/MXt1VvPiHYZsATYEjgNmGWsG9RGuXNJ/+N8KHAw8Dtj3efrqL+7qrffAOfF4Ptltx4bsswbwDnArTXKHU96Eo4EHPATY92E9gp3GDRjXT/gAODsGPyqGPxs4FnSqFVtEjA9Br8iBv8YcAdwWI3Gdkud7Pd6JQZ/e9bfd2oUnQRcGIN/KwY/nzSbfb+9wrVGtG2BlTH4/CvBzwLrPGuNdQOBzwDPdFSuB6mr3zlTjXXLjHWPGuu+1vXN6xYsnTjetYLWD1hRtWxFtry6HMB7Ncr1FPX2G+DXwDbAENJ0O9tYZ7q2ed1C9T7q8HjXuhhYCfSvWtY/W15dDmDT3MbbKtdT1NtvYvB/z/16g7FuErAXaSpZn1Xvow6Pd60RbT7Qz1g3NLdsFPCPfKEY/NukE+fRHZXrQerqdzvWAqUuaVX3EujE8e5wRIvBrzTW3QGca6w7BZgA7Eg60a92PTDNWHcwsD3pxHls59rePXSm38a6icAc0iX+RGB34GTB5raUsa43KRe9gN7Guj7A6hj8mqqi15OuNO8DBpBeEpncXr31vLxxIrAVsIz0uskhMfjlxrrDjXX5BJ8FLCddHt8KnByDf7Gu3nVP9fZ7KvB6Vu5U4IAY/ELx1rbONOA/wBTgzOznSca63Y11+anxcuAh0uj/KDCjrdcZK/S9TiVC34JSIjRoSoQGTYnQoCkRGjQlosf++XfVesa6AcBc0vuYu8bgn2un3CbAb0jvCb8Xg6/5YQMNmspbBewDXFCj3CnAPTH4tl64b5MGTX0kBr8aWGqs+2iZse5I4BjSOwXTYvDzgG8Cg411U4GbYvBX1qpbz9FUu4x1mwPfA74K7El69wdgOPA3YA/gMGPdsFp1adBURz5H+ozZA8DdpE8bQ/pQ5LwY/Iekt59qfpJag6Y6spD04cavx+DHA2Oy5Y/kft4JeKVWRfpep1qHse4eUogicCWwhvTJjDXAszH4HxrrBpO+uNMfmNveF1jyNGhKhE6dSoQGTYnQoCkRGjQlQoOmRGjQlIj/AUg/zb0MUgujAAAAAElFTkSuQmCC" alt="Customer ID" style="max-width:100%;height:auto" /></div><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAACJCAYAAACvmePuAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjAsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvlHJYcgAAAAlwSFlzAAAJOgAACToB8GSSSgAAC91JREFUeJzt3X2QFMUdxvHvgURBUFB8IWCaMmi00WjFUmPZJggqvhsVJWhK0WiqIr5jUGPEQEEZJfEtMSbxDQyECL5EjSVIoahtjKIGNbYmgtIKoqWiIL6Bcvmje8k47h57t7NH393vU3XFbc9MT0/vs909c57X0NjYiBAbWqcN3QAhQIIoEiFBFEmQIIokSBBFEjaqtEFpU83t9P7e2XnFNaf1KW22Bs4AJntnF2fKBwEPA7t6Z//dym2aDJwMnO6dvak1z12kSn1bTlMj4j6Zr8GxbEKu/NlaG5uArYHLgP658mcJ17ioNRujtNkEODq+HNGa566DSn37FRVHRO/sP0vfK226x28XZcuzlDadgc7e2dXNamqivLMrgbLXWmeHApsBc4H9lTZ9vLPLNkA7WlXFIK5PnD52IYySE4EdgcFKm4Xx9SCgD/AGMAMYXwqp0qY/8BowHBgC/BD4ELgZGOedXRv36wdcFevqAbwJ/MU7e2ncvg9wMbAn4c17BZjknZ2Wa6sCfgUcCHQDFsbX/wBeiLs9rLQBwDvbUG5qVtp0i8cdD/SMx17inX0wc655wLvAXcB4wqjwOGGaXVJF144AlgJnAi/Fc12bqb/UdyOAocCxwErgIu/sVKXNGOBcoAtwC3BxqT/j8YOBy4HdgBXAncAY7+yquH0kcCvQo1QWyxcDd3hnL6jmOmM7y/ZtuYuu9WalP3BlvLBDCB3UG1gOnA8cDEwCTgF+W+b4K4FVwDBgKjA2fl9yG7Ad8JNY/0Rg48x2Rbj4HwNHEDr1VqXNuiktrlOeIIT1grjfzbHeZcCJcddR/H/JUcmN8VomEqbPN4D7lTYmt9/ehCCNjm3/DvCnJuottbUHcBgwwzv7MmF5UGl6viK2/1jgMWCK0uY3wF7AqcA1wBhCkEv1DwRmEQJ0LGHaPAG4Y31tq6Cp62xW37Z4RIy2BA7wzi7IlC0hvOEAKG0eBz4CblHanJWbuh/1zo6O389R2hwMHEMYQSF06gjv7H3x9bzsyb2zf82cpwF4FOgHnA5Mj5vOAzYH9shMcXMzxz0fv3WVlh1xv50JoTjFOzslls0GngcuJYxOJZsBh3ln34/7bQtcrbTp6p39pNI5gB8AXYHSdU0HJilttvfOvprb9yHv7M9j/U8SPsBHAjt5Z78AZiltjiJ8YEr1XQp44Mi4D0qb5cDtSpt9vLNPNNG2cpq8zmr7FmofEZfmQojSpkFpc67SxiltPgHWANMII9k3csc/mHvtCEEqWQBcrrQZqbTJH4vSppfS5jqljY/nWUP4ZO6Y2W0wMKuAddaeQAMws1QQp7yZQH5EnF96cyIX/+27nnOMAF71zj4VX98ONBKWLnnrPkxxPfsO8EgpYNHC3Dn3Au7O7XMn8HmZa6hGS6/zK2oN4ttlys4Ffg3cDRxFuPhRcdsmuX0/yL1endtnOPA0cDXglTYLlDZDMtsnx30mAQcRwnJLro4tCdNErfoAq7yzH+fK3wa6KW2yS4YPcvuUZoH89a+jtOlNWMPep7TpqbTpSVg3z6f89FzuHOXKsufsQ+49i6F8D9iiUtuaUO580MR1VlLr1FzuWeNxhEXtJaUCpY1uSeXe2aXASKVNJ0KgfwncG0fHj4DDgVHe2T9kzpX/cL1HeANqtQzorrTplgvjNsDH3tnPaqx/GOH9OCd+fYnSZpcCnmcuI9xUZOvtTPiwLo9Fn8Z/v5Y7tleN525SPX6y0hXIvyknltuxWt7ZtXGNMY5w16sIU32n7LniYv/I3OFzgaFKm20qVF/tp3g+4YO37mYqrkuHAba6K2nSCMJd8v65r4MJS44inik+CRwdw1dyDOEDULqG0p39zqUdlDZ7E9aDzVX1CFnriFjOHODsuIBeRAjhgOZWorTZHJhNuHP+LyF4o4G3gJfiYng+MFZpsxJYC1xEeCSR7bSrgZOAx5Q2Ewl3ujsDm3pnrwReBz4BTlbarADWeGefzrfHO/uS0mY68LsY+EWEm6KdgJ829/py19oP2I/wqGVeme2zCOvES/LbmmkC8C/gb0qbGwjr8SuA2ZkblacIj4+uU9pcSpiyxxAeETVXVX0L9RkRxxPu9ibEf1cDZ7egnk8Jz6HOAe4FpgAfAwdl7jxPAF4lhPVawsL7tmwl3tl3gH0Jb8A1wN8JNzSvx+2fEgK1B/AIYeSr5PTYjrHAPYSR+XDvbK0j4nDCaDutwvapwPZxZGox7+yLhMdgWxOe/5Xeo2GZfVYT7rTXEh7rjCZ80N7P11fF+aru2wb5L7RFCuS/vhFJkCCKJEgQRRIkiCIJLQriG2+vuKrohoiOraUjYr/17yJE9WRqFkmQIIokSBBFEiSIIgkSRJEECaJIggRRJEGCKJIgQRRJkCCKJEgQRRIkiCIJEkSRBAmiSIIEUSRBgiiSUI9fsAdgwG6DFzQ0NPQFuHfmTb0AjjzutKp/N7axsXHpwuce2r1OzROJqVsQGxoa+g468JDeAF27bgpA6XU15s15oE4tEymSqVkkQYIokiBBFEmQIIokSBBFEiSIIgkSRJEECaJIggRRJEGCKJIgQRRJKDSI8c+dtRltrb3tWdEjYl3/KEwdtLX2tlsyNYskSBBFEiSIIgkSRJEECaJIggRRJEGCKJIgQRRJkCCKJEgQRRLq9nvNqVPafAF0UtrIH6yuzVrvbOdaK+mQI2IphBu6He1Ep9ifNSl6ROyvtHEADQ0NPWupaM2a1T1LddWBhLBYNfdn0UFc7J3VADvsPuQdoOr/xUhely5f++CVBXN1YS3LkBGxcGtrraBDvhlxTVNz5wmgoDVih71Z8c52Vtq40gguNqwOOSKK9EgQRRIkiCIJEkSRBAmiSIIEUSRBgiiSIEEUSZAgiiQUHcSq/45KItpae9utQoPond23yPrqra21tz2TqVkkQYIokiBBFEmQIIokSBBFEiSIIgkSRJEECaJIggRRJEGCKJIgQRRJqNuvkzY2Ni6dN+cBAEr/Nvf4otsk0lW3IC587qHd61W3aH9kahZJkCCKJEgQRRIkiCIJEkSRBAmiSIIEUSRBgiiSIEEUSZAgiiRIEEUSJIgiCRJEkQQJokiCBFEkQYIoktDQ2Nj8P875xtsrngEWfaV8ydJ+2/Xru6SIhnV07aAvl2y3zebnV7tzi4JYidJmhnf2+MIq7MA6Wl/K1CySUHQQZxZcX0fWofqy0KlZiJaSqVkkQYIoklDI7zUrbbYCJgODgCXAGd7ZuUXU3dYpbTYGbgAOAHoCDjjPO/tE3H4RMBroDNwEXOidbYzb9gRuBgYA84GTvLM+busK3AgcRfjrCBd6Z6e33pUVq6gR8XrgLWAr4GfADKXNFgXV3dZtBCwGDCGI1wD3KW26K20OBUYB3wU0cAhwKqwL8F3AdcAWgAWmZuodB/QG+gLHA79X2nyr7ldTJzXfrChtugPLge29s0ti2Txginf21ppb2A4pbd4EjgAuAF70zk6I5SOBU7yz31faDAWu984OiNu6Ae8CA72zryltlgHHeWdt3D4Z8N7Zy1r9ggpQxIi4A7CqFMLoBWBgAXW3O0qbHQgj3ELCKPh8ZnO23760zTv7MeGnWQOVNr2AbZs4ts0pIojdgZW5spWxXGTEdd1U4HLv7Aq+2nfZfmuqX0v7fFjh2DaniCCuAjbLlW0Wy0WktOlCeEi9EBgfi/N9l+23pvq1tE+PCse2OUUE8RWgu9Kmb6ZsF+DFAupuF5Q2nYA/A43AyaW7YsId9K6ZXbP99qVtcTT9JmFN+T7h5rDSsW1OzY9vvLOrlDb3AOOUNmcBQ4BvA/fUWnc78kegDzDUO/t5pnwqcIPSZjrwEXA+4S4ZYB7QVWlzKjANuAR4xjv7WubYXyhtjgd2JjzG2afeF1IvRT2+OQP4OvAecBUw3Du7vKC62zSljQJOA/YC3lXarIpf+3ln7yc8Y3wKeBmYDdwC4J39DDgaOBf4APge8KNM1WMJTyuWAXcCZ3pn/9Ma11QP8rNmkQT5EZ9IggRRJEGCKJIgQRRJkCCKJEgQRRIkiCIJEkSRhP8B1kWYmyRfIaUAAAAASUVORK5CYII=" alt="Transaction Amount" style="max-width:100%;height:auto" /></div></div>
+</div>
+</div>
