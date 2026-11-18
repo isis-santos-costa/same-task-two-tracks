@@ -5,10 +5,10 @@
 # config --------------------------------------------------------------------------------------------------
 
 action = 'None'
-is_first_action = False
-show_title = False
+is_first_action = True
+show_title = True
 
-track, kind, module, task = 'A', 'task', 2, 1
+track, kind, module, task = 'A', 'skill_assessment', 2, 1
 task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS, show_title)
 
 
@@ -54,9 +54,9 @@ profile_a_vs_t_sections = (["### Profile · Actual vs Target" , "`profile_actual
 
 sections = [
       f'<div class="t-{track.lower()}">'
-    , "\n### Skill Assessment 2.1: Profile a dataset and surface quality risk"
     , "`raw_data`"
     , raw_data_table
+    , '<br>'
     , *profile_raw_sections
     , *profile_a_vs_t_sections
     , '</div>'
