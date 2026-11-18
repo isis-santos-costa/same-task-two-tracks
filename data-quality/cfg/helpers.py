@@ -1649,7 +1649,7 @@ def _make_groups(s, n_buckets=5, max_cats=5):
     return groups.where(s.notna(), 'missing')
 
 
-def build_imputation_summary_table(raw_dist, prop_dist, mode_dist, min_effect=0.03):
+def build_imputation_summary_table(raw_dist, prop_dist, mode_dist, track, min_effect=0.03):
     """
     Build summary DataFrame on distributions of field with missingness:
     Raw vs. Proportional vs. Naive Mode.
