@@ -170,7 +170,7 @@ def _comparison_table(rows, kinds, titles, modules, cfg, widths):
         sid_b = make_snippet_id(make_task_id('b', kind, module, task), action)
         name, _, note = action.partition(' (')
         action_html = escape(name) + (f'<br><small class="dim">{escape(note.rstrip(")"))}</small>' if note else '')
-        cells += [f'<th class="ix" scope="row">{escape(action_html)}</th>',
+        cells += [f'<th class="ix" scope="row">{action_html}</th>',
                   f'<td class="t-a">{_snippet(sid_a, cfg)}</td>',
                   f'<td class="t-b">{_snippet(sid_b, cfg)}</td>']
         trs.append('<tr>' + ''.join(cells) + '</tr>')
