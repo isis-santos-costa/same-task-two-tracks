@@ -29,15 +29,13 @@ The accompanying notebook to this repo demonstrates the Data Quality workstream 
 For stable and reproducible execution across all forks, it clones this repository at a pinned release tag.
 
 
-## DoD · Definition of Done—Data Quality
+## Definition of Done · Data Quality
 
-_Target_  
-Reference Data Quality syllabus compleeted (
+_Target_: reference Data Quality syllabus completed (
 [Coursera](https://www.coursera.org/specializations/data-quality-analyst-validation-debugging-and-monitoring), 
 [DataKitchen](https://datakitchen.io/certifications/data-observability-and-data-quality-testing/)
 ), with each task solved twice: 
 * Track A in pandas from first principles
 * Track B with production tools (SQL · dbt)
 
-_v1 ready when_  
-At least one task is complete in both tracks.
+_v1 ready when_: at least one task is complete in both tracks.
