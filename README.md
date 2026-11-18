@@ -40,4 +40,4 @@ Reference Data Quality syllabus compleeted (
 * Track B with production tools (SQL · dbt)
 
 _v1 ready when_  
-At least one task presents both tracks.
+At least one task is complete in both tracks.
