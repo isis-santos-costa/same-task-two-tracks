@@ -64,7 +64,8 @@ def build_see_also(name, current, function_title):
 
 def style_table(
     df, track, caption=None, min_width=None, max_height=None, sticky_first_col=False, bold_first_col=False, 
-    index=False, right_cols=(), nowrap_cols=(), formats=None, cell_styles=None, row_styles=None, max_rows=0):
+    index=False, hide_cols=None, right_cols=(), nowrap_cols=(), formats=None, cell_styles=None, row_styles=None, 
+    max_rows=0):
     """
     Track-themed DataFrame -> HTML. 
     Always fits: wraps text, scales the font, scrolls as a last resort.
@@ -80,6 +81,8 @@ def style_table(
     styler = df.style
     if not index:
         styler = styler.hide(axis='index')
+    if hide_cols:
+        styler = styler.hide(subset=hide_cols, axis='columns')
     if caption:
         styler = styler.set_caption(caption)
     if formats:
@@ -100,9 +103,7 @@ def style_table(
         base.append(('min-width', min_width))
 
     styles = [
-        {'selector': '', 'props': [('border-collapse', 'separate'), ('border-spacing',  '0'), ('width', '100%'),
-                                   ('table-layout'   , 'auto'    ), ('font-family'   , FONT),
-                                   ('font-size'      , 'clamp(10px, 2.4cqw, 13px)')]},
+        {'selector': '', 'props': base},
         {'selector': 'caption', 'props': [('caption-side', 'top'), ('text-align', 'left'), ('padding', '0 0 .6em'),
                                           ('color', t['head_fg']), ('font-weight', '600')]},
         {'selector': 'thead th', 'props': [('background-color', t['head_bg']), ('color', t['head_fg']),
@@ -148,6 +149,8 @@ def style_table(
 
     html = styler.set_table_styles(styles).to_html()
     box  = f'max-height:{max_height}; ' if max_height else ''
+
+    html = re.sub(r'\n\s*\n', '\n', styler.set_table_styles(styles).to_html())
     
     return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; {box}border:1px solid {t['outer']}; '
             f'border-radius:8px; box-shadow:{t['shadow']}; background:{t['body_bg']};">{html}</div>')
@@ -166,12 +169,14 @@ def style_raw_table(df, track, sticky_first_col=True, **kw):
     )
 
 
-def fig_to_img_html(fig, alt, dpi=None):
+def fig_to_img_html(fig, alt, dpi=None, transparent=True, width=None):
     buf = io.BytesIO()
-    fig.savefig(buf, format='png', transparent=True, dpi=dpi or DEV.chart_dpi, bbox_inches='tight')
+    fig.savefig(buf, format='png', transparent=transparent, dpi=dpi or DEV.chart_dpi, bbox_inches='tight',
+                facecolor=fig.get_facecolor())
     plt.close(fig)
     img = base64.b64encode(buf.getvalue()).decode('utf-8')
-    return f'<img src="data:image/png;base64,{img}" alt="{alt}" style="max-width:100%;height:auto" />'
+    width = f'width:{width};' if width else 'max-width:100%;'
+    return f'<img src="data:image/png;base64,{img}" alt="{alt}" style="{width}height:auto" />'
 
 
 def get_code_from_eval(eval_fn):
@@ -1269,6 +1274,16 @@ Overall missing `{target}`: **{overall:.1%}**<br><br>
 """, raw=True)
 
 
+def make_lift_style(track, min_effect=0.25):
+        t = THEMES[track.lower()]
+        def fn(v):
+            if pd.isna(v) or abs(v) < min_effect:
+                return ''
+            c, bg = (t['warn'], t['warn_bg']) if v > 0 else (t['ok'], t['ok_bg'])
+            return f'color:{c} !important;background-color:{bg} !important;font-weight:600;'
+        return fn
+
+
 def make_lift_row_style(track, min_effect, col='lift'):
     t = THEMES[track.lower()]
     def fn(row):
@@ -1358,3 +1373,330 @@ def get_missing_rates(df, target, n_buckets=5):
         .reset_index(drop=True)
     )
     return out[['column', 'group', 'n', rate_col_name, 'lift']], overall
+
+
+# Data Imputation (⚠ use with caution) .......................................................
+
+def build_full_imputation_audit(df_before, df_after, df_mode, target, n_buckets=5, max_cats=5):
+    """
+    Compare observed vs. post-imputation `target` distributions across EVERY column and group,
+    alongside Naive Mode drift as a baseline reference.
+    """
+    before_dist, _ = get_missing_col_distribution_by_other_cols_group(df_before, target, n_buckets, max_cats)
+    after_dist, _  = get_missing_col_distribution_by_other_cols_group(df_after,  target, n_buckets, max_cats)
+    mode_dist, _   = get_missing_col_distribution_by_other_cols_group(df_mode,   target, n_buckets, max_cats)
+
+    cat_cols = [
+        c for c in before_dist.columns
+        if c not in ('column', 'group', 'n', 'max_group_gap', 'dominant_gap')
+    ]
+
+    merged = (
+        before_dist[['column', 'group', 'n'] + cat_cols]
+        .merge(
+            after_dist[['column', 'group', 'n'] + cat_cols],
+            on=['column', 'group'],
+            suffixes=(' (before)', ' (after)'),
+            how='outer',
+        )
+        .merge(
+            mode_dist[['column', 'group'] + cat_cols].rename(
+                columns={c: f'{c} (mode)' for c in cat_cols}
+            ),
+            on=['column', 'group'],
+            how='outer',
+        )
+    )
+
+    merged['imputation_drift'] = np.column_stack([
+        (merged[f'{c} (after)'] - merged[f'{c} (before)']).abs().fillna(0.0)
+        for c in cat_cols
+    ]).max(axis=1)
+
+    merged['naive_imputation_drift'] = np.column_stack([
+        (merged[f'{c} (mode)'] - merged[f'{c} (before)']).abs().fillna(0.0)
+        for c in cat_cols
+    ]).max(axis=1)
+
+    merged = merged.drop(columns=[f'{c} (mode)' for c in cat_cols])
+
+    overall_row = merged[merged['column'] == 'OVERALL']
+    group_rows  = merged[merged['column'] != 'OVERALL'].sort_values('naive_imputation_drift', ascending=False)
+    out = pd.concat([overall_row, group_rows], ignore_index=True)
+
+    return out, cat_cols
+
+
+def get_missing_col_distribution_by_other_cols_group(df, target, n_buckets=5, max_cats=5):
+    """Observed distribution of `target` per group across every other column."""
+    from pandas.api.types import is_datetime64_any_dtype as is_dt
+    from pandas.api.types import is_numeric_dtype        as is_num
+    from pandas.api.types import is_integer_dtype        as is_int
+
+    obs = df[target].notna()
+    y   = df.loc[obs, target]
+    overall = y.value_counts(normalize=True)
+    cats_order = overall.index.tolist()
+
+    rows = [
+        pd.DataFrame([{
+            'column': 'OVERALL',
+            'group': 'ALL OBSERVED',
+            'n': int(obs.sum()),
+            **overall.to_dict(),
+            'max_group_gap': 0.0,
+            'dominant_gap': '—',
+        }])
+    ]
+
+    for col in df.columns.drop(target):
+        s = df[col]
+        if not is_dt(s) and not is_num(s) and s.dtype == 'object':
+            parsed = pd.to_datetime(s, format='%Y-%m-%d', errors='coerce')
+            if s.notna().sum() > 0 and (parsed.notna().sum() / s.notna().sum()) > 0.90:
+                s = parsed
+
+        if is_dt(s):
+            groups = s.dt.to_period('M').astype(str)
+        elif is_num(s) and (s.nunique() > max_cats):
+            cats = pd.qcut(s, q=n_buckets, duplicates='drop')
+            if is_int(s):
+                cats = cats.cat.rename_categories([
+                    f"[{int(c.left) + 1}, {int(c.right)}]" for c in cats.cat.categories
+                ])
+            else:
+                cats = cats.cat.rename_categories([
+                    f"[{c.left:,.2f}, {c.right:,.2f}]" for c in cats.cat.categories
+                ])
+            groups = cats.astype(str)
+        else:
+            groups = s.astype(str)
+
+        if not is_num(s):
+            top = groups.value_counts().index[:max_cats - 1]
+            groups = groups.where(groups.isin(top), 'other')
+
+        g_obs = groups.where(s.notna(), 'missing')[obs]
+
+        ct = pd.crosstab(g_obs, y, normalize='index').reindex(columns=cats_order, fill_value=0.0)
+        counts = g_obs.value_counts().reindex(ct.index)
+
+        deltas = ct - overall
+        top_cat   = deltas.idxmax(axis=1)
+        top_delta = deltas.max(axis=1)
+
+        g = ct.copy()
+        g.insert(0, 'column', col)
+        g.insert(1, 'group', ct.index)
+        g.insert(2, 'n', counts.values)
+        g['max_group_gap'] = deltas.abs().max(axis=1).values
+        g[ 'dominant_gap'] = [
+            f"{100*d:+.1f} pp {cat}" if abs(d) >= 0.005 else 'balanced'
+            for cat, d in zip(top_cat, top_delta)
+        ]
+        rows.append(g.reset_index(drop=True))
+
+    out = pd.concat(rows, ignore_index=True)
+    overall_row = out.iloc[:1]
+    group_rows  = out.iloc[1:].sort_values('max_group_gap', ascending=False)
+    out         = pd.concat([overall_row, group_rows], ignore_index=True)
+
+    return out, overall
+
+
+def render_imputation_before_after(
+    df_before, df_after, target, track, group_col=None, n_buckets=5, max_cats=5
+):
+    """
+    Side-by-side 100% stacked horizontal bar chart comparing `target` distribution
+    Before (observed only) vs. After imputation, with OVERALL pinned at the top.
+    """
+    t = THEMES[track.lower()]
+
+    def _build_panel_df(df):
+        obs = df[target].notna()
+        y   = df.loc[obs, target]
+        overall = y.value_counts(normalize=True)
+        cats_order = overall.index.tolist()
+
+        top = pd.DataFrame([overall.to_dict()], index=['OVERALL'])
+        if group_col is None or group_col == 'OVERALL':
+            return top, cats_order
+
+        groups = _make_groups(df[group_col], n_buckets=n_buckets, max_cats=max_cats)[obs]
+        ct = pd.crosstab(groups, y, normalize='index').reindex(columns=cats_order, fill_value=0.0)
+        ct = ct.sort_values(by=cats_order[0], ascending=True)
+        return pd.concat([top, ct]), cats_order
+
+    before_df, cats = _build_panel_df(df_before)
+    after_df, _     = _build_panel_df(df_after)
+    after_df        = after_df.reindex(index=before_df.index, columns=cats, fill_value=0.0)
+
+    palette = [t['head_fg'], t['ok'], t['warn'], '#8da0cb', '#e78ac3', '#a6d854']
+
+    n_rows = len(before_df)
+    fg     = t['body_fg']
+    fig, axes = plt.subplots(1, 2, figsize=(7, 0.42 * n_rows + 1.2), sharey=True, sharex=True)
+
+    panels = [
+        (axes[0], before_df, f'Observed · N={df_before[target].notna().sum():,}'),
+        (axes[1], after_df,  f'After · N={len(df_after):,}'),
+    ]
+    for ax, pdf, title in panels:
+        y_pos, left = np.arange(n_rows), np.zeros(n_rows)
+        for i, cat in enumerate(cats):
+            vals = pdf[cat].to_numpy()
+            bars = ax.barh(y_pos, vals, left=left, height=0.62, label=str(cat),
+                           color=palette[i % len(palette)], edgecolor=t['body_bg'], linewidth=1)
+            for bar, v in zip(bars, vals):
+                if v >= 0.12:
+                    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_y() + bar.get_height() / 2,
+                            f"{v:.0%}", ha='center', va='center', color=t['body_bg'], fontsize=10, fontweight='bold')
+            left += vals
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(pdf.index, fontsize=11, color=fg)
+        ax.set_xlim(0, 1)
+        ax.set_xticks([0, 0.5, 1.0])
+        ax.set_xticklabels(['0%', '50%', '100%'], fontsize=10, color=fg)
+        ax.set_title(title, fontsize=12, fontweight='bold', color=fg)
+        ax.spines[['top', 'right']].set_visible(False)
+        for s in ('left', 'bottom'):
+            ax.spines[s].set_color(t['line'])
+        ax.patch.set_alpha(0)
+
+    axes[0].invert_yaxis()
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='lower center', ncol=len(cats), frameon=False,
+               fontsize=11, labelcolor=fg, bbox_to_anchor=(0.5, -0.02))
+    fig.patch.set_alpha(0)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+
+    return fig_to_img_html(fig, alt=f'{target} distribution before vs after imputation',
+                       dpi=max(DEV.chart_dpi, 100), transparent=False, width='80%')
+
+
+def impute_by_group_dist(df, target, dist_df, group_col=None, n_buckets=5, max_cats=5, seed=42):
+    """
+    Impute missing values in `target` by sampling from the observed distribution
+    of `group_col` (or 'OVERALL' if `group_col` is None or a group has 0 observed rows).
+    Returns a copy of `df` with `target` imputed and an `is_<target>_imputed` flag.
+    """
+    rng = np.random.default_rng(seed)
+    out = df.copy()
+
+    cat_cols = [
+        c for c in dist_df.columns
+        if c not in ('column', 'group', 'n', 'max_group_gap', 'dominant_gap')
+    ]
+    overall_probs = dist_df.loc[dist_df['column'] == 'OVERALL', cat_cols].iloc[0].to_numpy(dtype=float)
+
+    miss_mask = out[target].isna()
+    out[f'is_{target.lower()}_imputed'] = miss_mask
+
+    if not miss_mask.any():
+        return out
+
+    if group_col is None or group_col == 'OVERALL':
+        out.loc[miss_mask, target] = rng.choice(cat_cols, size=int(miss_mask.sum()), p=overall_probs)
+        return out
+
+    sub = dist_df[dist_df['column'] == group_col].set_index('group')[cat_cols]
+    groups = _make_groups(out[group_col], n_buckets=n_buckets, max_cats=max_cats)
+
+    for grp, idx in out[miss_mask].groupby(groups[miss_mask]).groups.items():
+        if grp in sub.index and sub.loc[grp].sum() > 0:
+            probs = sub.loc[grp].to_numpy(dtype=float)
+            probs = probs / probs.sum()  # guard against floating-point rounding
+        else:
+            probs = overall_probs
+
+        out.loc[idx, target] = rng.choice(cat_cols, size=len(idx), p=probs)
+
+    return out
+
+
+def _make_groups(s, n_buckets=5, max_cats=5):
+    """Consistent bucketing for dates, numeric quantiles, and top categories."""
+    from pandas.api.types import is_datetime64_any_dtype as is_dt
+    from pandas.api.types import is_numeric_dtype        as is_num
+    from pandas.api.types import is_integer_dtype        as is_int
+
+    if not is_dt(s) and not is_num(s) and s.dtype == 'object':
+        parsed = pd.to_datetime(s, format='%Y-%m-%d', errors='coerce')
+        if s.notna().sum() > 0 and (parsed.notna().sum() / s.notna().sum()) > 0.90:
+            s = parsed
+
+    if is_dt(s):
+        groups = s.dt.to_period('M').astype(str)
+    elif is_num(s) and (s.nunique() > max_cats):
+        cats = pd.qcut(s, q=n_buckets, duplicates='drop')
+        if is_int(s):
+            cats = cats.cat.rename_categories([
+                f"[{int(c.left) + 1}, {int(c.right)}]" for c in cats.cat.categories
+            ])
+        else:
+            cats = cats.cat.rename_categories([
+                f"[{c.left:,.2f}, {c.right:,.2f}]" for c in cats.cat.categories
+            ])
+        groups = cats.astype(str)
+    else:
+        groups = s.astype(str)
+
+    if not is_num(s):
+        top = groups.value_counts().index[:max_cats - 1]
+        groups = groups.where(groups.isin(top), 'other')
+
+    return groups.where(s.notna(), 'missing')
+
+
+def build_imputation_summary_table(raw_dist, prop_dist, mode_dist, min_effect=0.03):
+    """
+    Build summary DataFrame on distributions of field with missingness:
+    Raw vs. Proportional vs. Naive Mode.
+    """
+    cats = raw_dist.index.tolist()
+    prop_dist = prop_dist.reindex(cats, fill_value=0.0)
+    mode_dist = mode_dist.reindex(cats, fill_value=0.0)
+
+    rows = [
+        {
+            'method': 'Raw (observed)',
+            **{f'{c} share': raw_dist[c] for c in cats},
+            'max_overall_drift': 0.0,
+            'integrity_assessment': 'Ground-truth baseline',
+        },
+        {
+            'method': 'Proportional',
+            **{f'{c} share': prop_dist[c] for c in cats},
+            'max_overall_drift': float((prop_dist - raw_dist).abs().max()),
+            'integrity_assessment': 'Preserves marginal & subgroup balance',
+        },
+        {
+            'method': 'Naive Mode (`fillna(mode)`)',
+            **{f'{c} share': mode_dist[c] for c in cats},
+            'max_overall_drift': float((mode_dist - raw_dist).abs().max()),
+            'integrity_assessment': 'Inflates majority class',
+        },
+    ]
+    summary_df = pd.DataFrame(rows)
+    share_cols = [c for c in summary_df.columns if c.endswith(' share')]
+    fmt = {
+        **{c: '{:.2%}' for c in share_cols},
+        'max_overall_drift': lambda v: '—' if v == 0 else f'{v:.2%}',
+    }
+    
+    summary_table_html = style_table(
+        summary_df,
+        track,
+        caption=f'Imputation method comparison · {target}',
+        bold_first_col=True,
+        formats=fmt,
+        row_styles=[make_lift_row_style(track, min_effect, col='max_overall_drift')],
+    )
+    return summary_table_html
+
+
+def build_kpi_strip(items):
+    """Row of KPI tiles. items: list of (label, value, note)."""
+    tiles = ''.join(f'<div class="kpi"><small>{l}</small><b>{v}</b><span>{n}</span></div>' for l, v, n in items)
+    return f'<div class="kpis">{tiles}</div>'
