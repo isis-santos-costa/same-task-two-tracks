@@ -131,7 +131,9 @@ COMPARISON = [   # (program, kind, module, task, action): keep each task's rows 
     ('Coursera', 'job_task'        , 1, 2, 'Data Quality Tests'),
     ('Coursera', 'job_task'        , 1, 3, 'Data Reconciliation'),
     ('Coursera', 'skill_assessment', 2, 1, 'Data Profiling'),
+    ('Coursera', 'job_task'        , 2, 1, 'Data Profiling'),
     ('Coursera', 'job_task'        , 2, 1, 'Missing Data'),
+    ('Coursera', 'job_task'        , 2, 1, 'Data Imputation (\u26a0\ufe0e use with caution)'),
 ]
 
 # guards: loud on purpose
