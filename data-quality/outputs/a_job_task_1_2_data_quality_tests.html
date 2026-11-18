@@ -1,0 +1,162 @@
+<p></p>
+<div class="bn t-a">
+<div class="bn-eb">Track A · JOB TASK.1.2</div>
+<div class="t-a">
+<h3>Data Quality Tests</h3>
+<p><code>dq_tests</code></p>
+<div style="container-type:inline-size; overflow:auto; max-width:100%; max-height:360px; border:1px solid #CBD5E1; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,.10); background:#F8FAFC;"><style type="text/css">
+#T_f882b  {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: auto;
+  font-family: system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size: clamp(10px, 2.4cqw, 13px);
+}
+#T_f882b caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 .6em;
+  color: #475569;
+  font-weight: 600;
+}
+#T_f882b thead th {
+  background-color: #EEF2F7;
+  color: #475569;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-size: .85em;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: .8em .9em;
+  border-bottom: 2px solid #64748B;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_f882b tbody td {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  padding: .6em .9em;
+  border-bottom: 1px solid #E2E8F0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_f882b tbody th {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  padding: .6em .9em;
+  border-bottom: 1px solid #E2E8F0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+#T_f882b tbody tr:nth-child(even) td {
+  background-color: #F1F5F9;
+}
+#T_f882b tbody tr:nth-child(even) th {
+  background-color: #F1F5F9;
+}
+#T_f882b tbody tr:hover td {
+  background-color: #E2E8F0;
+}
+#T_f882b tbody tr:hover th {
+  background-color: #E2E8F0;
+}
+#T_f882b tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  max-width: 11rem;
+  box-shadow: 1px 0 0 #E2E8F0;
+}
+#T_f882b thead th:first-child {
+  left: 0;
+  z-index: 4;
+}
+#T_f882b tbody td:first-child {
+  font-weight: 600;
+}
+#T_f882b  tbody th:first-child {
+  font-weight: 600;
+}
+#T_f882b thead th:nth-child(3) {
+  text-align: right;
+}
+#T_f882b tbody td:nth-child(3) {
+  text-align: right;
+}
+</style>
+<table id="T_f882b">
+  <thead>
+    <tr>
+      <th id="T_f882b_level0_col0" class="col_heading level0 col0" >Test</th>
+      <th id="T_f882b_level0_col1" class="col_heading level0 col1" >Result</th>
+      <th id="T_f882b_level0_col2" class="col_heading level0 col2" >Affected</th>
+      <th id="T_f882b_level0_col3" class="col_heading level0 col3" >%</th>
+      <th id="T_f882b_level0_col4" class="col_heading level0 col4" >Class</th>
+      <th id="T_f882b_level0_col5" class="col_heading level0 col5" >Code</th>
+      <th id="T_f882b_level0_col6" class="col_heading level0 col6" >Details</th>
+      <th id="T_f882b_level0_col7" class="col_heading level0 col7" >Relevance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td id="T_f882b_row0_col0" class="data row0 col0" >Rule 01 · Validity · ticket_id · Must start with "T-" followed by four digits (e.g., T-1234).</td>
+      <td id="T_f882b_row0_col1" class="data row0 col1" >❌&nbsp;Failed</td>
+      <td id="T_f882b_row0_col2" class="data row0 col2" >1</td>
+      <td id="T_f882b_row0_col3" class="data row0 col3" >10.0%</td>
+      <td id="T_f882b_row0_col4" class="data row0 col4" >FORMAT</td>
+      <td id="T_f882b_row0_col5" class="data row0 col5" >df.loc[~df['ticket_id'].str.contains(r'^T-\d{4}$', regex=True, na=False), 'ticket_id'].tolist()</td>
+      <td id="T_f882b_row0_col6" class="data row0 col6" >1 invalid ticket_id found: ['S-9452']</td>
+      <td id="T_f882b_row0_col7" class="data row0 col7" >Valid IDs are crucial for cross-table analyses (JOIN).</td>
+    </tr>
+    <tr>
+      <td id="T_f882b_row1_col0" class="data row1 col0" >Rule 02 · Validity · priority · Must be integer [1, 5]</td>
+      <td id="T_f882b_row1_col1" class="data row1 col1" >❌&nbsp;Failed</td>
+      <td id="T_f882b_row1_col2" class="data row1 col2" >3</td>
+      <td id="T_f882b_row1_col3" class="data row1 col3" >30.0%</td>
+      <td id="T_f882b_row1_col4" class="data row1 col4" >RANGE</td>
+      <td id="T_f882b_row1_col5" class="data row1 col5" >df.loc[~(lambda s: s.between(1, 5) & (s % 1 == 0))(pd.to_numeric(df['priority'], errors='coerce')), 'priority'].tolist()</td>
+      <td id="T_f882b_row1_col6" class="data row1 col6" >3 invalid priority values found: [6, 99, 0]</td>
+      <td id="T_f882b_row1_col7" class="data row1 col7" >Valid category options are essential for accurate group reporting.</td>
+    </tr>
+    <tr>
+      <td id="T_f882b_row2_col0" class="data row2 col0" >Rule 03 · Validity · status · Is one of "Open", "In Progress", "Closed"</td>
+      <td id="T_f882b_row2_col1" class="data row2 col1" >❌&nbsp;Failed</td>
+      <td id="T_f882b_row2_col2" class="data row2 col2" >1</td>
+      <td id="T_f882b_row2_col3" class="data row2 col3" >10.0%</td>
+      <td id="T_f882b_row2_col4" class="data row2 col4" >DOMAIN</td>
+      <td id="T_f882b_row2_col5" class="data row2 col5" >df.loc[~df['status'].isin(['Open', 'In Progress', 'Closed']), 'status'].tolist()</td>
+      <td id="T_f882b_row2_col6" class="data row2 col6" >1 invalid status value found: ['Pending']</td>
+      <td id="T_f882b_row2_col7" class="data row2 col7" >Valid category options are essential for accurate group reporting.</td>
+    </tr>
+    <tr>
+      <td id="T_f882b_row3_col0" class="data row3 col0" >Rule 04 · Completeness · agent_id · Non-nullable</td>
+      <td id="T_f882b_row3_col1" class="data row3 col1" >✅&nbsp;Passed</td>
+      <td id="T_f882b_row3_col2" class="data row3 col2" >0</td>
+      <td id="T_f882b_row3_col3" class="data row3 col3" >0.0%</td>
+      <td id="T_f882b_row3_col4" class="data row3 col4" >NULL</td>
+      <td id="T_f882b_row3_col5" class="data row3 col5" >df.loc[df['agent_id'].isna(), 'agent_id'].tolist()</td>
+      <td id="T_f882b_row3_col6" class="data row3 col6" >All clean.</td>
+      <td id="T_f882b_row3_col7" class="data row3 col7" >Tickets with NULL agent_id would keep open and unassigned.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="legend"><b>Legend</b> · <b>Affected</b>: rows affected · <b>%</b>: share of rows affected</p>
+<br>
+<p><strong>Data Quality validation checks</strong> were performed against <strong>4 rules</strong>, assessing overall <em>accuracy</em>,
+<em>completeness</em>, and <em>plausibility</em> of data according to defined domains. The test covers checks for the following classes: FORMAT, RANGE, DOMAIN, NULL.</p>
+<p>Each test actively monitors critical quality risks, such as <strong>entity integrity</strong> for cross-table joins,
+<strong>boundary constraints</strong> for numerical metrics, and <strong>structural validity</strong> for categorical domains.
+Resolving these any failures found ensures that downstream summaries, segmentation models,
+and P&amp;L calculations reflect true operational reality.</p>
+<p><strong>❌ Failed tests: 3</strong>, ✅ Passed: 1 (Total: 4).<br />
+The overall quality of raw data is mixed, and some fields require cleaning.</p>
+<br>
+</div>
+</div>

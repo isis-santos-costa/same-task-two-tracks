@@ -17,7 +17,7 @@ from pathlib   import Path
 TOC_CSS = TRACK_CSS + '<style>.toc{' + ''.join(
     f'--ix-{k.replace("_", "-")}:{v};' for k, v in IX.items()
 ) + '}' + """
-.toc{max-width:26rem;background:var(--ix-bg);color:var(--ix-fg);border:1px solid var(--ix-line);border-radius:10px;
+.toc{max-width:29rem;background:var(--ix-bg);color:var(--ix-fg);border:1px solid var(--ix-line);border-radius:10px;
      padding:16px 22px;font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}
 .toc .prog{font-weight:400;color:var(--ix-muted);font-size:12px}
 .toc a{text-decoration:none!important}
@@ -27,9 +27,10 @@ TOC_CSS = TRACK_CSS + '<style>.toc{' + ''.join(
 .toc a.track:hover{background:var(--hbg)}
 .toc .track b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--hfg)}
 .toc .track span{font-size:12.5px;color:var(--fg)}
+.toc .track em{display:block;font-style:normal;font-size:11px;letter-spacing:.06em;color:var(--hfg);opacity:.85}
 .toc .row{display:flex;align-items:baseline;gap:10px;padding:3px 0}
 .toc .txt{flex:1}
-.toc .kind{flex:none;min-width:5.6em;color:var(--ix-muted)}
+.toc .kind{flex:none;width:9em;color:var(--ix-muted)}
 .toc .mod{font-weight:700;margin-top:10px;padding-top:10px;border-top:1px solid var(--ix-line)}
 .toc .pills{flex:none;white-space:nowrap}
 .toc a.pill{display:inline-block;margin-left:4px;padding:.15em .75em;border:1px solid var(--rl);border-radius:999px;
@@ -43,9 +44,10 @@ def _pills(anchor):
         f'<a class="pill t-{k}" href="#{anchor(k)}">{k.upper()}</a>' for k in TRACKS) + '</span>'
 
 
-def render_toc(tasks, kinds, modules):
-    tracks = ''.join(f'<a class="track t-{k}" href="#{k}"><b>Track {k.upper()}</b><span>{escape(v)}</span></a>'
-                     for k, v in TRACKS.items())
+def render_toc(tasks, kinds, modules, tools):
+    tracks = ''.join(
+        f'<a class="track t-{k}" href="#{k}"><b>Track {k.upper()}</b><span>{escape(v)}</span>'
+        f'<em>{escape(tools[k])}</em></a>' for k, v in TRACKS.items())
     rows = ['<p class="hint">Click a pill to jump to that task.</p>', f'<div class="tracks">{tracks}</div>']
     for (program, module), m_rows in groupby(tasks, key=itemgetter(0, 2)):
         pills = _pills(lambda k: f'{k}{module}')

@@ -14,6 +14,8 @@ from dataclasses import dataclass
 
 @dataclass
 class DevFlags:
+    max_rows                : int  = 200
+    chart_dpi               : int  = 150
     record_version          : bool = False
     allow_version_overwrite : bool = True
     export_zip              : bool = True
@@ -75,13 +77,14 @@ MODULES = {
 }
 
 TASKS = [   # (program, kind, module, task, title): the single source of truth, ordered by program, module
-    ('Coursera', 'task',     1, 1, 'Profile a dataset and surface quality risks'),
-    ('Coursera', 'task',     1, 2, 'Run validation checks and flag errors'),
-    ('Coursera', 'task',     1, 3, 'Reconcile data across systems'),
-    ('Coursera', 'job_task', 1, 1, 'Profile a dataset and surface quality risks'),
-    ('Coursera', 'job_task', 1, 2, 'Run validation checks and flag errors'),
-    ('Coursera', 'job_task', 1, 3, 'Reconcile data across systems'),
-    ('Coursera', 'task'    , 2, 1, 'Profile a dataset and surface quality risks'),
+    ('Coursera', 'task'            , 1, 1, 'Profile a dataset and surface quality risks'),
+    ('Coursera', 'task'            , 1, 2, 'Run validation checks and flag errors'),
+    ('Coursera', 'task'            , 1, 3, 'Reconcile data across systems'),
+    ('Coursera', 'job_task'        , 1, 1, 'Profile a dataset and surface quality risks'),
+    ('Coursera', 'job_task'        , 1, 2, 'Run validation checks and flag errors'),
+    ('Coursera', 'job_task'        , 1, 3, 'Reconcile data across systems'),
+    ('Coursera', 'skill_assessment', 2, 1, 'Profile a dataset and surface quality risks'),
+    ('Coursera', 'job_task'        , 2, 1, 'Analyze missing data'),
 ]
 TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
 
@@ -99,7 +102,7 @@ INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
     'jt_1_3_sales_source'          : 'sales_source.csv',
     'jt_1_3_sales_target'          : 'sales_target.csv',
     'sa_2_1_sales_performance'     : 'sales_performance.csv',
-    'l_2_1_missing_data'           : 'transactions_obt_w_missing_data.csv'
+    'jt_2_1_missing_data'          : 'transactions_obt_w_missing_data.csv'
 }
 
 TASK_OUTPUT_FILES = {
@@ -108,7 +111,9 @@ TASK_OUTPUT_FILES = {
     '2_1' : 'actual_vs_profit_data.csv',
 }
 
-KINDS  = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment', 'lab': 'Lab'}
+KINDS = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
+
+TOOLS = {'a': 'pandas', 'b': 'dbt · SQL'}
 
 # comparison ..............................................................................................
 
@@ -116,16 +121,17 @@ WIDTHS = dict(task=12, action=10, a=39, b=39)   # preferred share, %
 assert sum(WIDTHS.values()) == 100
 
 COMPARISON = [   # (program, kind, module, task, action): keep each task's rows together
-    ('Coursera', 'task',     1, 1, 'Data Profiling'),
-    ('Coursera', 'task',     1, 1, 'Data Quality Tests'),
-    ('Coursera', 'task',     1, 2, 'Data Profiling'),
-    ('Coursera', 'task',     1, 2, 'Data Quality Tests'),
-    ('Coursera', 'task',     1, 3, 'Data Reconciliation'),
-    ('Coursera', 'job_task', 1, 1, 'Data Profiling'),
-    ('Coursera', 'job_task', 1, 2, 'Data Profiling'),
-    ('Coursera', 'job_task', 1, 2, 'Data Quality Tests'),
-    ('Coursera', 'job_task', 1, 3, 'Data Reconciliation'),
-    ('Coursera', 'task',     2, 1, 'Data Profiling'),
+    ('Coursera', 'task'            , 1, 1, 'Data Profiling'),
+    ('Coursera', 'task'            , 1, 1, 'Data Quality Tests'),
+    ('Coursera', 'task'            , 1, 2, 'Data Profiling'),
+    ('Coursera', 'task'            , 1, 2, 'Data Quality Tests'),
+    ('Coursera', 'task'            , 1, 3, 'Data Reconciliation'),
+    ('Coursera', 'job_task'        , 1, 1, 'Data Profiling'),
+    ('Coursera', 'job_task'        , 1, 2, 'Data Profiling'),
+    ('Coursera', 'job_task'        , 1, 2, 'Data Quality Tests'),
+    ('Coursera', 'job_task'        , 1, 3, 'Data Reconciliation'),
+    ('Coursera', 'skill_assessment', 2, 1, 'Data Profiling'),
+    ('Coursera', 'job_task'        , 2, 1, 'Missing Data'),
 ]
 
 # guards: loud on purpose
@@ -147,6 +153,7 @@ CODE_HEADER = """
 
 # Data Profiling ..........................................................................................
 
+PROFILE_FMT = {'Null': '{:.1%}', 'nNulls': '{:,}'}
 PROFILE_RIGHT_COLS = ('Null', 'nNulls') if DEV.record_version else ('Core profile', 'Null', 'nNulls')
 
 PROFILE_CLASS_ORDER    = ['num', 'cat']
@@ -155,7 +162,7 @@ PROFILE_SUBCLASS_ORDER = ['integer', 'float', 'date', 'low-cardinality', 'high-c
 PROFILE_ANALYSIS_TEMPLATE = """
 <br>
 
-The Data Profiling reviewed **{total_records} customer records** on completeness and quality. 
+The Data Profiling reviewed **{total_records:,} customer records** on completeness and quality. 
 {completeness_text} {outlier_text} {date_assessment}
     """
 

@@ -10,21 +10,22 @@
 
 action = 'Data Profiling'
 is_first_action = True
+show_title = False
 
 track, kind, module, task = 'A', 'task', 1, 1
-task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS)
+task_id, task_title, path_out = get_cell_meta(track, kind, module, task, PATH_OUT_REPORTS, show_title)
 
 
 # Data Profiling ------------------------------------------------------------------------------------------
 
-profiling = use('get_data_profiling', 1)(df)
+profile = use('get_data_profile', 1)(df)
 
 
 # report --------------------------------------------------------------------------------------------------
 
 # build ...................................................................................................
-profiling_styled = style_table(
-    profiling.table, 
+profile_styled = style_table(
+    profile.table, 
     track,
     min_width='44rem', 
     max_height='360px',
@@ -36,10 +37,11 @@ sections = [
       f'<div class="t-{track.lower()}">'
     , f"\n### {action}"
     , "`customer_data_profile`"
-    , profiling_styled
-    , profiling.legend
-    , profiling.report
-    , profiling.see_also
+    , profile_styled
+    , profile.legend
+    , profile.see_also
+    , profile.report
+    , profile.report_help
     , '</div>'
 ]
 
