@@ -355,7 +355,7 @@ def get_cell_meta(track, kind, module, task, path_out_reports, show_title=False)
     Note: raises KeyError for unregistered `title`: loud on purpose.
     """
     tid   = make_task_id(track, kind, module, task)
-    title = f'<h3>{KINDS[kind]} {module}.{task}: {TITLES[(kind, module, task)]}</h3>' if show_title else ''
+    title = f'<h3>{KINDS[kind]} {module}.{task}: {TASK_TITLES[(kind, module, task)]}</h3>' if show_title else ''
     return CellMeta(tid, title, path_out_reports.get(tid))
 
 
