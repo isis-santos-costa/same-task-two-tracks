@@ -172,7 +172,7 @@ def style_raw_table(df, track, sticky_first_col=True, **kw):
 def fig_to_img_html(fig, alt, dpi=None, transparent=True, width=None):
     buf = io.BytesIO()
     fig.savefig(buf, format='png', transparent=transparent, dpi=dpi or DEV.chart_dpi, bbox_inches='tight',
-                facecolor=fig.get_facecolor())
+                facecolor='none' if transparent else fig.get_facecolor())
     plt.close(fig)
     img = base64.b64encode(buf.getvalue()).decode('utf-8')
     width = f'width:{width};' if width else 'max-width:100%;'
