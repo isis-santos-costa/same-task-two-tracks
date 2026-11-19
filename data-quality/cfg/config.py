@@ -109,16 +109,16 @@ KINDS = {
     'skill_assessment': 'Skill Assessment'
 }
 
-ACTION_TYPES = {
-    'DP'  : 'Data Profiling',
-    'DQ_T': f'{DQ} Tests',
-    'DR'  : 'Data Reconciliation',
-    'MISS': 'Missing Data',
-    'DIC' : 'Data Imputation (\u26a0\ufe0e use with caution)',
-    'U'   : 'Uniqueness',
-}
+ACTION_TYPES = (
+    'Data Profiling',
+    f'{DQ} Tests',
+    'Data Reconciliation',
+    'Missing Data',
+    'Data Imputation (\u26a0\ufe0e use with caution)',
+    'Uniqueness',
+)
 
-DP, DQ_T, DR, MISS, DIC, U = ACTION_TYPES.values()
+DP, DQ_T, DR, MISS, DIC, U = ACTION_TYPES
 
 _TASK_TREE = {
     ('Coursera', 1): {
