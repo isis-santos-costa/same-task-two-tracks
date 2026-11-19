@@ -283,16 +283,17 @@ def build_legend(items):
     return f'<p class="legend"><b>Legend</b> · {body}</p>'
 
 
-def short_sha(repo_dir):
-    """Get identifier of Git commit in use."""
-    try:
-        result = subprocess.run(
-            ['git', '-C', str(repo_dir), 'rev-parse', '--short', 'HEAD'],
-            capture_output=True, text=True, check=True,
-        )
-    except subprocess.CalledProcessError as e:
-        raise RuntimeError(f'Cannot read commit from {repo_dir}: {e.stderr.strip()}') from e
-    return result.stdout.strip()
+def get_commit_label(repo_dir):
+    """'v0.2.0' on an exact tag, else the short SHA (plus '+' if ahead of the last tag)."""
+    def git(*args):
+        r = subprocess.run(['git', '-C', str(repo_dir), *args], capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else ''
+    sha = git('rev-parse', '--short', 'HEAD')
+    tag = git('describe', '--tags', '--exact-match')
+    if tag:
+        return f'{tag} · {sha}'
+    last = git('describe', '--tags', '--abbrev=0')
+    return f'{last}+ · {sha}' if last else sha
 
 
 def sort_cat(col_name, cat_order):
