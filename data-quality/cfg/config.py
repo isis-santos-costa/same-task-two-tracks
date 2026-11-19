@@ -61,35 +61,7 @@ VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcas
     },
 }
 
-# toc & comparison ........................................................................................
-
-PROGRAMS = {   # key used in the registry -> (full name, link)
-    'Coursera': ('Data Quality Specialization · Coursera',
-                 'https://www.coursera.org/specializations/data-quality-analyst-validation-debugging-and-monitoring'),
-    'DataKitchen': ('Data Observability and Data Quality Testing Certification · DataKitchen',
-                    'https://datakitchen.io/certifications/data-observability-and-data-quality-testing/'),
-}
-
-MODULES = {
-    ('Coursera', 1): 'Data Quality · Profiling & Tests',
-    ('Coursera', 2): 'Data Quality · Validation & Debugging',
-    ('Coursera', 3): 'Data Quality · Monitoring & Prevention',
-}
-
-TASKS = [   # (program, kind, module, task, title): the single source of truth, ordered by program, module
-    ('Coursera', 'task'            , 1, 1, 'Profile a dataset and surface quality risks'),
-    ('Coursera', 'task'            , 1, 2, 'Run validation checks and flag errors'),
-    ('Coursera', 'task'            , 1, 3, 'Reconcile data across systems'),
-    ('Coursera', 'job_task'        , 1, 1, 'Profile a dataset and surface quality risks'),
-    ('Coursera', 'job_task'        , 1, 2, 'Run validation checks and flag errors'),
-    ('Coursera', 'job_task'        , 1, 3, 'Reconcile data across systems'),
-    ('Coursera', 'skill_assessment', 2, 1, 'Profile a dataset and surface quality risks'),
-    ('Coursera', 'job_task'        , 2, 1, 'Analyze missing data'),
-]
-TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
-
-_ids = [(k, m, t) for _, k, m, t, _ in TASKS]
-assert len(_ids) == len(set(_ids)), 'Cell IDs must be unique across programs: give the newcomer its own kind'
+# files ...................................................................................................
 
 INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
     't_1_1_rules'                  : 'dq_rules.txt',
@@ -102,43 +74,136 @@ INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
     'jt_1_3_sales_source'          : 'sales_source.csv',
     'jt_1_3_sales_target'          : 'sales_target.csv',
     'sa_2_1_sales_performance'     : 'sales_performance.csv',
-    'jt_2_1_missing_data'          : 'transactions_obt_w_missing_data.csv'
+    'jt_2_1_missing_data'          : 'transactions_obt_w_missing_data.csv',
+    'jt_2_2_uniqueness'            : 'sales_data.csv',
 }
 
-TASK_OUTPUT_FILES = {
+OUTPUT_FILES = {
     '1_1' : 'dq_audit_report.md',
     '1_2' : 'dq_validation_findings.md',
     '2_1' : 'actual_vs_profit_data.csv',
 }
 
-KINDS = {'task': 'Task', 'job_task': 'Job Task', 'skill_assessment': 'Skill Assessment'}
+# toc & comparison ........................................................................................
+
+DQ = 'Data Quality'
+C_LINK  = 'https://www.coursera.org/specializations/data-quality-analyst-validation-debugging-and-monitoring'
+DK_LINK = 'https://datakitchen.io/certifications/data-observability-and-data-quality-testing/'
+
+PROGRAMS = {   # key used in the Tracks comparison registry -> (full name, link)
+    'Coursera'    : (f'{DQ} Specialization · Coursera', C_LINK),
+    'DataKitchen' : (f'Data Observability and {DQ} Testing Certification · DataKitchen', DK_LINK),
+}
+
+_MODULES_TREE = {
+    'Coursera': {
+        1: 'Profiling & Tests',
+        2: 'Validation & Debugging',
+        3: 'Monitoring & Prevention',
+    }
+}
+
+KINDS = {
+    'task': 'Task', 
+    'job_task': 'Job Task', 
+    'skill_assessment': 'Skill Assessment'
+}
+
+ACTION_TYPES = {
+    'DP'  : 'Data Profiling',
+    'DQ_T': f'{DQ} Tests',
+    'DR'  : 'Data Reconciliation',
+    'MISS': 'Missing Data',
+    'DIC' : 'Data Imputation (\u26a0\ufe0e use with caution)',
+    'U'   : 'Uniqueness',
+}
+
+DP, DQ_T, DR, MISS, DIC, U = ACTION_TYPES.values()
+
+_TASK_TREE = {
+    ('Coursera', 1): {
+        'task': [
+            (1, 'Profile a dataset and surface quality risks', [DP, DQ_T]),
+            (2, 'Run validation checks and flag errors',       [DP, DQ_T]),
+            (3, 'Reconcile data across systems',               [DR]),
+        ],
+        'job_task': [
+            (1, 'Profile a dataset and surface quality risks', [DP]),
+            (2, 'Run validation checks and flag errors',       [DP, DQ_T]),
+            (3, 'Reconcile data across systems',               [DR]),
+        ],
+    },
+    ('Coursera', 2): {
+        'skill_assessment': [
+            (1, 'Profile a dataset and surface quality risks', [DP]),
+        ],
+        'job_task': [
+            (1, 'Analyze missing data',                        [DP, MISS, DIC]),
+            (2, 'Ensure data uniqueness',                      [DP, U]),
+        ],
+    },
+}
 
 TOOLS = {'a': 'pandas', 'b': 'dbt · SQL'}
+
+MODULES = {
+    (prog, num): f'{DQ} · {title}'
+    for prog, modules in _MODULES_TREE.items()
+    for num, title in modules.items()
+}
+
+TASKS = [
+    (prog, kind, mod, task, title)
+    for (prog, mod), kinds in _TASK_TREE.items()
+    for kind, tasks        in kinds.items()
+    for task, title, _     in tasks
+]
+
+ACTIONS = {
+    (prog, kind, mod, task): actions
+    for (prog, mod), kinds in _TASK_TREE.items()
+    for kind, tasks in kinds.items()
+    for task, _, actions in tasks
+}
+
+TASK_TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
+
+_ids = [(k, m, t) for _, k, m, t, _ in TASKS]
+assert len(_ids) == len(set(_ids)), (
+    'Cell IDs must be unique across programs: give the newcomer its own kind')
+
+# --- integrity assertions: uniqueness ---
+
+task_keys = [(prog, kind, mod, task) for prog, kind, mod, task, _ in TASKS]
+assert len(task_keys)    == len(set(task_keys)),    'Duplicate task keys in TASKS'
+
+# --- integrity assertions: referencial ---
+
+missing_programs = {prog for prog, _ in MODULES} - PROGRAMS.keys()
+assert not missing_programs, f'Programs in MODULES not listed in the PROGRAMS registry: {missing_programs}'
+
+missing_modules = {(prog, mod) for prog, _, mod, _, _ in TASKS} - MODULES.keys()
+assert not missing_modules, f'(Program, module) pairs in TASKS not listed in the MODULES registry: {missing_modules}'
 
 # comparison ..............................................................................................
 
 WIDTHS = dict(task=12, action=10, a=39, b=39)   # preferred share, %
 assert sum(WIDTHS.values()) == 100
 
-COMPARISON = [   # (program, kind, module, task, action): keep each task's rows together
-    ('Coursera', 'task'            , 1, 1, 'Data Profiling'),
-    ('Coursera', 'task'            , 1, 1, 'Data Quality Tests'),
-    ('Coursera', 'task'            , 1, 2, 'Data Profiling'),
-    ('Coursera', 'task'            , 1, 2, 'Data Quality Tests'),
-    ('Coursera', 'task'            , 1, 3, 'Data Reconciliation'),
-    ('Coursera', 'job_task'        , 1, 1, 'Data Profiling'),
-    ('Coursera', 'job_task'        , 1, 2, 'Data Profiling'),
-    ('Coursera', 'job_task'        , 1, 2, 'Data Quality Tests'),
-    ('Coursera', 'job_task'        , 1, 3, 'Data Reconciliation'),
-    ('Coursera', 'skill_assessment', 2, 1, 'Data Profiling'),
-    ('Coursera', 'job_task'        , 2, 1, 'Data Profiling'),
-    ('Coursera', 'job_task'        , 2, 1, 'Missing Data'),
-    ('Coursera', 'job_task'        , 2, 1, 'Data Imputation (\u26a0\ufe0e use with caution)'),
+COMPARISON = [
+    (prog, kind, mod, task, action)
+    for prog, kind, mod, task, _ in TASKS
+    for action in ACTIONS[(prog, kind, mod, task)]
 ]
 
-# guards: loud on purpose
-_missing = {r[:4] for r in COMPARISON} - {r[:4] for r in TASKS}
-assert not _missing, f'COMPARISON refers to tasks missing from TASKS: {sorted(_missing)}'
+# --- integrity assertions: referencial ---
+
+valid_actions = set(ACTION_TYPES.values())
+bad_actions = {a for acts in ACTIONS.values() for a in acts} - valid_actions
+assert not bad_actions, f'Unregistered ACTION_TYPES used in ACTIONS: {bad_actions}'
+
+bad_kinds = {kind for _, kind, _, _, _ in TASKS} - KINDS.keys()
+assert not bad_kinds, f'Unregistered KINDS used in TASKS: {bad_kinds}'
 
 # code cells ..............................................................................................
 
@@ -190,7 +255,7 @@ Numerical field distributions (in v3+) complement this.
 <br>
     """
 
-# Data Quality Tests 1/2 ..................................................................................
+# Data Quality Tests ......................................................................................
 
 AUDIT_ANALYSIS_TEMPLATE = """
 <br>
@@ -208,7 +273,7 @@ and P&L calculations reflect true operational reality.
 <br>
     """
 
-# task 1.1 ................................................................................................
+# --- task 1.1 ---
 
 MIN_AGE =  18
 MAX_AGE = 120
@@ -303,7 +368,7 @@ RULES_CONFIG = [
     },
 ]
 
-# job task 1.2 ............................................................................................
+# --- job task 1.2 ---
 
 RULES_CONFIG_SERVICE_TICKETS = [
     {
@@ -349,10 +414,10 @@ RULES_CONFIG_SERVICE_TICKETS = [
     },
 ]
 
-# Data Quality Tests 2/2 ..................................................................................
+# --- assertions ---
 
 DQ_TESTS_CLASSES = {'NULL', 'UNIQUE', 'RANGE', 'DOMAIN', 'FORMAT'}
 
 for _rules in (RULES_CONFIG, RULES_CONFIG_SERVICE_TICKETS):
     _bad = {r['class'] for r in _rules} - DQ_TESTS_CLASSES
-    assert not _bad, f'Unknown rule classes: {_bad}'
+    assert not _bad, f'Unregistered rule classes: {_bad}'
