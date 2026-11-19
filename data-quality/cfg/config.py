@@ -198,7 +198,7 @@ COMPARISON = [
 
 # --- integrity assertions: referencial ---
 
-valid_actions = set(ACTION_TYPES.values())
+valid_actions = set(ACTION_TYPES)
 bad_actions = {a for acts in ACTIONS.values() for a in acts} - valid_actions
 assert not bad_actions, f'Unregistered ACTION_TYPES used in ACTIONS: {bad_actions}'
 
