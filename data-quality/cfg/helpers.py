@@ -359,9 +359,9 @@ def load_input(path_in_files: dict, spec: CellSpec, suffix: str = '', **kwargs) 
     
     path = Path(path_in_files[fid])
     ext  = path.suffix.lower()
-    assert ext in _LOADERS, f'Unsupported file extension {ext!r} for {path.name}'
+    assert ext in LOADERS, f'Unsupported file extension {ext!r} for {path.name}'
     
-    return _LOADERS[ext](path, **kwargs)    
+    return LOADERS[ext](path, **kwargs)    
 
 
 # code cells ..............................................................................................
