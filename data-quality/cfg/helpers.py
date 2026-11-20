@@ -2,7 +2,7 @@
 
 # --- libraries • authored ---
 from identity import *
-# from config   import *
+from config   import *
 
 # --- libraries • standard ---
 import io
