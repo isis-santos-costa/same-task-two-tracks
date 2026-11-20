@@ -5,12 +5,12 @@ from identity import TRACKS
 
 # --- libraries: standard ---
 import warnings
-import pandas as pd
-from pathlib import Path
+import pandas      as pd
+from   pathlib     import Path
+from   collections import Counter
+from   dataclasses import dataclass
 
 # development flags .......................................................................................
-
-from dataclasses import dataclass
 
 @dataclass
 class DevFlags:
@@ -47,6 +47,12 @@ SMOOTH_HR = """
 <hr style="border: none; height: 1px; background-color: rgba(150, 150, 150, 0.2); margin: 20px 0;" />
 """
 
+_LOADERS = {
+    '.csv' : pd.read_csv,
+    '.xlsx': pd.read_excel,
+    '.xls' : pd.read_excel,
+}
+
 # version registry for autored functions ..................................................................
 
 VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcases it, note)}
@@ -59,29 +65,6 @@ VERSION_NOTES = {   # function -> {version: (snippet id of the cell that showcas
         1: ('a_task_1_1_data_quality_tests', 'baseline: result, affected rows, class, code'),
         2: ('a_task_1_2_data_quality_tests', 'with details and relevance for each rule'),
     },
-}
-
-# files ...................................................................................................
-
-INPUT_FILES = {   # id: filename (ids follow the task ids: kind, module, task)
-    't_1_1_rules'                  : 'dq_rules.txt',
-    't_1_1_data'                   : 'customer_data.csv',
-    'jt_1_1_city_data'             : 'city_data.xlsx',
-    'jt_1_1_retail_data'           : 'retail_data.xlsx',
-    'jt_1_1_product_inventory'     : 'product_inventory.csv',
-    'jt_1_2_service_tickets'       : 'service_tickets.csv',
-    'jt_1_2_service_tickets_rules' : 'service_tickets_rules.txt',
-    'jt_1_3_sales_source'          : 'sales_source.csv',
-    'jt_1_3_sales_target'          : 'sales_target.csv',
-    'sa_2_1_sales_performance'     : 'sales_performance.csv',
-    'jt_2_1_missing_data'          : 'transactions_obt_w_missing_data.csv',
-    'jt_2_2_uniqueness'            : 'sales_data.csv',
-}
-
-OUTPUT_FILES = {
-    '1_1' : 'dq_audit_report.md',
-    '1_2' : 'dq_validation_findings.md',
-    '2_1' : 'actual_vs_profit_data.csv',
 }
 
 # toc & comparison ........................................................................................
@@ -109,16 +92,14 @@ KINDS = {
     'skill_assessment': 'Skill Assessment'
 }
 
-ACTION_TYPES = (
-    'Data Profiling',
-    f'{DQ} Tests',
-    'Data Reconciliation',
-    'Missing Data',
-    'Data Imputation (\u26a0\ufe0e use with caution)',
-    'Uniqueness',
-)
-
-DP, DQ_T, DR, MISS, DIC, U = ACTION_TYPES
+DP   = 'Data Profiling'
+DQ_T = f'{DQ} Tests'
+DR   = 'Data Reconciliation'
+MISS = 'Missing Data'
+DIC  = 'Data Imputation (\u26a0\ufe0e use with caution)'
+U    = 'Uniqueness'
+ACTION_TYPES = (DP, DQ_T, DR, MISS, DIC, U)
+NO_ACTION    = 'Just display'
 
 _TASK_TREE = {
     ('Coursera', 1): {
@@ -159,6 +140,11 @@ TASKS = [
     for task, title, _     in tasks
 ]
 
+def get_prog_acr(program):
+    return 'cr' if program == 'Coursera' else 'dk'
+
+TASK_IDS = [f'{get_prog_acr(p)}_{k[0]}_{m}_{t}' for p, k, m, t, _ in TASKS]
+
 ACTIONS = {
     (prog, kind, mod, task): actions
     for (prog, mod), kinds in _TASK_TREE.items()
@@ -166,24 +152,92 @@ ACTIONS = {
     for task, _, actions in tasks
 }
 
-TASK_TITLES = {(k, m, t): title for _, k, m, t, title in TASKS}
+TASK_TITLES = {(p, k, m, t): title for p, k, m, t, title in TASKS}
+
+# --- files ---
+
+INPUT_FILES = {  # id: filename (ids follow the task ids: program, kind, module, task)
+    'cr_t_1_1'        : 'customer_data.csv',
+    'cr_t_1_1_rules'  : 'dq_rules.txt',
+    'cr_j_1_1_city'   : 'city_data.xlsx',
+    'cr_j_1_1_retail' : 'retail_data.xlsx',
+    'cr_j_1_1_inv'    : 'product_inventory.csv',
+    'cr_j_1_2'        : 'service_tickets.csv',
+    'cr_j_1_2_rules'  : 'service_tickets_rules.txt',
+    'cr_j_1_3_source' : 'sales_source.csv',
+    'cr_j_1_3_target' : 'sales_target.csv',
+    'cr_s_2_1'        : 'sales_performance.csv',
+    'cr_j_2_1'        : 'transactions_obt_w_missing_data.csv',
+    'cr_j_2_2'        : 'sales_data.csv',
+}
+
+OUTPUT_FILES = {
+    'cr_t_1_1' : 'dq_audit_report.md',
+    'cr_t_1_2' : 'dq_validation_findings.md',
+    'cr_j_2_1' : 'actual_vs_profit_data.csv',
+}
+
+# --- cell spec ---
+
+@dataclass(frozen=True)
+class CellSpec:
+    track   : str
+    program : str
+    kind    : str
+    module  : int
+    task    : int
+    action  : str = NO_ACTION
+
+    def __post_init__(self):
+        assert  self.track.lower()         in TRACKS  ,   f'Not in TRACKS registry:  {self.track}'
+        assert  self.program               in PROGRAMS, f'Not in PROGRAMS registry:  {self.program}'
+        assert  self.kind                  in KINDS   ,     f'Not in KIDS registry:  {self.kind}'
+        assert (self.program, self.module) in MODULES ,  f'Not in MODULES registry: {(self.program, self.module)}'
+        assert  self.key                   in ACTIONS ,  f'Not in ACTIONS registry:  {self.key}'
+        assert  self.action in ACTION_TYPES or self.action == NO_ACTION, f'Unknown action: {self.action}'
+
+    @property
+    def key(self) -> tuple[str, str, int, int]:
+        return (self.program, self.kind, self.module, self.task)
+
+    @property
+    def default_file_id(self) -> str:
+        return f'{get_prog_acr(self.program)}_{self.kind[0]}_{self.module}_{self.task}'
+
+    def file_id(self, suffix: str = '') -> str:
+        return f'{self.default_file_id}_{suffix}' if suffix else self.default_file_id    
+
+    @property
+    def is_first_action_in_task(self) -> bool:
+        task_actions = ACTIONS.get(self.key, [])
+        return bool(task_actions) and self.action == task_actions[0]
+
+# --- integrity assertions: uniqueness ---
 
 _ids = [(k, m, t) for _, k, m, t, _ in TASKS]
 assert len(_ids) == len(set(_ids)), (
     'Cell IDs must be unique across programs: give the newcomer its own kind')
 
-# --- integrity assertions: uniqueness ---
+assert len(KINDS) == len({k[0] for k in KINDS}), 'KINDS keys must have unique first letters'
 
-task_keys = [(prog, kind, mod, task) for prog, kind, mod, task, _ in TASKS]
-assert len(task_keys)    == len(set(task_keys)),    'Duplicate task keys in TASKS'
+assert len(TASK_IDS) == len(set(TASK_IDS)), f'Duplicate TASK_IDS found: {[k for k, v in Counter(TASK_IDS).items() if v > 1]}'
 
-# --- integrity assertions: referencial ---
+# --- integrity assertions: referential ---
 
 missing_programs = {prog for prog, _ in MODULES} - PROGRAMS.keys()
-assert not missing_programs, f'Programs in MODULES not listed in the PROGRAMS registry: {missing_programs}'
+assert not missing_programs, f'Programs in MODULES not in the PROGRAMS registry: {missing_programs}'
+
+missing_programs = {prog for prog, *_ in TASKS} - PROGRAMS.keys()
+assert not missing_programs, f'Programs in TASKS not in the PROGRAMS registry: {missing_programs}'
 
 missing_modules = {(prog, mod) for prog, _, mod, _, _ in TASKS} - MODULES.keys()
 assert not missing_modules, f'(Program, module) pairs in TASKS not listed in the MODULES registry: {missing_modules}'
+
+missing_input_id = [tid[0:8] for tid in INPUT_FILES if tid[0:8] not in TASK_IDS]
+assert missing_input_id == [], f'Not in TASK_IDS registry: {missing_input_id}'
+
+missing_output_id = [tid[0:8] for tid in OUTPUT_FILES if tid[0:8] not in TASK_IDS]
+assert missing_output_id == [], f'Not in TASK_IDS registry: {missing_output_id}'
 
 # comparison ..............................................................................................
 
@@ -196,7 +250,7 @@ COMPARISON = [
     for action in ACTIONS[(prog, kind, mod, task)]
 ]
 
-# --- integrity assertions: referencial ---
+# --- integrity assertions: referential ---
 
 valid_actions = set(ACTION_TYPES)
 bad_actions = {a for acts in ACTIONS.values() for a in acts} - valid_actions
