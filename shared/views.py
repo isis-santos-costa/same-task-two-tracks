@@ -165,7 +165,7 @@ def _comparison_table(rows, kinds, titles, modules, cfg, widths):
         if i in by_task:
             jump = ' · '.join(f'<a href="#{make_task_id(t, kind, module, task)}">Track {t.upper()}</a>' for t in TRACKS)
             cells.append(f'<th class="ix" scope="rowgroup" rowspan="{by_task[i]}"><strong>{kinds[kind]} {module}.{task}</strong><br>'
-                         f'{escape(titles[(kind, module, task)])}<br><small>{jump}</small></th>')
+                         f'{escape(titles[(program, kind, module, task)])}<br><small>{jump}</small></th>')
         sid_a = make_snippet_id(make_task_id('a', kind, module, task), action)
         sid_b = make_snippet_id(make_task_id('b', kind, module, task), action)
         name, _, note = action.partition(' (')
