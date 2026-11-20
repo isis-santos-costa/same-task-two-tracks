@@ -2,7 +2,7 @@
 
 # --- libraries • authored ---
 from identity import *
-from config   import *
+# from config   import *
 
 # --- libraries • standard ---
 import io
@@ -154,6 +154,17 @@ def style_table(
     
     return (f'<div style="container-type:inline-size; overflow:auto; max-width:100%; {box}border:1px solid {t['outer']}; '
             f'border-radius:8px; box-shadow:{t['shadow']}; background:{t['body_bg']};">{html}</div>')
+
+
+def render_raw_data(df, track, output_table_label='raw_data'):
+    return '\n\n'.join([
+        f'<div class="t-{track.lower()}">',
+        '\n### Raw Data',
+        f'`{output_table_label}`',
+        style_raw_table(df, track),
+        '<br>',
+        '</div>',
+    ])
 
 
 def style_raw_table(df, track, sticky_first_col=True, **kw):
@@ -339,7 +350,19 @@ def get_iso_date(df, date_col_name):
     df = df.drop(columns=date_col_name)
     
     return df
+
+
+def load_input(path_in_files: dict, spec: CellSpec, suffix: str = '', **kwargs) -> pd.DataFrame:
+    """Resolve file_id from spec and dispatch to the matching pandas reader."""
+    fid = spec.file_id(suffix)
+    assert fid in path_in_files, f'File ID not found in PATH_IN_FILES: {fid!r}'
     
+    path = Path(path_in_files[fid])
+    ext  = path.suffix.lower()
+    assert ext in _LOADERS, f'Unsupported file extension {ext!r} for {path.name}'
+    
+    return _LOADERS[ext](path, **kwargs)    
+
 
 # code cells ..............................................................................................
 
@@ -348,38 +371,38 @@ class CellMeta(NamedTuple):
     task_title: str
     path_out:   Path | None
 
-
-def get_cell_meta(track, kind, module, task, path_out_reports, show_title=False):
-    """
-    Cell metadata from the TASKS registry: task_id, task_title, path_out.
-    Note: raises KeyError for unregistered `title`: loud on purpose.
-    """
-    tid   = make_task_id(track, kind, module, task)
-    title = f'<h3>{KINDS[kind]} {module}.{task}: {TASK_TITLES[(kind, module, task)]}</h3>' if show_title else ''
+def get_cell_meta(path_out_reports, spec: CellSpec, show_title=False):
+    """Get cell metadata from the registry: task_id, task_title, path_out. Fails loudly on unregistered input."""
+    assert spec.action == NO_ACTION or spec.action in ACTIONS[spec.key], (
+        f'{spec.action!r} is not registered for {spec.program} {spec.kind} {spec.module}.{spec.task}'
+    )
+    tid   = make_task_id(spec.track, spec.kind, spec.module, spec.task)
+    title = f'<h3>{KINDS[spec.kind]} {spec.module}.{spec.task}: {TASK_TITLES[key]}</h3>' if show_title else ''
     return CellMeta(tid, title, path_out_reports.get(tid))
 
 
-def finish_cell(task_id, task_title, action, report_text, track, is_first_action, path_out, dev_render_md=False):
+def finish_cell(spec: CellSpec, meta: CellMeta, report_text, dev_render_md=DEV.render_md):
     """Close a task cell: show the report, save it, and (in dev mode) read it back."""
-    render_cell(task_id, task_title, action, report_text, track, is_first_action)
-    if not path_out:
+    render_cell(spec, meta, report_text)
+    if not meta.path_out:
         return
-    save_to_md(report_text, path_out)
+    save_to_md(report_text, meta.path_out)
     if dev_render_md:
-        display_txt_as_md(path_out)
+        display_txt_as_md(meta.path_out)
     return
 
 
-def render_cell(task_id, task_title, action, report_text, track='a', is_first_action=False):
-    snippet_id = make_snippet_id(task_id, action)
-    anchors = (f"<a id='{task_id}'></a>" if is_first_action else '') + f"<a id='{snippet_id}'></a>"
-    t = task_id.upper().split('_')
+def render_cell(spec: CellSpec, meta: CellMeta, report_text):
+    anchors = f"<a id='{meta.task_id}'></a>" if spec.is_first_action_in_task else ''
+    if spec.action != NO_ACTION:
+        anchors += f"<a id='{make_snippet_id(meta.task_id, spec.action)}'></a>"
+    t = meta.task_id.upper().split('_')
     task_short = f"{t[1]} {'.'.join(t[2:])}"
-    eyebrow_suffix = f' · {task_short}' if not task_title else ''
-    title_html = f'{task_title}'
+    eyebrow_suffix = f' · {task_short}' if not meta.task_title else ''
+    title_html = f'{meta.task_title}'
     display_markdown(CODE_HEADER.format(
-        anchors=anchors, track=track.lower(), TRACK=track.upper(), eyebrow_suffix=eyebrow_suffix,
-        action=action, task_title=title_html, report=report_text), raw=True)
+        anchors=anchors, track=spec.track.lower(), TRACK=spec.track.upper(), eyebrow_suffix=eyebrow_suffix,
+        action=spec.action, task_title=title_html, report=report_text), raw=True)
 
 
 # Data Profiling ..............................................................................
