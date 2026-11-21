@@ -2,7 +2,7 @@
 
 # --- libraries • authored ---
 from identity import *
-from config   import *
+# from config   import *
 
 # --- libraries • standard ---
 import io
@@ -156,12 +156,12 @@ def style_table(
             f'border-radius:8px; box-shadow:{t['shadow']}; background:{t['body_bg']};">{html}</div>')
 
 
-def render_raw_data(df, track, output_table_label='raw_data'):
+def render_raw_data(df, spec):
     return '\n\n'.join([
-        f'<div class="t-{track.lower()}">',
+        f'<div class="t-{spec.track.lower()}">',
         '\n### Raw Data',
-        f'`{output_table_label}`',
-        style_raw_table(df, track),
+        f'`{spec.table_label}`',
+        style_raw_table(df, spec.track),
         '<br>',
         '</div>',
     ])
@@ -373,16 +373,18 @@ class CellMeta(NamedTuple):
 
 def get_cell_meta(path_out_reports, spec: CellSpec, show_title=False):
     """Get cell metadata from the registry: task_id, task_title, path_out. Fails loudly on unregistered input."""
-    assert spec.action == NO_ACTION or spec.action in ACTIONS[spec.key], (
+    assert spec.action == NO_ACTION or spec.action in ACTIONS[spec.task_key], (
         f'{spec.action!r} is not registered for {spec.program} {spec.kind} {spec.module}.{spec.task}'
     )
     tid   = make_task_id(spec.track, spec.kind, spec.module, spec.task)
-    title = f'<h3>{KINDS[spec.kind]} {spec.module}.{spec.task}: {TASK_TITLES[key]}</h3>' if show_title else ''
+    title = f'<h3>{KINDS[spec.kind]} {spec.module}.{spec.task}: {TASK_TITLES[spec.task_key]}</h3>' if show_title else ''
     return CellMeta(tid, title, path_out_reports.get(tid))
 
 
-def finish_cell(spec: CellSpec, meta: CellMeta, report_text, dev_render_md=DEV.render_md):
+def finish_cell(spec: CellSpec, meta: CellMeta, report_text, dev_render_md=None):
     """Close a task cell: show the report, save it, and (in dev mode) read it back."""
+    if dev_render_md is None:
+        dev_render_md = DEV.render_md
     render_cell(spec, meta, report_text)
     if not meta.path_out:
         return
@@ -391,14 +393,13 @@ def finish_cell(spec: CellSpec, meta: CellMeta, report_text, dev_render_md=DEV.r
         display_txt_as_md(meta.path_out)
     return
 
+# f''
 
 def render_cell(spec: CellSpec, meta: CellMeta, report_text):
     anchors = f"<a id='{meta.task_id}'></a>" if spec.is_first_action_in_task else ''
     if spec.action != NO_ACTION:
         anchors += f"<a id='{make_snippet_id(meta.task_id, spec.action)}'></a>"
-    t = meta.task_id.upper().split('_')
-    task_short = f"{t[1]} {'.'.join(t[2:])}"
-    eyebrow_suffix = f' · {task_short}' if not meta.task_title else ''
+    eyebrow_suffix = f' · {KINDS[spec.kind]} {spec.module}.{spec.task}' if not meta.task_title else ''
     title_html = f'{meta.task_title}'
     display_markdown(CODE_HEADER.format(
         anchors=anchors, track=spec.track.lower(), TRACK=spec.track.upper(), eyebrow_suffix=eyebrow_suffix,
