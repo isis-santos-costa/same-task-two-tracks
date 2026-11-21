@@ -6,6 +6,7 @@ from identity import TRACKS
 # --- libraries: standard ---
 import warnings
 import pandas      as pd
+from   enum        import Enum
 from   pathlib     import Path
 from   collections import Counter
 from   dataclasses import dataclass
@@ -92,35 +93,37 @@ KINDS = {
     'skill_assessment': 'Skill Assessment'
 }
 
-DP   = 'Data Profiling'
-DQ_T = f'{DQ} Tests'
-DR   = 'Data Reconciliation'
-MISS = 'Missing Data'
-DIC  = 'Data Imputation (\u26a0\ufe0e use with caution)'
-U    = 'Uniqueness'
-ACTION_TYPES = (DP, DQ_T, DR, MISS, DIC, U)
+class Act(str, Enum):
+    PROFILE           = 'Data Profiling'
+    TEST              = f'{DQ} Tests'
+    RECONCILE         = 'Data Reconciliation'
+    MISS              = 'Missing Data'
+    IMPUTE_CAUTIOUSLY = 'Data Imputation (\u26a0\ufe0e use with caution)'
+    DEDUPE            = 'Uniqueness'
+
+ACTION_TYPES = tuple(a.value for a in Act)
 NO_ACTION    = 'Just display'
 
 _TASK_TREE = {
     ('Coursera', 1): {
         'task': [
-            (1, 'Profile a dataset and surface quality risks', [DP, DQ_T]),
-            (2, 'Run validation checks and flag errors',       [DP, DQ_T]),
-            (3, 'Reconcile data across systems',               [DR]),
+            (1, 'Profile a dataset and surface quality risks', [Act.PROFILE, Act.TEST]),
+            (2, 'Run validation checks and flag errors',       [Act.PROFILE, Act.TEST]),
+            (3, 'Reconcile data across systems',               [Act.RECONCILE]),
         ],
         'job_task': [
-            (1, 'Profile a dataset and surface quality risks', [DP]),
-            (2, 'Run validation checks and flag errors',       [DP, DQ_T]),
-            (3, 'Reconcile data across systems',               [DR]),
+            (1, 'Profile a dataset and surface quality risks', [Act.PROFILE]),
+            (2, 'Run validation checks and flag errors',       [Act.PROFILE, Act.TEST]),
+            (3, 'Reconcile data across systems',               [Act.RECONCILE]),
         ],
     },
     ('Coursera', 2): {
         'skill_assessment': [
-            (1, 'Profile a dataset and surface quality risks', [DP]),
+            (1, 'Profile a dataset and surface quality risks', [Act.PROFILE]),
         ],
         'job_task': [
-            (1, 'Analyze missing data',                        [DP, MISS, DIC]),
-            (2, 'Ensure data uniqueness',                      [DP, U]),
+            (1, 'Analyze missing data',                        [Act.PROFILE, Act.MISS, Act.IMPUTE_CAUTIOUSLY]),
+            (2, 'Ensure data uniqueness',                      [Act.PROFILE, Act.DEDUPE]),
         ],
     },
 }
@@ -181,23 +184,24 @@ OUTPUT_FILES = {
 
 @dataclass(frozen=True)
 class CellSpec:
-    track   : str
-    program : str
-    kind    : str
-    module  : int
-    task    : int
-    action  : str = NO_ACTION
+    track       : str
+    program     : str
+    kind        : str
+    module      : int
+    task        : int
+    action      : str = NO_ACTION
+    table_label : str = 'raw_data'
 
     def __post_init__(self):
         assert  self.track.lower()         in TRACKS  ,   f'Not in TRACKS registry:  {self.track}'
         assert  self.program               in PROGRAMS, f'Not in PROGRAMS registry:  {self.program}'
         assert  self.kind                  in KINDS   ,     f'Not in KIDS registry:  {self.kind}'
         assert (self.program, self.module) in MODULES ,  f'Not in MODULES registry: {(self.program, self.module)}'
-        assert  self.key                   in ACTIONS ,  f'Not in ACTIONS registry:  {self.key}'
+        assert  self.task_key              in ACTIONS ,  f'Not in ACTIONS registry:  {self.task_key}'
         assert  self.action in ACTION_TYPES or self.action == NO_ACTION, f'Unknown action: {self.action}'
 
     @property
-    def key(self) -> tuple[str, str, int, int]:
+    def task_key(self) -> tuple[str, str, int, int]:
         return (self.program, self.kind, self.module, self.task)
 
     @property
@@ -209,7 +213,7 @@ class CellSpec:
 
     @property
     def is_first_action_in_task(self) -> bool:
-        task_actions = ACTIONS.get(self.key, [])
+        task_actions = ACTIONS.get(self.task_key, [])
         return bool(task_actions) and self.action == task_actions[0]
 
 # --- integrity assertions: uniqueness ---
@@ -349,76 +353,76 @@ TIER_DOMAIN = [
 
 RULES_CONFIG = [
     {
-          "key"       : "r01"
-        , "dim"       : "Completeness"
-        , "field"     : "customer_id"
-        , "rule"      : "Non-nullable"
-        , "relevance" : "Entity integrity is crucial for cross-table analyses (JOIN)."
-        , "class"     : "NULL"
-        , "noun"      : "NULL value"
-        , "eval_fn"   : lambda df: df.loc[df['customer_id'].isna(), 'customer_id'].tolist()
+          'key'       : 'r01'
+        , 'dim'       : 'Completeness'
+        , 'field'     : 'customer_id'
+        , 'rule'      : 'Non-nullable'
+        , 'relevance' : 'Entity integrity is crucial for cross-table analyses (JOIN).'
+        , 'class'     : 'NULL'
+        , 'noun'      : 'NULL value'
+        , 'eval_fn'   : lambda df: df.loc[df['customer_id'].isna(), 'customer_id'].tolist()
         
     },
     {
-          "key"       : "r02"
-        , "dim"       : "Uniqueness"
-        , "field"     : "customer_id"
-        , "rule"      : "Index"
-        , "relevance" : "Entity integrity is crucial for cross-table analyses (JOIN)."
-        , "class"     : "UNIQUE"
-        , "noun"      : "duplicate ID"
-        , "eval_fn"   : lambda df: df[df['customer_id'].duplicated()]['customer_id'].tolist()
+          'key'       : 'r02'
+        , 'dim'       : 'Uniqueness'
+        , 'field'     : 'customer_id'
+        , 'rule'      : 'Index'
+        , 'relevance' : 'Entity integrity is crucial for cross-table analyses (JOIN).'
+        , 'class'     : 'UNIQUE'
+        , 'noun'      : 'duplicate ID'
+        , 'eval_fn'   : lambda df: df[df['customer_id'].duplicated()]['customer_id'].tolist()
     },
     {
-          "key"       : "r03"
-        , "dim"       : "Validity"
-        , "field"     : "age"
-        , "rule"      : f"[{MIN_AGE}, {MAX_AGE}]"
-        , "relevance" : ("Non-valid values can distort non-robust summarizing metrics, like"
-                       " the mean.")
-        , "class"     : "RANGE"
-        , "noun"      : "out-of-range age"
-        , "eval_fn"   : lambda df: df.loc[df['age'] < MIN_AGE, 'age'].tolist() + df.loc[df['age'] > MAX_AGE, 'age'].tolist()
+          'key'       : 'r03'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'age'
+        , 'rule'      : f'[{MIN_AGE}, {MAX_AGE}]'
+        , 'relevance' : ('Non-valid values can distort non-robust summarizing metrics, like'
+                       ' the mean.')
+        , 'class'     : 'RANGE'
+        , 'noun'      : 'out-of-range age'
+        , 'eval_fn'   : lambda df: df.loc[df['age'] < MIN_AGE, 'age'].tolist() + df.loc[df['age'] > MAX_AGE, 'age'].tolist()
     },
     {
-          "key"       : "r04"
-        , "dim"       : "Validity"
-        , "field"     : "email"
-        , "rule"      : 'Must have an "@"'
-        , "relevance" : "Email without an @ is not directly actionable via machine."
-        , "class"     : "FORMAT"
-        , "noun"      : "invalid email"
-        , "eval_fn"   : lambda df: df.loc[~df['email'].str.contains('@', na=False), 'email'].tolist()
+          'key'       : 'r04'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'email'
+        , 'rule'      : 'Must have an "@"'
+        , 'relevance' : 'Email without an @ is not directly actionable via machine.'
+        , 'class'     : 'FORMAT'
+        , 'noun'      : 'invalid email'
+        , 'eval_fn'   : lambda df: df.loc[~df['email'].str.contains('@', na=False), 'email'].tolist()
     },
     {
-          "key"       : "r05"
-        , "dim"       : "Validity"
-        , "field"     : "state"
-        , "rule"      : "Must be within domain"
-        , "relevance" : "Valid category options are essential for accurate group reporting."
-        , "class"     : "DOMAIN"
-        , "noun"      : "invalid state"
-        , "eval_fn"   : lambda df: df.loc[~df['state'].isin(STATE_DOMAIN), 'state'].tolist()
+          'key'       : 'r05'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'state'
+        , 'rule'      : 'Must be within domain'
+        , 'relevance' : 'Valid category options are essential for accurate group reporting.'
+        , 'class'     : 'DOMAIN'
+        , 'noun'      : 'invalid state'
+        , 'eval_fn'   : lambda df: df.loc[~df['state'].isin(STATE_DOMAIN), 'state'].tolist()
     },
     {
-          "key"       : "r06"
-        , "dim"       : "Validity"
-        , "field"     : "purchase_amount"
-        , "rule"      : "Must be ≥ 0"
-        , "relevance" : "Non-negative purchases are required for P&L accuracy."
-        , "class"     : "RANGE"
-        , "noun"      : "negative purchase"
-        , "eval_fn"   : lambda df: df.loc[df['purchase_amount'] < 0, 'purchase_amount'].tolist()
+          'key'       : 'r06'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'purchase_amount'
+        , 'rule'      : 'Must be ≥ 0'
+        , 'relevance' : 'Non-negative purchases are required for P&L accuracy.'
+        , 'class'     : 'RANGE'
+        , 'noun'      : 'negative purchase'
+        , 'eval_fn'   : lambda df: df.loc[df['purchase_amount'] < 0, 'purchase_amount'].tolist()
     },
     {
-          "key"       : "r07"
-        , "dim"       : "Validity"
-        , "field"     : "loyalty_tier"
-        , "rule"      : "Must be within domain"
-        , "relevance" : "Valid category options are essential for accurate group reporting."
-        , "class"     : "DOMAIN"
-        , "noun"      : "invalid loyalty tier"
-        , "eval_fn"   : lambda df: df.loc[~df['loyalty_tier'].isin(TIER_DOMAIN), 'loyalty_tier'].tolist()
+          'key'       : 'r07'
+        , 'dim'       : 'Validity'
+        , 'field'     : 'loyalty_tier'
+        , 'rule'      : 'Must be within domain'
+        , 'relevance' : 'Valid category options are essential for accurate group reporting.'
+        , 'class'     : 'DOMAIN'
+        , 'noun'      : 'invalid loyalty tier'
+        , 'eval_fn'   : lambda df: df.loc[~df['loyalty_tier'].isin(TIER_DOMAIN), 'loyalty_tier'].tolist()
     },
 ]
 
